@@ -25,7 +25,7 @@ final class DocumentMetadata extends Data
      * @param  string|null  $modificationDate
      * @param  string|null  $copyright
      * @param  string|null  $copyrightUrl
-     * @param  array<string, string>  $custom  Custom fields set with setMetadata (or by other tools).
+     * @param  array<array-key, string>  $custom  Custom fields set with setMetadata (or by other tools).
      */
     public function __construct(
         public readonly ?string $title,

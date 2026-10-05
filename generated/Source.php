@@ -41,7 +41,7 @@ final readonly class Source implements Payload
 
     /**
      * @param  string  $url  http(s) URL the Worker downloads. Some sites block requests from Cloudflare Workers; send those files as uploads instead.
-     * @param  array<string, string>|null  $headers  Extra request headers for `url`, e.g. { "authorization": "Bearer …" } for private files.
+     * @param  array<array-key, string>|null  $headers  Extra request headers for `url`, e.g. { "authorization": "Bearer …" } for private files.
      */
     public static function url(string $url, ?array $headers = null): self
     {

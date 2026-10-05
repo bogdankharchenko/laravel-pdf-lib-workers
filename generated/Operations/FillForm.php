@@ -30,8 +30,8 @@ final class FillForm extends Data implements Operation
     public readonly string $op;
 
     /**
-     * @param  array<string, string|bool|list<string>>|Optional  $fields  Text fields take a string; checkboxes true/false; dropdowns and option lists an option or array of options; radio groups an option. Default: [].
-     * @param  array<string, string|Source>|Optional  $images  Images for text fields or buttons, by field name (e.g. a signature box).
+     * @param  array<array-key, string|bool|list<string>>|Optional  $fields  Text fields take a string; checkboxes true/false; dropdowns and option lists an option or array of options; radio groups an option. Default: [].
+     * @param  array<array-key, string|Source>|Optional  $images  Images for text fields or buttons, by field name (e.g. a signature box).
      * @param  Alignment|Optional  $imageAlignment  Horizontal alignment.
      * @param  bool|Optional  $flatten  Turn the fields into plain page content afterwards, so they can no longer be edited. Default: false.
      * @param  bool|Optional  $strict  Fail on unknown field names instead of ignoring them. Default: true.

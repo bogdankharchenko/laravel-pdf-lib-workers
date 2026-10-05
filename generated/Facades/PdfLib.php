@@ -17,7 +17,6 @@ use BogdanKharchenko\PdfLibWorkers\Data\InlinePdf;
 use BogdanKharchenko\PdfLibWorkers\Data\LockedInfoResponse;
 use BogdanKharchenko\PdfLibWorkers\Data\MeasureResponse;
 use BogdanKharchenko\PdfLibWorkers\Data\Output;
-use BogdanKharchenko\PdfLibWorkers\Data\PdfResult;
 use BogdanKharchenko\PdfLibWorkers\Data\ScriptsResponse;
 use BogdanKharchenko\PdfLibWorkers\Data\SplitResponse;
 use BogdanKharchenko\PdfLibWorkers\Data\StoredPdf;

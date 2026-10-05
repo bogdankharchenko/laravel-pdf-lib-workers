@@ -58,7 +58,7 @@ final readonly class MergeSource implements Payload
 
     /**
      * @param  string  $url  http(s) URL the Worker downloads. Some sites block requests from Cloudflare Workers; send those files as uploads instead.
-     * @param  array<string, string>|null  $headers  Extra request headers for `url`, e.g. { "authorization": "Bearer …" } for private files.
+     * @param  array<array-key, string>|null  $headers  Extra request headers for `url`, e.g. { "authorization": "Bearer …" } for private files.
      * @param  string|null  $password  Password for an encrypted PDF. The result is saved without a password unless you add an `encrypt` operation.
      * @param  bool|null  $preserveXFA  Keep XFA form data (Adobe dynamic forms). Without it, operations that touch the form remove XFA.
      * @param  string|list<int>|null  $pages  PDFs only: which pages to take, in this order.

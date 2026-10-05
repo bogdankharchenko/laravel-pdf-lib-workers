@@ -38,7 +38,7 @@ final class DrawSvg extends Data implements Operation
      * @param  float|Optional  $width
      * @param  float|Optional  $height
      * @param  float|Optional  $fontSize  Default size for SVG text.
-     * @param  array<string, BuiltInFont|FontSource>|Optional  $fonts  Fonts for SVG text, keyed by the font-family name used in the SVG.
+     * @param  array<array-key, BuiltInFont|FontSource>|Optional  $fonts  Fonts for SVG text, keyed by the font-family name used in the SVG.
      * @param  BlendMode|Optional  $blendMode  How the drawing's colours mix with what is underneath.
      */
     public function __construct(

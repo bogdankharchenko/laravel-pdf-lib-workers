@@ -83,19 +83,26 @@ final readonly class FileResponse implements Responsable
         ]);
     }
 
+    /**
+     * The name in a Content-Disposition header: filename* (RFC 6266, for
+     * non-ASCII names) when given, else filename. Paths are cut to the base name.
+     */
     private static function filename(string $disposition): ?string
     {
-        if ($disposition === '') {
-            return null;
-        }
-
-        $name = HeaderUtils::combine(HeaderUtils::split($disposition, ';='))['filename'] ?? null;
+        $params = HeaderUtils::combine(HeaderUtils::split($disposition, ';='));
+        $extended = $params['filename*'] ?? null;
+        $name = is_string($extended) && preg_match("/^UTF-8'[^']*'(.+)$/i", $extended, $match) === 1
+            ? rawurldecode($match[1])
+            : $params['filename'] ?? null;
 
         return is_string($name) && $name !== '' ? basename($name) : null;
     }
 
+    /**
+     * The name with one "_" for each character a plain filename="…" can't hold.
+     */
     private static function ascii(string $filename): string
     {
-        return preg_replace('/[^\x20-\x7e]|[%\/\\\\]/', '_', $filename) ?? 'document';
+        return (string) preg_replace('/[^\x20-\x7e]|[%\/\\\\]/u', '_', mb_scrub($filename, 'UTF-8'));
     }
 }

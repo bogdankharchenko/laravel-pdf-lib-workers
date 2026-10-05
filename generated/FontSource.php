@@ -43,7 +43,7 @@ final readonly class FontSource implements Payload
 
     /**
      * @param  string  $url  http(s) URL the Worker downloads. Some sites block requests from Cloudflare Workers; send those files as uploads instead.
-     * @param  array<string, string>|null  $headers  Extra request headers for `url`, e.g. { "authorization": "Bearer …" } for private files.
+     * @param  array<array-key, string>|null  $headers  Extra request headers for `url`, e.g. { "authorization": "Bearer …" } for private files.
      * @param  string|null  $postscriptName  Picks one face from a .ttc/.dfont collection, e.g. "Helvetica-Bold".
      */
     public static function url(string $url, ?array $headers = null, ?string $postscriptName = null): self

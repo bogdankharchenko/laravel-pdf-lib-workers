@@ -463,7 +463,8 @@ final class Generator
 
         $value = $this->type($schema['additionalProperties'] ?? [], $owner, $property);
 
-        return new PhpType('array', 'array<string, '.$value->docOrNull($value->nullable).'>', 'array', $value->uses, map: true, ambiguous: $value->ambiguous || $value->listOf !== null || $this->isDataClass($value));
+        // array-key, not string: PHP stores keys such as "0" or "2026" as ints.
+        return new PhpType('array', 'array<array-key, '.$value->docOrNull($value->nullable).'>', 'array', $value->uses, map: true, ambiguous: $value->ambiguous || $value->listOf !== null || $this->isDataClass($value));
     }
 
     // ---------- enums ----------
@@ -855,7 +856,7 @@ final class Generator
     // ---------- endpoints and facade ----------
 
     /**
-     * @return list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, body: string}>
+     * @return list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}>
      */
     private function endpointMethods(): array
     {
@@ -879,8 +880,8 @@ final class Generator
             $description = $operation['description'] ?? '';
 
             if ($typedJson) {
-                [$returns, $returnDoc, $body, $returnUses] = $this->jsonReturn($json, str_replace(', %ACCEPT%', '', $call));
-                $methods[] = compact('name', 'summary', 'description', 'params', 'returns', 'returnDoc', 'body') + ['uses' => [...$uses, ...$returnUses]];
+                [$returns, $returnDoc, $body, $returnUses, $bodyUses] = $this->jsonReturn($json, str_replace(', %ACCEPT%', '', $call));
+                $methods[] = compact('name', 'summary', 'description', 'params', 'returns', 'returnDoc', 'body', 'bodyUses') + ['uses' => [...$uses, ...$returnUses]];
             }
             if ($binary) {
                 $accept = isset($ok['application/pdf']) ? "'application/pdf'" : "'*/*'";
@@ -892,6 +893,7 @@ final class Generator
                     'returns' => self::FILE_RESPONSE,
                     'returnDoc' => $this->short(self::FILE_RESPONSE),
                     'uses' => [...$uses, self::FILE_RESPONSE],
+                    'bodyUses' => [],
                     'body' => 'return '.$this->short(self::FILE_RESPONSE).'::fromResponse('.str_replace('%ACCEPT%', $accept, $call).($fallbackName === null ? '' : ", {$fallbackName}").');',
                 ];
             }
@@ -934,8 +936,10 @@ final class Generator
     }
 
     /**
+     * The return type, its PHPDoc, the method body, the classes the type names and the classes only the body names.
+     *
      * @param  array<string, mixed>  $schema
-     * @return array{0: string, 1: string, 2: string, 3: list<string>}
+     * @return array{0: string, 1: string, 2: string, 3: list<string>, 4: list<string>}
      */
     private function jsonReturn(array $schema, string $call): array
     {
@@ -943,23 +947,23 @@ final class Generator
             $members = array_values(array_map(fn (array $m): string => (string) Spec::refName($m), $schema['oneOf']));
             $classes = array_values(array_map(fn (string $m): string => $this->classes[$m], $members));
 
-            return [implode('|', $classes), implode('|', array_map($this->short(...), $classes)), "\$data = {$call}->json();\n\n".$this->resolverBody($members, '$data'), $classes];
+            return [implode('|', $classes), implode('|', array_map($this->short(...), $classes)), "\$data = {$call}->json();\n\n".$this->resolverBody($members, '$data'), $classes, []];
         }
 
         $name = (string) Spec::refName($schema);
         $class = $this->classes[$name];
         $type = $this->refType($name);
 
-        return [$type->native, $type->doc, 'return '.$this->short($class)."::from({$call}->json());", [...$type->uses, $class]];
+        return [$type->native, $type->doc, 'return '.$this->short($class)."::from({$call}->json());", $type->uses, [$class]];
     }
 
     /**
-     * @param  list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, body: string}>  $methods
+     * @param  list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}>  $methods
      */
     private function emitEndpoints(array $methods): void
     {
         $fqcn = self::NS.'\\Endpoints';
-        [$file, $namespace] = $this->file($fqcn, [...array_merge(...array_column($methods, 'uses')), self::API_EXCEPTION]);
+        [$file, $namespace] = $this->file($fqcn, [...array_merge(...array_column($methods, 'uses'), ...array_column($methods, 'bodyUses')), self::API_EXCEPTION]);
         $trait = $namespace->addTrait('Endpoints');
         $trait->addComment("The API's endpoints, one method each. Used by Client.");
 
@@ -981,7 +985,7 @@ final class Generator
     /**
      * The facade, with an @method line per endpoint so IDEs and PHPStan know them.
      *
-     * @param  list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, body: string}>  $methods
+     * @param  list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}>  $methods
      */
     private function emitFacade(array $methods): void
     {

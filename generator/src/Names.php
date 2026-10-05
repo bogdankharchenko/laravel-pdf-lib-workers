@@ -20,7 +20,7 @@ final class Names
             // All-caps words read better as words ("BASIC" → "Basic"). Codes with digits ("4A0", "3B", "SRA4")
             // and mixed case ("UseNone") are kept.
             $part = preg_match('/^[A-Z]{2,}$/', $part) ? ucfirst(strtolower($part)) : ucfirst($part);
-            // Keep digit runs apart: "RC4-40" → "Rc4_40", not "Rc440".
+            // Keep digit runs apart: "RC4-40" → "RC4_40", not "RC440".
             $name .= ($name !== '' && ctype_digit($name[-1]) && ctype_digit($part[0]) ? '_' : '').$part;
         }
 

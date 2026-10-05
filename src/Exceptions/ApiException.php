@@ -28,7 +28,7 @@ class ApiException extends RuntimeException
         $data = $response->json();
         $error = is_array($data) && is_string($data['error'] ?? null)
             ? ErrorResponse::from($data)
-            : new ErrorResponse(error: "HTTP {$response->status()}: ".mb_strimwidth(trim($response->body()), 0, 200, '…'));
+            : new ErrorResponse(error: "HTTP {$response->status()}: ".self::excerpt($response->body()));
 
         $class = match ($response->status()) {
             400 => InvalidRequestException::class,
@@ -42,6 +42,14 @@ class ApiException extends RuntimeException
         };
 
         return new $class($response->status(), $error);
+    }
+
+    /**
+     * The start of a body that isn't an API error, such as a proxy's HTML page, on one line.
+     */
+    private static function excerpt(string $body): string
+    {
+        return mb_strimwidth(trim((string) preg_replace('/\s+/', ' ', $body)), 0, 200, '…');
     }
 
     /**
