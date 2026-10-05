@@ -17,8 +17,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 final readonly class Upload
 {
+    /**
+     * @param  SplFileInfo|null  $file  The file object itself, not just its path: that keeps a
+     *                                  temporary file, such as UploadedFile::fake(), until it is sent.
+     */
     private function __construct(
-        private ?string $path,
+        private ?SplFileInfo $file,
         private ?string $contents,
         public string $filename,
     ) {}
@@ -28,15 +32,15 @@ final readonly class Upload
      */
     public static function fromFile(SplFileInfo|string $file, ?string $filename = null): self
     {
-        $path = $file instanceof SplFileInfo ? $file->getRealPath() : $file;
+        $file = $file instanceof SplFileInfo ? $file : new SplFileInfo($file);
 
-        if ($path === false || ! is_file($path) || ! is_readable($path)) {
-            throw new InvalidArgumentException('Cannot read file: '.($file instanceof SplFileInfo ? $file->getPathname() : $file));
+        if (! $file->isFile() || ! $file->isReadable()) {
+            throw new InvalidArgumentException('Cannot read file: '.$file->getPathname());
         }
 
-        $filename ??= $file instanceof UploadedFile ? $file->getClientOriginalName() : basename($path);
+        $filename ??= $file instanceof UploadedFile ? $file->getClientOriginalName() : $file->getFilename();
 
-        return new self($path, null, $filename);
+        return new self($file, null, $filename);
     }
 
     /**
@@ -68,14 +72,14 @@ final readonly class Upload
      */
     public function body(): mixed
     {
-        if ($this->path === null) {
+        if ($this->file === null) {
             return (string) $this->contents;
         }
 
-        $stream = fopen($this->path, 'rb');
+        $stream = fopen($this->file->getPathname(), 'rb');
 
         if ($stream === false) {
-            throw new InvalidArgumentException("Cannot open file: {$this->path}");
+            throw new InvalidArgumentException('Cannot open file: '.$this->file->getPathname());
         }
 
         return $stream;

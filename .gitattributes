@@ -1,0 +1,12 @@
+# Left out of the package Composer installs: only src/, generated/ and config/ are needed.
+/.github            export-ignore
+/generator          export-ignore
+/tests              export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/openapi.json       export-ignore
+/phpstan.neon.dist  export-ignore
+/phpunit.xml.dist   export-ignore
+
+# Generated from openapi.json: collapsed in diffs on GitHub.
+/generated/**       linguist-generated

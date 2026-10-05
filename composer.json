@@ -3,6 +3,7 @@
     "description": "Laravel client for the pdf-lib-workers API: merge, edit, fill, stamp and inspect PDFs on Cloudflare Workers. Generated from the API's OpenAPI spec.",
     "type": "library",
     "license": "MIT",
+    "authors": [{ "name": "Bogdan Kharchenko" }],
     "keywords": ["laravel", "pdf", "pdf-lib", "cloudflare-workers", "openapi"],
     "require": {
         "php": "^8.3",

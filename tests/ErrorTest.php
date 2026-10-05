@@ -26,7 +26,6 @@ final class ErrorTest extends TestCase
     public static function capturedErrors(): iterable
     {
         yield 'bad operation' => ['error-400', InvalidRequestException::class, 400, 'operations[0] (removePages): Page 9 is out of range (document has 2 pages)'];
-        yield 'invalid fields' => ['error-400-validation', InvalidRequestException::class, 400, 'Invalid request'];
         yield 'wrong key' => ['error-401', UnauthorizedException::class, 401, 'Missing or invalid API key'];
         yield 'missing file' => ['error-404', NotFoundException::class, 404, 'No file at key "missing/file.pdf"'];
         yield 'not a pdf' => ['error-422', UnprocessablePdfException::class, 422, 'Not a PDF (starts with "not a pdf")'];
@@ -81,11 +80,27 @@ final class ErrorTest extends TestCase
 
         $error = $this->catch(fn () => PdfLib::info('in.pdf'));
 
+        $this->assertInstanceOf(InvalidRequestException::class, $error);
+        $this->assertSame('Invalid request', $error->error->error);
+        $this->assertStringStartsWith("Invalid request: operations.0.op: Invalid discriminator value. Expected 'addPage' | ", $error->getMessage());
+
         $fields = $error->fieldErrors();
         $this->assertNotEmpty($fields);
         $this->assertContainsOnlyInstancesOf(FieldError::class, $fields);
         $this->assertSame('operations.0.op', $fields[0]->path);
         $this->assertStringContainsString("Expected 'addPage'", $fields[0]->message);
+    }
+
+    public function test_names_every_invalid_field_in_the_message(): void
+    {
+        Http::fake(['*' => Http::response(['error' => 'Invalid request', 'details' => [
+            ['path' => 'operations.0.x', 'message' => 'Expected number, received string'],
+            ['path' => '', 'message' => 'Unrecognized key: "colour"'],
+        ]], 400)]);
+
+        $error = $this->catch(fn () => PdfLib::info('in.pdf'));
+
+        $this->assertSame('Invalid request: operations.0.x: Expected number, received string; Unrecognized key: "colour"', $error->getMessage());
     }
 
     public function test_keeps_details_given_as_text(): void

@@ -117,6 +117,9 @@ abstract class TestCase extends Orchestra
             if ($contents instanceof StreamInterface) {
                 $contents->rewind();
                 $contents = $contents->getContents();
+            } elseif (is_resource($contents)) { // Laravel 12 records the stream as it was given
+                rewind($contents);
+                $contents = stream_get_contents($contents);
             }
             $parts[$part['name']] = ['contents' => (string) $contents, 'filename' => $part['filename'] ?? null];
         }

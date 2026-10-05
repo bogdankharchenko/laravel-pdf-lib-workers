@@ -12,7 +12,8 @@ use RuntimeException;
 /**
  * The API answered with an error. Catch this to handle every API error, or a
  * subclass for one kind. The message names the failing input, e.g.
- * "operations[2] (removePages): Page 9 is out of range".
+ * "operations[2] (removePages): Page 9 is out of range", or lists the invalid
+ * fields: "Invalid request: operations.0.x: Expected number, received string".
  */
 class ApiException extends RuntimeException
 {
@@ -20,7 +21,7 @@ class ApiException extends RuntimeException
         public readonly int $status,
         public readonly ErrorResponse $error,
     ) {
-        parent::__construct($error->error, $status);
+        parent::__construct(self::describe($error), $status);
     }
 
     public static function fromResponse(Response $response): self
@@ -42,6 +43,20 @@ class ApiException extends RuntimeException
         };
 
         return new $class($response->status(), $error);
+    }
+
+    /**
+     * The error, followed by each invalid field for a 400 validation error.
+     */
+    private static function describe(ErrorResponse $error): string
+    {
+        if (! is_array($error->details) || $error->details === []) {
+            return $error->error;
+        }
+
+        $fields = array_map(fn (FieldError $field): string => $field->path === '' ? $field->message : "{$field->path}: {$field->message}", $error->details);
+
+        return $error->error.': '.implode('; ', $fields);
     }
 
     /**

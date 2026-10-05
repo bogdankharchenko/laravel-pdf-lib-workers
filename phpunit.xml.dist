@@ -11,6 +11,12 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <groups>
+        <!-- tests/LiveTest.php runs against a real deployment; its docblock says how. -->
+        <exclude>
+            <group>live</group>
+        </exclude>
+    </groups>
     <source>
         <include>
             <directory>src</directory>

@@ -90,6 +90,14 @@ final class UploadTest extends TestCase
         $this->assertSame(['contents' => '%PDF-signed', 'filename' => 'Signed contract.pdf'], $this->sentParts()['file1']);
     }
 
+    public function test_keeps_a_temporary_file_until_it_is_sent(): void
+    {
+        // A fake upload's file is deleted once nothing refers to the UploadedFile.
+        PdfLib::info(PdfSource::file(UploadedFile::fake()->createWithContent('scan.pdf', '%PDF-scan')));
+
+        $this->assertSame(['contents' => '%PDF-scan', 'filename' => 'scan.pdf'], $this->sentParts()['file1']);
+    }
+
     public function test_reads_files_from_a_disk(): void
     {
         Storage::fake('templates');

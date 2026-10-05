@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Generated from openapi.json (pdf-lib-workers 0.2.1, sha256 afab6278fb6f).
+ * Generated from openapi.json (pdf-lib-workers 0.2.2, sha256 dcb53f93ae8a).
  * Do not edit: change the API's spec, copy it here and run `composer generate`.
  */
 
@@ -38,7 +38,7 @@ final class SetMetadata extends Data implements Operation
      * @param  string|Optional  $modificationDate  Default: now.
      * @param  string|Optional  $copyright  e.g. "© 2026 Acme Inc. All rights reserved." Shown as Acrobat's copyright notice.
      * @param  string|Optional  $copyrightUrl  Page with licence or ownership details.
-     * @param  array<array-key, string|null>|Optional  $custom  Your own fields, e.g. { "MadeFor": "Client X" }. Keys are letters, digits and _ (max 64). null removes a field.
+     * @param  array<array-key, string|null>|Optional  $custom  Your own fields, e.g. { "MadeFor": "Client X" }. Keys start with a letter, then letters, digits or _ (max 64). null removes a field.
      */
     public function __construct(
         public readonly string|Optional $title = new Optional(),
