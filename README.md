@@ -8,14 +8,16 @@ This version targets **pdf-lib-workers 0.2.2**. The JSON endpoints work with any
 
 ## Install
 
-```bash
-composer require bogdankharchenko/laravel-pdf-lib-workers
-```
-
-While the repository is private, first add it to your app's `composer.json`:
+The repository is private and not on Packagist yet, so first add it to your app's `composer.json`:
 
 ```json
 "repositories": [{ "type": "vcs", "url": "https://github.com/bogdankharchenko/laravel-pdf-lib-workers" }]
+```
+
+Then, until the first release is tagged, require the main branch:
+
+```bash
+composer require bogdankharchenko/laravel-pdf-lib-workers:dev-main
 ```
 
 Then add your deployment's address and API key to `.env`:
