@@ -1,0 +1,78 @@
+tests/RequestBodyTest.php
+  s_11a02fa3fb7722::t_f5d48fa2fe9927 1-170
+  s_11a02fa3fb7722::t_149258f6cc8608 171-192
+tests/ErrorTest.php
+  s_11a02fa3fb7722::t_7459caa2abf84e 1-123
+  s_11a02fa3fb7722::t_8f190b3c44954b 124-131
+tests/ResponseTest.php
+  s_11a02fa3fb7722::t_26241e092b0e29 1-225
+tests/TestCase.php
+  s_11a02fa3fb7722::t_1af79487030b3c 11,13,17-28,62-73,86-107,109,111-121
+  s_11a02fa3fb7722::t_988f0f31fb482b 122-124
+tests/FileResponseTest.php
+  s_11a02fa3fb7722::t_d48d7f295866f4 1-136
+tests/UploadTest.php
+  s_11a02fa3fb7722::t_cbadec733f62db 1-130
+  s_11a02fa3fb7722::t_c9970041eb1651 131-132
+tests/OperationsTest.php
+  s_11a02fa3fb7722::t_9bedcbe114209c 1-93,96
+  s_11a02fa3fb7722::t_606719a7e5f12c 94-95,97-109
+generated/Data/DocumentMetadata.php
+  s_11a02fa3fb7722::t_375cfb486b2f75 28
+generated/FontSource.php
+  s_11a02fa3fb7722::t_769200c547c9eb 46
+generated/MergeSource.php
+  s_11a02fa3fb7722::t_fac5ee140e0ca3 61
+generated/Operations/DrawSvg.php
+  s_11a02fa3fb7722::t_9425a90601f106 41
+generated/Operations/FillForm.php
+  s_11a02fa3fb7722::t_1972f783b7bfc4 33-34
+generated/Operations/SetMetadata.php
+  s_11a02fa3fb7722::t_10a7baa873a296 41
+generated/PdfSource.php
+  s_11a02fa3fb7722::t_50949b0517fda4 48
+generated/Source.php
+  s_11a02fa3fb7722::t_cd4e5daaa427ba 44
+generator/src/Generator.php
+  s_11a02fa3fb7722::t_a0957cff1685d3 466-467,859,883-884,896,939-940,942,950,957,961,966,988
+generator/src/Names.php
+  s_11a02fa3fb7722::t_772a16ea80fab8 23
+phpstan.neon.dist
+  s_11a02fa3fb7722::t_dba570e3dc3720 7
+src/Exceptions/ApiException.php
+  s_11a02fa3fb7722::t_9d901886e02a79 31,47-54
+src/FileResponse.php
+  s_11a02fa3fb7722::t_1d50900dce3be1 86-89,92-96,101-103,106
+src/Support/Encoder.php
+  s_11a02fa3fb7722::t_c6de25aaff969f 9,12,19-21,30-38,42,63,65,67
+src/Support/JsonMap.php
+  s_11a02fa3fb7722::t_de1c747f2b133e 8-9,16
+src/Support/Transformers/JsonObjectTransformer.php
+  s_11a02fa3fb7722::t_24f09a95e452d1 7,13-14,22
+src/Support/Transformers/PassThroughTransformer.php
+  s_11a02fa3fb7722::t_125d496e3ba9d6 1-22
+tests/AppConfigTest.php
+  s_11a02fa3fb7722::t_be0be4a9e5d7a2 1-44
+tests/Generator/GeneratedCodeTest.php
+  s_11a02fa3fb7722::t_4bb7e1642a4762 1-64
+tests/Generator/NamesTest.php
+  s_11a02fa3fb7722::t_7fd70102b7d1ee 1-53
+tests/ServiceProviderTest.php
+  s_11a02fa3fb7722::t_d4559bc3831cae 1-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d2d329f73ed3593b5d289772dd160f5d20421300",
+  "prompts": {},
+  "sessions": {
+    "s_11a02fa3fb7722": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24159d53-2c36-4ac6-a170-c654d0a1d84c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Bogdan Kharchenko <scriptor@gmail.com>"
+    }
+  }
+}
