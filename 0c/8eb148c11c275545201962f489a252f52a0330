@@ -1,0 +1,349 @@
+generator/src/Generator.php
+  s_11a02fa3fb7722::t_21241a2377e627 1-15,20-37,54-103,105-110,114-126,128-132,134-138,140-141,143-164,166-175,177-183,185,187-189,191-193,195-237,240-258,260-261,263-319,321-323,327-329,331-335,337-339,345,348-356,362-367,369,371-372,374,376-386,388-395,397-403,419-421,423-426,429,434-442,444,446-449,451-457,459-464,467-477,479,482-486,489-507,509-510,513,515,517-522,527-529,536-537,542,545,549-550,602-604,608,610-613,615-618,620-627,629,631-633,635,637-648,650-653,657-658,660-679,682,685-694,696-701,703,706-712,714-716,720-728,731-758,760-762,764-766,770-774,776,778-788,790-797,800-804,806-809,811,813-821,824-832,836,838,840,842-843,845,847-849,851,853-857,859-869,871-877,880-881,884-888,891-894,896-906,908-911,913-914,917,919-921,923-927,929-932,934-942,945,947-948,952,954-955,960-972,975-982,985,987-988,990-994,996,998-1029,1032-1046,1050-1063,1066-1078,1080-1101
+  s_11a02fa3fb7722::t_c55113a858d9ef 16-19,38-53,104,111-113,127,133,139,142,165,176,184,186,190,194,238-239,259,262,320,324-326,330,340-344,346-347,357-361,368,370,373,375,387,396,404-418,422,427-428,430-433,443,445,450,458,466,478,480-481,487-488,508,511-512,514,516,523-526,530-535,538-541,543-544,546-548,551-601,605-607,609,614,619,634,636,649,654-656,659,680-681,683-684,695,702,704-705,713,717-719,729-730,759,763,767-769,775,777,789,798-799,805,810,812,822-823,833-835,837,839,841,846,850,852,858,870,878-879,882-883,889-890,895,907,912,915-916,918,922,928,933,946,949-951,953,956-959,973-974,983-984,986,989,995,997,1030-1031,1047-1049,1064-1065,1079
+  s_11a02fa3fb7722::t_afe5e475708f3c 336
+  s_11a02fa3fb7722::t_f763d300100a81 465
+  s_11a02fa3fb7722::t_efdb188a5b5301 628
+  s_11a02fa3fb7722::t_1caf357cf05eef 630
+  s_11a02fa3fb7722::t_cef744bb63c317 844
+  s_11a02fa3fb7722::t_d7cd08b73c7836 943-944
+generator/src/PhpType.php
+  s_11a02fa3fb7722::t_a0e1a28c0ef13f 8,13-15,18-21,26,29-32,35,37,42
+  s_11a02fa3fb7722::t_ba373c086e7eb7 1-7,9-12,16-17,22-25,27-28,33-34,36,38-41,43-61
+.gitignore
+  s_11a02fa3fb7722::t_c3f01fbb479acf 1-4
+composer.json
+  s_11a02fa3fb7722::t_237e6ed7d25d8f 1-46
+config/pdf-lib-workers.php
+  s_11a02fa3fb7722::t_28b41eb5105f98 1-22
+generated/Data/AttachmentInfo.php
+  s_11a02fa3fb7722::t_a9310892ea64f8 1-31
+generated/Data/Box.php
+  s_11a02fa3fb7722::t_95139f545b6da6 1-32
+generated/Data/ClipBox.php
+  s_11a02fa3fb7722::t_a95f4fb02648dd 1-32
+generated/Data/DocumentMetadata.php
+  s_11a02fa3fb7722::t_7b41fc9702fa2c 1-45
+generated/Data/DocumentScript.php
+  s_11a02fa3fb7722::t_88a4974c8aef06 1-25
+generated/Data/ErrorResponse.php
+  s_11a02fa3fb7722::t_13067a532bf6da 1-28
+generated/Data/ExtractResponse.php
+  s_11a02fa3fb7722::t_94df13e8042c0c 1-28
+generated/Data/ExtractedAttachment.php
+  s_11a02fa3fb7722::t_d97b7c5174b783 1-40
+generated/Data/ExtractedGraphic.php
+  s_11a02fa3fb7722::t_71389f6ccddfdf 1-31
+generated/Data/ExtractedImage.php
+  s_11a02fa3fb7722::t_6d83a71364a04a 1-47
+generated/Data/ExtractedPage.php
+  s_11a02fa3fb7722::t_55825901da531a 1-32
+generated/Data/FieldError.php
+  s_11a02fa3fb7722::t_2499a28d71188a 1-25
+generated/Data/FieldScript.php
+  s_11a02fa3fb7722::t_21ebeb0679da23 1-27
+generated/Data/FieldSettings.php
+  s_11a02fa3fb7722::t_61c8567e7c9322 1-53
+generated/Data/FormField.php
+  s_11a02fa3fb7722::t_c4b2fb6330f410 1-32
+generated/Data/FormInfo.php
+  s_11a02fa3fb7722::t_f3dedbe60809d1 1-30
+generated/Data/InfoResponse.php
+  s_11a02fa3fb7722::t_f04931bfb96093 1-45
+generated/Data/InlinePdf.php
+  s_11a02fa3fb7722::t_96c96c3ba60c9a 1-30
+generated/Data/Layer.php
+  s_11a02fa3fb7722::t_6870c454f5f52f 1-28
+generated/Data/LockedInfoResponse.php
+  s_11a02fa3fb7722::t_56dd5b9f563758 1-34
+generated/Data/MeasureResponse.php
+  s_11a02fa3fb7722::t_377a62eb7075b5 1-35
+generated/Data/MeasuredLine.php
+  s_11a02fa3fb7722::t_63406615c76f09 1-25
+generated/Data/Output.php
+  s_11a02fa3fb7722::t_f63ee41dce5b73 1-35
+generated/Data/PageBoxes.php
+  s_11a02fa3fb7722::t_22734aa8b32635 1-34
+generated/Data/PageInfo.php
+  s_11a02fa3fb7722::t_9cd152207510e9 1-31
+generated/Data/PageRange.php
+  s_11a02fa3fb7722::t_c5a0ee3ffb49f3 1-28
+generated/Data/PageScript.php
+  s_11a02fa3fb7722::t_32e5a9f9fbca20 1-27
+generated/Data/PageText.php
+  s_11a02fa3fb7722::t_04750823b71539 1-29
+generated/Data/PdfResult.php
+  s_11a02fa3fb7722::t_a4d826e3c018ae 1-29
+generated/Data/Permissions.php
+  s_11a02fa3fb7722::t_bd8ec24cb7a795 1-40
+generated/Data/Point.php
+  s_11a02fa3fb7722::t_f426170228649f 1-28
+generated/Data/RadioChoice.php
+  s_11a02fa3fb7722::t_1d250347c3e11e 1-37
+generated/Data/Rect.php
+  s_11a02fa3fb7722::t_9410d9d01b3598 1-32
+generated/Data/ScriptsResponse.php
+  s_11a02fa3fb7722::t_32970a1ab9bc13 1-34
+generated/Data/SignatureField.php
+  s_11a02fa3fb7722::t_32c57a468be6c6 1-26
+generated/Data/SplitPart.php
+  s_11a02fa3fb7722::t_692896f51b223b 1-31
+generated/Data/SplitResponse.php
+  s_11a02fa3fb7722::t_2b3771d0a88bc9 1-25
+generated/Data/StoredPdf.php
+  s_11a02fa3fb7722::t_a2f26dc71fa623 1-34
+generated/Data/TextItem.php
+  s_11a02fa3fb7722::t_9bbdc39f66170a 1-31
+generated/Data/TextResponse.php
+  s_11a02fa3fb7722::t_6f02da4fb34adb 1-25
+generated/Data/ViewerPreferences.php
+  s_11a02fa3fb7722::t_cae87f00e77dc0 1-56
+generated/Data/XfaScript.php
+  s_11a02fa3fb7722::t_c74320e8bcc9be 1-27
+generated/Endpoints.php
+  s_11a02fa3fb7722::t_ca1d342c719c36 1-363
+generated/Enums/AddFormFieldType.php
+  s_11a02fa3fb7722::t_f7d0b03f9d4bf3 1-20
+generated/Enums/Alignment.php
+  s_11a02fa3fb7722::t_eeb60dec148a59 1-20
+generated/Enums/AttachFileRelationship.php
+  s_11a02fa3fb7722::t_f3fa921e58221c 1-24
+generated/Enums/BlendMode.php
+  s_11a02fa3fb7722::t_b79917573a593a 1-29
+generated/Enums/BuiltInFont.php
+  s_11a02fa3fb7722::t_fa0967f615f0cc 1-31
+generated/Enums/ConvertToPDFAConformance.php
+  s_11a02fa3fb7722::t_252989b48f6251 1-19
+generated/Enums/DrawSvgPathFillRule.php
+  s_11a02fa3fb7722::t_3f0f619db0983f 1-16
+generated/Enums/DrawTextRenderMode.php
+  s_11a02fa3fb7722::t_cae43c1f032168 1-21
+generated/Enums/EmbedFacturXConformanceLevel.php
+  s_11a02fa3fb7722::t_a76f53ab1dbf0b 1-20
+generated/Enums/EncryptAlgorithm.php
+  s_11a02fa3fb7722::t_418bd9d2f0e2c0 1-18
+generated/Enums/ExtractInclude.php
+  s_11a02fa3fb7722::t_04582a6f3388de 1-18
+generated/Enums/ExtractedImageMimeType.php
+  s_11a02fa3fb7722::t_0553741e9ee718 1-16
+generated/Enums/FormFieldType.php
+  s_11a02fa3fb7722::t_2ac25e7757cd97 1-22
+generated/Enums/LineCap.php
+  s_11a02fa3fb7722::t_a05adea957d78b 1-20
+generated/Enums/Origin.php
+  s_11a02fa3fb7722::t_90a4ee1402d948 1-19
+generated/Enums/PageNumbersPosition.php
+  s_11a02fa3fb7722::t_64c91d64fbc554 1-20
+generated/Enums/PaperSize.php
+  s_11a02fa3fb7722::t_98c53ac3959f5d 1-64
+generated/Enums/PermissionsPrinting.php
+  s_11a02fa3fb7722::t_e0b9e451aef306 1-16
+generated/Enums/Position.php
+  s_11a02fa3fb7722::t_1f3bb3e6d5e4cf 1-24
+generated/Enums/ScalePagesTarget.php
+  s_11a02fa3fb7722::t_16845dee7679e2 1-20
+generated/Enums/SetFieldScriptEvent.php
+  s_11a02fa3fb7722::t_5a81ff4db3affc 1-24
+generated/Enums/SetViewerPreferencesDuplex.php
+  s_11a02fa3fb7722::t_6638939ccf98eb 1-17
+generated/Enums/SetViewerPreferencesNonFullScreenPageMode.php
+  s_11a02fa3fb7722::t_90d54edd56e598 1-21
+generated/Enums/SetViewerPreferencesPageLayout.php
+  s_11a02fa3fb7722::t_39fc667dae890d 1-20
+generated/Enums/SetViewerPreferencesPageMode.php
+  s_11a02fa3fb7722::t_c95082383e7067 1-23
+generated/Enums/SetViewerPreferencesPrintScaling.php
+  s_11a02fa3fb7722::t_ed07202ec300a2 1-19
+generated/Enums/SetViewerPreferencesReadingDirection.php
+  s_11a02fa3fb7722::t_d6ae3c11a01685 1-16
+generated/Enums/SignatureFieldSource.php
+  s_11a02fa3fb7722::t_97f0ef75aadfb1 1-16
+generated/Facades/PdfLib.php
+  s_11a02fa3fb7722::t_91d44954b3ff8f 1-59
+generated/FontSource.php
+  s_11a02fa3fb7722::t_9f50d897863c5f 1-121
+generated/MergeSource.php
+  s_11a02fa3fb7722::t_7cfedf8ff9c19d 1-207
+generated/Operations/AddFormField.php
+  s_11a02fa3fb7722::t_bad4ddc5d4fabb 1-114
+generated/Operations/AddJavaScript.php
+  s_11a02fa3fb7722::t_7f06fafe9769ae 1-35
+generated/Operations/AddPage.php
+  s_11a02fa3fb7722::t_5f45d1a2854c03 1-39
+generated/Operations/AttachFile.php
+  s_11a02fa3fb7722::t_586f71dca9451d 1-48
+generated/Operations/ConvertToPDFA.php
+  s_11a02fa3fb7722::t_c41ce0972425f0 1-42
+generated/Operations/CropPages.php
+  s_11a02fa3fb7722::t_b6e2aafc776017 1-42
+generated/Operations/DeleteXFA.php
+  s_11a02fa3fb7722::t_e29c3e3030cf74 1-29
+generated/Operations/DetachFile.php
+  s_11a02fa3fb7722::t_b3d0c98827a20c 1-33
+generated/Operations/DrawEllipse.php
+  s_11a02fa3fb7722::t_0c0ef88ca1aad6 1-67
+generated/Operations/DrawImage.php
+  s_11a02fa3fb7722::t_6b6e696c4f4ab0 1-59
+generated/Operations/DrawLine.php
+  s_11a02fa3fb7722::t_d7836688a4daad 1-58
+generated/Operations/DrawPdfPage.php
+  s_11a02fa3fb7722::t_a66612848e0403 1-68
+generated/Operations/DrawRectangle.php
+  s_11a02fa3fb7722::t_bd6375fc39fb99 1-75
+generated/Operations/DrawSvg.php
+  s_11a02fa3fb7722::t_a1f65cf2a6cacf 1-59
+generated/Operations/DrawSvgPath.php
+  s_11a02fa3fb7722::t_183354eede8d06 1-70
+generated/Operations/DrawText.php
+  s_11a02fa3fb7722::t_054e185527ef57 1-77
+generated/Operations/DuplicatePage.php
+  s_11a02fa3fb7722::t_e63ea547a50e8d 1-36
+generated/Operations/EmbedFacturX.php
+  s_11a02fa3fb7722::t_ce0ad1f8ca4dab 1-46
+generated/Operations/Encrypt.php
+  s_11a02fa3fb7722::t_6a43d5f0c8a65f 1-44
+generated/Operations/FillForm.php
+  s_11a02fa3fb7722::t_e6c5ea0462c22f 1-52
+generated/Operations/FlattenForm.php
+  s_11a02fa3fb7722::t_6c666432c1b492 1-36
+generated/Operations/InsertPdf.php
+  s_11a02fa3fb7722::t_95b41efbd5c2f3 1-44
+generated/Operations/PageNumbers.php
+  s_11a02fa3fb7722::t_ff555f723ae4fe 1-51
+generated/Operations/RemoveFormFields.php
+  s_11a02fa3fb7722::t_bdbc16a87ce7d2 1-33
+generated/Operations/RemovePages.php
+  s_11a02fa3fb7722::t_461404d5295718 1-33
+generated/Operations/ResizePages.php
+  s_11a02fa3fb7722::t_d53aae792861c9 1-39
+generated/Operations/RotatePages.php
+  s_11a02fa3fb7722::t_02159268da24c5 1-38
+generated/Operations/ScalePages.php
+  s_11a02fa3fb7722::t_c287c25c02c232 1-39
+generated/Operations/SelectPages.php
+  s_11a02fa3fb7722::t_1a0510c2688e3b 1-33
+generated/Operations/SetFieldProperties.php
+  s_11a02fa3fb7722::t_a001cb1a938070 1-84
+generated/Operations/SetFieldScript.php
+  s_11a02fa3fb7722::t_e242c77f6cb3a3 1-38
+generated/Operations/SetLayerVisibility.php
+  s_11a02fa3fb7722::t_308e3a79106119 1-34
+generated/Operations/SetMetadata.php
+  s_11a02fa3fb7722::t_652271839123b7 1-61
+generated/Operations/SetPageBoxes.php
+  s_11a02fa3fb7722::t_35b955c1d0e8ff 1-45
+generated/Operations/SetViewerPreferences.php
+  s_11a02fa3fb7722::t_47bd4c94b6bf93 1-68
+generated/Operations/SetXFAJavaScript.php
+  s_11a02fa3fb7722::t_629a1b15dfdeeb 1-37
+generated/Operations/TranslateContent.php
+  s_11a02fa3fb7722::t_806a399fd8a916 1-38
+generated/Operations/Watermark.php
+  s_11a02fa3fb7722::t_0b271aee527902 1-61
+generated/PdfSource.php
+  s_11a02fa3fb7722::t_d14ac10798ecc4 1-146
+generated/Source.php
+  s_11a02fa3fb7722::t_6a0d048a7ece79 1-105
+generator/generate.php
+  s_11a02fa3fb7722::t_83e42fb4acd74a 1-34
+generator/src/Names.php
+  s_11a02fa3fb7722::t_3006f15987dafe 1-66
+generator/src/Spec.php
+  s_11a02fa3fb7722::t_60ddcb203631b3 1-79
+openapi.json
+  s_11a02fa3fb7722::t_b02c573f3cfaab 1-6454
+phpstan.neon.dist
+  s_11a02fa3fb7722::t_8d587640d941a4 1-7
+phpunit.xml.dist
+  s_11a02fa3fb7722::t_8ace5a958e4718 1-20
+src/Client.php
+  s_11a02fa3fb7722::t_b0a9f7aa1a98ac 1-95
+src/Contracts/Operation.php
+  s_11a02fa3fb7722::t_32482f4e046e72 1-11
+src/Contracts/Payload.php
+  s_11a02fa3fb7722::t_c67212f4ff5a70 1-20
+src/Exceptions/ApiException.php
+  s_11a02fa3fb7722::t_c14c7c54c14cfb 1-56
+src/Exceptions/InvalidRequestException.php
+  s_11a02fa3fb7722::t_31d38aac2156ac 1-10
+src/Exceptions/MissingConfigurationException.php
+  s_11a02fa3fb7722::t_20e269e595b6fb 1-15
+src/Exceptions/NotFoundException.php
+  s_11a02fa3fb7722::t_55213b8c24b79d 1-10
+src/Exceptions/ServerException.php
+  s_11a02fa3fb7722::t_6410f762ebca91 1-10
+src/Exceptions/SourceTimeoutException.php
+  s_11a02fa3fb7722::t_4d2bcd264eb7e5 1-10
+src/Exceptions/SourceTooLargeException.php
+  s_11a02fa3fb7722::t_56447c00494b5a 1-10
+src/Exceptions/SourceUnavailableException.php
+  s_11a02fa3fb7722::t_2ce823dbbab98b 1-10
+src/Exceptions/UnauthorizedException.php
+  s_11a02fa3fb7722::t_480aa29e3b3784 1-10
+src/Exceptions/UnprocessablePdfException.php
+  s_11a02fa3fb7722::t_e6b5bb481d25ae 1-10
+src/FileResponse.php
+  s_11a02fa3fb7722::t_fe5e6349ffa247 1-101
+src/PdfLibWorkersServiceProvider.php
+  s_11a02fa3fb7722::t_68dadde87664c1 1-38
+src/Support/Casts/DataListOrScalarCast.php
+  s_11a02fa3fb7722::t_416c95888ad393 1-37
+src/Support/Encoder.php
+  s_11a02fa3fb7722::t_1212fcfa974f7d 1-71
+src/Support/Fields.php
+  s_11a02fa3fb7722::t_f946b77b0df34b 1-22
+src/Support/JsonMap.php
+  s_11a02fa3fb7722::t_077583e46fef95 1-18
+src/Support/Transformers/JsonObjectTransformer.php
+  s_11a02fa3fb7722::t_09930fdf9d0b93 1-23
+src/Upload.php
+  s_11a02fa3fb7722::t_86b841612cda24 1-83
+tests/TestCase.php
+  s_11a02fa3fb7722::t_b3ebd2d3fadcc9 1-83
+tests/fixtures/create-inline.json
+  s_11a02fa3fb7722::t_0a540d88d0b0a6 1-8
+tests/fixtures/create-stored.json
+  s_11a02fa3fb7722::t_eedda80b9adc38 1-10
+tests/fixtures/error-400-validation.json
+  s_11a02fa3fb7722::t_99b394e9054913 1-12
+tests/fixtures/error-400.json
+  s_11a02fa3fb7722::t_9da1c55b455816 1-6
+tests/fixtures/error-401.json
+  s_11a02fa3fb7722::t_79987829e56e30 1-6
+tests/fixtures/error-404.json
+  s_11a02fa3fb7722::t_d71137f38f43f6 1-6
+tests/fixtures/error-422.json
+  s_11a02fa3fb7722::t_71b8eeb36588ed 1-6
+tests/fixtures/extract-inline.json
+  s_11a02fa3fb7722::t_b19d4093368825 1-46
+tests/fixtures/extract-stored.json
+  s_11a02fa3fb7722::t_e53524b6a925b6 1-72
+tests/fixtures/info-locked.json
+  s_11a02fa3fb7722::t_98e217f2288bab 1-86
+tests/fixtures/info.json
+  s_11a02fa3fb7722::t_b291972cf9f98a 1-202
+tests/fixtures/measure.json
+  s_11a02fa3fb7722::t_97eab8565d8549 1-20
+tests/fixtures/scripts.json
+  s_11a02fa3fb7722::t_cfb55da3924433 1-14
+tests/fixtures/split.json
+  s_11a02fa3fb7722::t_a8e7a6eef4dce7 1-25
+tests/fixtures/text-items.json
+  s_11a02fa3fb7722::t_58a4860f1a6877 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0c8eb148c11c275545201962f489a252f52a0330",
+  "prompts": {},
+  "sessions": {
+    "s_11a02fa3fb7722": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24159d53-2c36-4ac6-a170-c654d0a1d84c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Bogdan Kharchenko <scriptor@gmail.com>"
+    }
+  }
+}
