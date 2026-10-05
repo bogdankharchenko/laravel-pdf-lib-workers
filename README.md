@@ -14,13 +14,13 @@ The repository is private and not on Packagist yet, so first add it to your app'
 "repositories": [{ "type": "vcs", "url": "https://github.com/bogdankharchenko/laravel-pdf-lib-workers" }]
 ```
 
-Then, until the first release is tagged, require the main branch:
+Then require it:
 
 ```bash
-composer require bogdankharchenko/laravel-pdf-lib-workers:dev-main
+composer require bogdankharchenko/laravel-pdf-lib-workers
 ```
 
-Then add your deployment's address and API key to `.env`:
+Add your deployment's address and API key to `.env`:
 
 ```dotenv
 PDF_LIB_WORKERS_URL=https://pdf-lib-workers.your-subdomain.workers.dev
