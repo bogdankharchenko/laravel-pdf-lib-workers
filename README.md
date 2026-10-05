@@ -4,8 +4,6 @@ Merge, fill, stamp, split and read PDFs from Laravel, using your own deployment 
 
 Every endpoint, operation, option and reply is generated from the API's OpenAPI spec as typed [laravel-data](https://spatie.be/docs/laravel-data) classes. Your IDE and PHPStan know every field, and the docblocks repeat the API's own documentation.
 
-This version targets **pdfmill 0.3.0**. Getting the PDF itself (`file()`, `download()`, or returning it from a route) needs 0.2.0 or later; everything else works from 0.1.0.
-
 ## Install
 
 It isn't on Packagist yet, so first add the repository to your app's `composer.json`:
