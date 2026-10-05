@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Contracts;
+namespace BogdanKharchenko\PdfMill\Contracts;
 
 /**
  * One step of an `operations` list. Every class in the Operations namespace

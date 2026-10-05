@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Support;
+namespace BogdanKharchenko\PdfMill\Support;
 
 /**
  * Marks an array as a JSON object, so it is sent as {} when empty and keeps

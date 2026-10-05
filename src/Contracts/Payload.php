@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Contracts;
+namespace BogdanKharchenko\PdfMill\Contracts;
 
 /**
  * A source (Source, PdfSource, MergeSource, FontSource): sent as a JSON object.

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\PdfLibWorkersServiceProvider;
+use BogdanKharchenko\PdfMill\PdfMillServiceProvider;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -28,13 +28,13 @@ abstract class TestCase extends Orchestra
 
     protected function getPackageProviders($app): array
     {
-        return [LaravelDataServiceProvider::class, PdfLibWorkersServiceProvider::class];
+        return [LaravelDataServiceProvider::class, PdfMillServiceProvider::class];
     }
 
     protected function defineEnvironment($app): void
     {
-        $app['config']->set('pdf-lib-workers.url', 'https://pdf.test');
-        $app['config']->set('pdf-lib-workers.key', 'test-key');
+        $app['config']->set('pdfmill.url', 'https://pdf.test');
+        $app['config']->set('pdfmill.key', 'test-key');
     }
 
     /**

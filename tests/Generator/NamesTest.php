@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests\Generator;
+namespace BogdanKharchenko\PdfMill\Tests\Generator;
 
-use BogdanKharchenko\PdfLibWorkers\Generator\Names;
+use BogdanKharchenko\PdfMill\Generator\Names;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;

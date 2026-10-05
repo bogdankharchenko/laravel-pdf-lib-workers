@@ -2,34 +2,34 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\Data\AttachmentInfo;
-use BogdanKharchenko\PdfLibWorkers\Data\Box;
-use BogdanKharchenko\PdfLibWorkers\Data\DocumentMetadata;
-use BogdanKharchenko\PdfLibWorkers\Data\DocumentScript;
-use BogdanKharchenko\PdfLibWorkers\Data\ExtractedAttachment;
-use BogdanKharchenko\PdfLibWorkers\Data\ExtractedGraphic;
-use BogdanKharchenko\PdfLibWorkers\Data\ExtractedImage;
-use BogdanKharchenko\PdfLibWorkers\Data\ExtractedPage;
-use BogdanKharchenko\PdfLibWorkers\Data\FieldSettings;
-use BogdanKharchenko\PdfLibWorkers\Data\FormField;
-use BogdanKharchenko\PdfLibWorkers\Data\FormInfo;
-use BogdanKharchenko\PdfLibWorkers\Data\InfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\LockedInfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\MeasuredLine;
-use BogdanKharchenko\PdfLibWorkers\Data\PageBoxes;
-use BogdanKharchenko\PdfLibWorkers\Data\PageInfo;
-use BogdanKharchenko\PdfLibWorkers\Data\PageRange;
-use BogdanKharchenko\PdfLibWorkers\Data\PageText;
-use BogdanKharchenko\PdfLibWorkers\Data\SplitPart;
-use BogdanKharchenko\PdfLibWorkers\Data\StoredPdf;
-use BogdanKharchenko\PdfLibWorkers\Data\TextItem;
-use BogdanKharchenko\PdfLibWorkers\Data\ViewerPreferences;
-use BogdanKharchenko\PdfLibWorkers\Enums\Alignment;
-use BogdanKharchenko\PdfLibWorkers\Enums\ExtractedImageMimeType;
-use BogdanKharchenko\PdfLibWorkers\Enums\FormFieldType;
-use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
+use BogdanKharchenko\PdfMill\Data\AttachmentInfo;
+use BogdanKharchenko\PdfMill\Data\Box;
+use BogdanKharchenko\PdfMill\Data\DocumentMetadata;
+use BogdanKharchenko\PdfMill\Data\DocumentScript;
+use BogdanKharchenko\PdfMill\Data\ExtractedAttachment;
+use BogdanKharchenko\PdfMill\Data\ExtractedGraphic;
+use BogdanKharchenko\PdfMill\Data\ExtractedImage;
+use BogdanKharchenko\PdfMill\Data\ExtractedPage;
+use BogdanKharchenko\PdfMill\Data\FieldSettings;
+use BogdanKharchenko\PdfMill\Data\FormField;
+use BogdanKharchenko\PdfMill\Data\FormInfo;
+use BogdanKharchenko\PdfMill\Data\InfoResponse;
+use BogdanKharchenko\PdfMill\Data\LockedInfoResponse;
+use BogdanKharchenko\PdfMill\Data\MeasuredLine;
+use BogdanKharchenko\PdfMill\Data\PageBoxes;
+use BogdanKharchenko\PdfMill\Data\PageInfo;
+use BogdanKharchenko\PdfMill\Data\PageRange;
+use BogdanKharchenko\PdfMill\Data\PageText;
+use BogdanKharchenko\PdfMill\Data\SplitPart;
+use BogdanKharchenko\PdfMill\Data\StoredPdf;
+use BogdanKharchenko\PdfMill\Data\TextItem;
+use BogdanKharchenko\PdfMill\Data\ViewerPreferences;
+use BogdanKharchenko\PdfMill\Enums\Alignment;
+use BogdanKharchenko\PdfMill\Enums\ExtractedImageMimeType;
+use BogdanKharchenko\PdfMill\Enums\FormFieldType;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
 use Closure;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spatie\LaravelData\Data;
@@ -44,15 +44,15 @@ final class ResponseTest extends TestCase
      */
     public static function endpoints(): iterable
     {
-        yield 'info' => ['info', '/pdf/info', fn () => PdfLib::info('in.pdf')];
-        yield 'info, locked' => ['info-locked', '/pdf/info', fn () => PdfLib::info('locked.pdf')];
-        yield 'text' => ['text-items', '/pdf/text', fn () => PdfLib::text('in.pdf', items: true)];
-        yield 'extract, stored' => ['extract-stored', '/pdf/extract', fn () => PdfLib::extract('in.pdf')];
-        yield 'extract, inline' => ['extract-inline', '/pdf/extract', fn () => PdfLib::extract('in.pdf', store: false)];
-        yield 'scripts' => ['scripts', '/pdf/scripts', fn () => PdfLib::scripts('in.pdf')];
-        yield 'measure' => ['measure', '/text/measure', fn () => PdfLib::measureText('Quarterly report for Acme Inc.', maxWidth: 140, fitHeight: 20)];
-        yield 'split' => ['split', '/pdf/split', fn () => PdfLib::split('in.pdf')];
-        yield 'create' => ['create-stored', '/pdf/create', fn () => PdfLib::create()->store()];
+        yield 'info' => ['info', '/pdf/info', fn () => PdfMill::info('in.pdf')];
+        yield 'info, locked' => ['info-locked', '/pdf/info', fn () => PdfMill::info('locked.pdf')];
+        yield 'text' => ['text-items', '/pdf/text', fn () => PdfMill::text('in.pdf', items: true)];
+        yield 'extract, stored' => ['extract-stored', '/pdf/extract', fn () => PdfMill::extract('in.pdf')];
+        yield 'extract, inline' => ['extract-inline', '/pdf/extract', fn () => PdfMill::extract('in.pdf', store: false)];
+        yield 'scripts' => ['scripts', '/pdf/scripts', fn () => PdfMill::scripts('in.pdf')];
+        yield 'measure' => ['measure', '/text/measure', fn () => PdfMill::measureText('Quarterly report for Acme Inc.', maxWidth: 140, fitHeight: 20)];
+        yield 'split' => ['split', '/pdf/split', fn () => PdfMill::split('in.pdf')];
+        yield 'create' => ['create-stored', '/pdf/create', fn () => PdfMill::create()->store()];
     }
 
     /**
@@ -73,7 +73,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('info');
 
-        $info = PdfLib::info('in.pdf');
+        $info = PdfMill::info('in.pdf');
 
         $this->assertInstanceOf(InfoResponse::class, $info);
         $this->assertSame(2, $info->pageCount);
@@ -113,7 +113,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('info-locked');
 
-        $info = PdfLib::info('locked.pdf');
+        $info = PdfMill::info('locked.pdf');
 
         $this->assertInstanceOf(LockedInfoResponse::class, $info);
         $this->assertTrue($info->needsPassword);
@@ -124,7 +124,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('text-items');
 
-        $page = PdfLib::text('in.pdf', items: true)->pages[0];
+        $page = PdfMill::text('in.pdf', items: true)->pages[0];
 
         $this->assertInstanceOf(PageText::class, $page);
         $this->assertSame('Invoice 42', $page->text);
@@ -137,7 +137,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('extract-stored');
 
-        $extracted = PdfLib::extract('in.pdf');
+        $extracted = PdfMill::extract('in.pdf');
 
         $page = $extracted->pages[0];
         $this->assertInstanceOf(ExtractedPage::class, $page);
@@ -158,7 +158,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('extract-inline');
 
-        $image = PdfLib::extract('in.pdf', store: false)->pages[0]->images[0] ?? null;
+        $image = PdfMill::extract('in.pdf', store: false)->pages[0]->images[0] ?? null;
 
         $this->assertInstanceOf(ExtractedImage::class, $image);
         $this->assertNull($image->key);
@@ -170,7 +170,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('scripts');
 
-        $scripts = PdfLib::scripts('in.pdf');
+        $scripts = PdfMill::scripts('in.pdf');
 
         $this->assertInstanceOf(DocumentScript::class, $scripts->document[0]);
         $this->assertSame("app.alert('hi');", $scripts->document[0]->script);
@@ -181,7 +181,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('measure');
 
-        $measured = PdfLib::measureText('Quarterly report for Acme Inc.', maxWidth: 140, fitHeight: 20);
+        $measured = PdfMill::measureText('Quarterly report for Acme Inc.', maxWidth: 140, fitHeight: 20);
 
         $this->assertInstanceOf(MeasuredLine::class, $measured->lines[0]);
         $this->assertSame('for Acme Inc.', $measured->lines[1]->text);
@@ -192,7 +192,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('split');
 
-        $part = PdfLib::split('in.pdf')->parts[1];
+        $part = PdfMill::split('in.pdf')->parts[1];
 
         $this->assertInstanceOf(SplitPart::class, $part);
         $this->assertSame([2], $part->pages);
@@ -203,7 +203,7 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('create-stored');
 
-        $pdf = PdfLib::create()->store();
+        $pdf = PdfMill::create()->store();
 
         $this->assertInstanceOf(StoredPdf::class, $pdf);
         $this->assertSame(2, $pdf->pageCount);

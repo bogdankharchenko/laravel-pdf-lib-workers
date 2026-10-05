@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Support\Transformers;
+namespace BogdanKharchenko\PdfMill\Support\Transformers;
 
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;

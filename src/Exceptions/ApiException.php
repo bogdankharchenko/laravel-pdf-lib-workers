@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Exceptions;
+namespace BogdanKharchenko\PdfMill\Exceptions;
 
-use BogdanKharchenko\PdfLibWorkers\Data\ErrorResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\FieldError;
+use BogdanKharchenko\PdfMill\Data\ErrorResponse;
+use BogdanKharchenko\PdfMill\Data\FieldError;
 use Illuminate\Http\Client\Response;
 use RuntimeException;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Exceptions;
+namespace BogdanKharchenko\PdfMill\Exceptions;
 
 /**
  * HTTP 504: a URL source timed out.

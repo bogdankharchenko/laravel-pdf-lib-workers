@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Exceptions;
+namespace BogdanKharchenko\PdfMill\Exceptions;
 
 /**
  * HTTP 500 or another status: the API is misconfigured or failed unexpectedly.

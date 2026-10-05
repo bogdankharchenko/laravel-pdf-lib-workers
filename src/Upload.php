@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers;
+namespace BogdanKharchenko\PdfMill;
 
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;

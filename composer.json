@@ -1,6 +1,6 @@
 {
-    "name": "bogdankharchenko/laravel-pdf-lib-workers",
-    "description": "Laravel client for the pdf-lib-workers API: merge, edit, fill, stamp and inspect PDFs on Cloudflare Workers. Generated from the API's OpenAPI spec.",
+    "name": "bogdankharchenko/laravel-pdfmill",
+    "description": "Laravel client for the pdfmill API: merge, edit, fill, stamp and inspect PDFs on Cloudflare Workers. Generated from the API's OpenAPI spec.",
     "type": "library",
     "license": "MIT",
     "authors": [{ "name": "Bogdan Kharchenko" }],
@@ -20,13 +20,13 @@
     },
     "autoload": {
         "psr-4": {
-            "BogdanKharchenko\\PdfLibWorkers\\": ["src/", "generated/"]
+            "BogdanKharchenko\\PdfMill\\": ["src/", "generated/"]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BogdanKharchenko\\PdfLibWorkers\\Generator\\": "generator/src/",
-            "BogdanKharchenko\\PdfLibWorkers\\Tests\\": "tests/"
+            "BogdanKharchenko\\PdfMill\\Generator\\": "generator/src/",
+            "BogdanKharchenko\\PdfMill\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -37,8 +37,8 @@
     },
     "extra": {
         "laravel": {
-            "providers": ["BogdanKharchenko\\PdfLibWorkers\\PdfLibWorkersServiceProvider"],
-            "aliases": { "PdfLib": "BogdanKharchenko\\PdfLibWorkers\\Facades\\PdfLib" }
+            "providers": ["BogdanKharchenko\\PdfMill\\PdfMillServiceProvider"],
+            "aliases": { "PdfMill": "BogdanKharchenko\\PdfMill\\Facades\\PdfMill" }
         }
     },
     "config": { "sort-packages": true },

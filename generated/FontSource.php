@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Generated from openapi.json (pdf-lib-workers 0.2.2, sha256 dcb53f93ae8a).
+ * Generated from openapi.json (pdfmill 0.3.0, sha256 793485a9b985).
  * Do not edit: change the API's spec, copy it here and run `composer generate`.
  */
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers;
+namespace BogdanKharchenko\PdfMill;
 
-use BogdanKharchenko\PdfLibWorkers\Contracts\Payload;
-use BogdanKharchenko\PdfLibWorkers\Support\Fields;
-use BogdanKharchenko\PdfLibWorkers\Support\JsonMap;
+use BogdanKharchenko\PdfMill\Contracts\Payload;
+use BogdanKharchenko\PdfMill\Support\Fields;
+use BogdanKharchenko\PdfMill\Support\JsonMap;
 use SplFileInfo;
 
 /**

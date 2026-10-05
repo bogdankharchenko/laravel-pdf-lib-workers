@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\Data\Layer;
-use BogdanKharchenko\PdfLibWorkers\Data\Permissions;
-use BogdanKharchenko\PdfLibWorkers\Enums\AddFormFieldType;
-use BogdanKharchenko\PdfLibWorkers\Enums\BuiltInFont;
-use BogdanKharchenko\PdfLibWorkers\Enums\ExtractInclude;
-use BogdanKharchenko\PdfLibWorkers\Enums\Origin;
-use BogdanKharchenko\PdfLibWorkers\Enums\PaperSize;
-use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
-use BogdanKharchenko\PdfLibWorkers\FontSource;
-use BogdanKharchenko\PdfLibWorkers\MergeSource;
-use BogdanKharchenko\PdfLibWorkers\PdfSource;
-use BogdanKharchenko\PdfLibWorkers\Source;
+use BogdanKharchenko\PdfMill\Data\Layer;
+use BogdanKharchenko\PdfMill\Data\Permissions;
+use BogdanKharchenko\PdfMill\Enums\AddFormFieldType;
+use BogdanKharchenko\PdfMill\Enums\BuiltInFont;
+use BogdanKharchenko\PdfMill\Enums\ExtractInclude;
+use BogdanKharchenko\PdfMill\Enums\Origin;
+use BogdanKharchenko\PdfMill\Enums\PaperSize;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
+use BogdanKharchenko\PdfMill\FontSource;
+use BogdanKharchenko\PdfMill\MergeSource;
+use BogdanKharchenko\PdfMill\PdfSource;
+use BogdanKharchenko\PdfMill\Source;
 
 /**
  * What goes over the wire for JSON requests.
@@ -31,7 +31,7 @@ final class RequestBodyTest extends TestCase
 
     public function test_posts_json_with_the_api_key(): void
     {
-        PdfLib::edit('templates/in.pdf')->rotatePages(90)->store();
+        PdfMill::edit('templates/in.pdf')->rotatePages(90)->store();
 
         $request = $this->sentRequest();
         $this->assertSame('POST', $request->method());
@@ -43,21 +43,21 @@ final class RequestBodyTest extends TestCase
 
     public function test_leaves_out_arguments_and_fields_that_were_not_given(): void
     {
-        PdfLib::edit('in.pdf')->drawText('Hi', 10, 20)->store();
+        PdfMill::edit('in.pdf')->drawText('Hi', 10, 20)->store();
 
         $this->assertSentJson('{"source": "in.pdf", "operations": [{"op": "drawText", "text": "Hi", "x": 10, "y": 20}]}');
     }
 
     public function test_keeps_a_null_that_was_given(): void
     {
-        PdfLib::edit('in.pdf')->addFormField(AddFormFieldType::Text, 'name', maxLength: null)->store();
+        PdfMill::edit('in.pdf')->addFormField(AddFormFieldType::Text, 'name', maxLength: null)->store();
 
         $this->assertSentJson('{"source": "in.pdf", "operations": [{"op": "addFormField", "type": "text", "name": "name", "maxLength": null}]}');
     }
 
     public function test_sends_enums_as_their_values(): void
     {
-        PdfLib::create(PaperSize::Letter)
+        PdfMill::create(PaperSize::Letter)
             ->drawText('Hi', 10, 20, origin: Origin::TopLeft, font: BuiltInFont::HelveticaBold)
             ->store();
 
@@ -71,14 +71,14 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_a_custom_page_size_as_a_pair(): void
     {
-        PdfLib::create([612, 792], pageCount: 2)->store();
+        PdfMill::create([612, 792], pageCount: 2)->store();
 
         $this->assertSentJson('{"size": [612, 792], "pageCount": 2}');
     }
 
     public function test_sends_maps_as_objects_even_when_empty(): void
     {
-        PdfLib::edit(PdfSource::url('https://files.test/in.pdf', headers: []))
+        PdfMill::edit(PdfSource::url('https://files.test/in.pdf', headers: []))
             ->fillForm(fields: [])
             ->setMetadata(custom: [])
             ->store();
@@ -93,7 +93,7 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_maps_with_numeric_keys_as_objects(): void
     {
-        PdfLib::edit(PdfSource::url('https://files.test/in.pdf', headers: ['1' => 'x']))
+        PdfMill::edit(PdfSource::url('https://files.test/in.pdf', headers: ['1' => 'x']))
             ->fillForm(fields: ['0' => 'first', '1' => true])
             ->setMetadata(custom: ['2026' => 'year'])
             ->store();
@@ -111,14 +111,14 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_an_empty_nested_object_as_an_object(): void
     {
-        PdfLib::edit('in.pdf')->encrypt('owner', permissions: new Permissions)->store();
+        PdfMill::edit('in.pdf')->encrypt('owner', permissions: new Permissions)->store();
 
         $this->assertSentJson('{"source": "in.pdf", "operations": [{"op": "encrypt", "ownerPassword": "owner", "permissions": {}}]}');
     }
 
     public function test_sends_a_list_of_objects(): void
     {
-        PdfLib::edit('in.pdf')->setLayerVisibility([new Layer('Draft', false), new Layer('Final', true)])->store();
+        PdfMill::edit('in.pdf')->setLayerVisibility([new Layer('Draft', false), new Layer('Final', true)])->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -130,7 +130,7 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_every_kind_of_source(): void
     {
-        PdfLib::merge([
+        PdfMill::merge([
             'a.pdf',
             MergeSource::key('b.pdf', password: 'secret', pages: '1-2'),
             MergeSource::url('https://files.test/c.png', headers: ['authorization' => 'Bearer x'], size: 'image'),
@@ -154,7 +154,7 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_sources_inside_operations(): void
     {
-        PdfLib::edit('in.pdf')->fillForm(images: ['signature' => Source::base64('iVBO'), 'logo' => 'logos/acme.png'])->store();
+        PdfMill::edit('in.pdf')->fillForm(images: ['signature' => Source::base64('iVBO'), 'logo' => 'logos/acme.png'])->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -166,7 +166,7 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_lists_of_enums(): void
     {
-        PdfLib::extract('in.pdf', pages: [1, -1], include: [ExtractInclude::Images, ExtractInclude::Text], store: false);
+        PdfMill::extract('in.pdf', pages: [1, -1], include: [ExtractInclude::Images, ExtractInclude::Text], store: false);
 
         $this->assertSentJson('{"source": "in.pdf", "pages": [1, -1], "include": ["images", "text"], "store": false}');
     }

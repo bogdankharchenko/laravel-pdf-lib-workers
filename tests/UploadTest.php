@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
-use BogdanKharchenko\PdfLibWorkers\MergeSource;
-use BogdanKharchenko\PdfLibWorkers\PdfSource;
-use BogdanKharchenko\PdfLibWorkers\Source;
-use BogdanKharchenko\PdfLibWorkers\Upload;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
+use BogdanKharchenko\PdfMill\MergeSource;
+use BogdanKharchenko\PdfMill\PdfSource;
+use BogdanKharchenko\PdfMill\Source;
+use BogdanKharchenko\PdfMill\Upload;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
@@ -27,7 +27,7 @@ final class UploadTest extends TestCase
 
     public function test_sends_files_as_parts_and_refers_to_them_by_name(): void
     {
-        PdfLib::edit(PdfSource::contents('%PDF-in', 'in.pdf', password: 'secret'))
+        PdfMill::edit(PdfSource::contents('%PDF-in', 'in.pdf', password: 'secret'))
             ->fillForm(images: ['signature' => Source::contents('PNG-sig', 'sig.png')])
             ->store();
 
@@ -52,7 +52,7 @@ final class UploadTest extends TestCase
     {
         $logo = Source::contents('PNG-logo', 'logo.png');
 
-        PdfLib::edit('in.pdf')->drawImage($logo, 10, 10)->drawImage($logo, 500, 10)->store();
+        PdfMill::edit('in.pdf')->drawImage($logo, 10, 10)->drawImage($logo, 500, 10)->store();
 
         $parts = $this->sentParts();
         $this->assertSame(['options', 'file1'], array_keys($parts));
@@ -71,7 +71,7 @@ final class UploadTest extends TestCase
     {
         $path = $this->tempFile('%PDF-a');
 
-        PdfLib::merge([MergeSource::file($path), MergeSource::file($path, 'again.pdf', pages: 'last')])->store();
+        PdfMill::merge([MergeSource::file($path), MergeSource::file($path, 'again.pdf', pages: 'last')])->store();
 
         $parts = $this->sentParts();
         $this->assertSame(['contents' => '%PDF-a', 'filename' => basename($path)], $parts['file1']);
@@ -83,7 +83,7 @@ final class UploadTest extends TestCase
     {
         $upload = UploadedFile::fake()->createWithContent('Signed contract.pdf', '%PDF-signed');
 
-        PdfLib::info(PdfSource::file($upload));
+        PdfMill::info(PdfSource::file($upload));
 
         $this->assertSame(['contents' => '%PDF-signed', 'filename' => 'Signed contract.pdf'], $this->sentParts()['file1']);
     }
@@ -91,7 +91,7 @@ final class UploadTest extends TestCase
     public function test_keeps_a_temporary_file_until_it_is_sent(): void
     {
         // A fake upload's file is deleted once nothing refers to the UploadedFile.
-        PdfLib::info(PdfSource::file(UploadedFile::fake()->createWithContent('scan.pdf', '%PDF-scan')));
+        PdfMill::info(PdfSource::file(UploadedFile::fake()->createWithContent('scan.pdf', '%PDF-scan')));
 
         $this->assertSame(['contents' => '%PDF-scan', 'filename' => 'scan.pdf'], $this->sentParts()['file1']);
     }
@@ -101,7 +101,7 @@ final class UploadTest extends TestCase
         Storage::fake('templates');
         Storage::disk('templates')->put('forms/w9.pdf', '%PDF-w9');
 
-        PdfLib::info(PdfSource::disk('forms/w9.pdf', 'templates'));
+        PdfMill::info(PdfSource::disk('forms/w9.pdf', 'templates'));
 
         $this->assertSame(['contents' => '%PDF-w9', 'filename' => 'w9.pdf'], $this->sentParts()['file1']);
     }
@@ -126,7 +126,7 @@ final class UploadTest extends TestCase
 
     private function tempFile(string $contents): string
     {
-        $path = tempnam(sys_get_temp_dir(), 'pdf-lib-workers-');
+        $path = tempnam(sys_get_temp_dir(), 'pdfmill-');
         $this->assertIsString($path);
         file_put_contents($path, $contents);
         $this->beforeApplicationDestroyed(function () use ($path): void {

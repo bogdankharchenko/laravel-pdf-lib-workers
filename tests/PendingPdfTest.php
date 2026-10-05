@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\Data\StoredPdf;
-use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
-use BogdanKharchenko\PdfLibWorkers\Operations\FlattenForm;
-use BogdanKharchenko\PdfLibWorkers\Operations\RotatePages;
-use BogdanKharchenko\PdfLibWorkers\PendingPdf;
+use BogdanKharchenko\PdfMill\Data\StoredPdf;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
+use BogdanKharchenko\PdfMill\Operations\FlattenForm;
+use BogdanKharchenko\PdfMill\Operations\RotatePages;
+use BogdanKharchenko\PdfMill\PendingPdf;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +23,7 @@ final class PendingPdfTest extends TestCase
     {
         Http::fake();
 
-        $pending = PdfLib::edit('in.pdf')->rotatePages(90)->flattenForm();
+        $pending = PdfMill::edit('in.pdf')->rotatePages(90)->flattenForm();
 
         $this->assertInstanceOf(PendingPdf::class, $pending);
         Http::assertNothingSent();
@@ -33,7 +33,7 @@ final class PendingPdfTest extends TestCase
     {
         $this->respondWith('create-stored');
 
-        $pdf = PdfLib::edit('in.pdf')->rotatePages(90)->flattenForm()->store();
+        $pdf = PdfMill::edit('in.pdf')->rotatePages(90)->flattenForm()->store();
 
         $this->assertInstanceOf(StoredPdf::class, $pdf);
         $this->assertSame('tests/fixtures/source.pdf', $pdf->key);
@@ -46,7 +46,7 @@ final class PendingPdfTest extends TestCase
     {
         $this->respondWith('create-stored');
 
-        PdfLib::create()->filename('Invoice 42.pdf')->linkTtl(86400)->withoutObjectStreams()->store('invoices/42.pdf');
+        PdfMill::create()->filename('Invoice 42.pdf')->linkTtl(86400)->withoutObjectStreams()->store('invoices/42.pdf');
 
         $this->assertSentJson(<<<'JSON'
             {"output": {"key": "invoices/42.pdf", "filename": "Invoice 42.pdf", "linkTtl": 86400, "useObjectStreams": false}}
@@ -57,7 +57,7 @@ final class PendingPdfTest extends TestCase
     {
         $this->respondWith('create-stored');
 
-        PdfLib::edit('signed.pdf', incremental: true)->addJavaScript('init', 'app.alert(1);')->store();
+        PdfMill::edit('signed.pdf', incremental: true)->addJavaScript('init', 'app.alert(1);')->store();
 
         $this->assertSentJson(<<<'JSON'
             {"source": "signed.pdf", "incremental": true, "operations": [{"op": "addJavaScript", "name": "init", "script": "app.alert(1);"}]}
@@ -69,7 +69,7 @@ final class PendingPdfTest extends TestCase
         $this->respondWith('create-stored');
         $steps = [new RotatePages(180), new FlattenForm];
 
-        PdfLib::merge(['a.pdf', 'b.pdf'])->apply(...$steps)->pageNumbers()->store();
+        PdfMill::merge(['a.pdf', 'b.pdf'])->apply(...$steps)->pageNumbers()->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -83,7 +83,7 @@ final class PendingPdfTest extends TestCase
     {
         $this->respondWith('create-stored');
 
-        PdfLib::edit('in.pdf')
+        PdfMill::edit('in.pdf')
             ->when(true, fn (PendingPdf $pdf) => $pdf->watermark(text: 'DRAFT'))
             ->unless(true, fn (PendingPdf $pdf) => $pdf->flattenForm())
             ->store();
@@ -95,7 +95,7 @@ final class PendingPdfTest extends TestCase
     {
         Http::fake(['*' => Http::response(self::PDF, 200, ['Content-Type' => 'application/pdf'])]);
 
-        $response = PdfLib::create()->download('blank.pdf');
+        $response = PdfMill::create()->download('blank.pdf');
 
         $this->assertSame(['application/pdf'], $this->sentRequest()->header('Accept'));
         $this->assertSentJson('{"output": {"store": false}}');
@@ -109,7 +109,7 @@ final class PendingPdfTest extends TestCase
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="w9.pdf"',
         ])]);
-        Route::get('/w9', fn () => PdfLib::edit('templates/w9.pdf')->fillForm(['name' => 'Ada'])->filename('w9.pdf'));
+        Route::get('/w9', fn () => PdfMill::edit('templates/w9.pdf')->fillForm(['name' => 'Ada'])->filename('w9.pdf'));
 
         $response = $this->get('/w9');
 

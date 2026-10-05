@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers;
+namespace BogdanKharchenko\PdfMill;
 
-use BogdanKharchenko\PdfLibWorkers\Exceptions\ApiException;
-use BogdanKharchenko\PdfLibWorkers\Support\Encoder;
-use BogdanKharchenko\PdfLibWorkers\Support\Fields;
-use BogdanKharchenko\PdfLibWorkers\Support\JsonMap;
+use BogdanKharchenko\PdfMill\Exceptions\ApiException;
+use BogdanKharchenko\PdfMill\Support\Encoder;
+use BogdanKharchenko\PdfMill\Support\Fields;
+use BogdanKharchenko\PdfMill\Support\JsonMap;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 
 /**
- * The pdf-lib-workers API client. Its endpoint methods are generated from the
+ * The pdfmill API client. Its endpoint methods are generated from the
  * API's OpenAPI spec (see Endpoints); this class only sends requests.
  *
  * Requests go through Laravel's HTTP client, so Http::fake() works in your tests.

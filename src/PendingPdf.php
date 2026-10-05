@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers;
+namespace BogdanKharchenko\PdfMill;
 
-use BogdanKharchenko\PdfLibWorkers\Contracts\Operation;
-use BogdanKharchenko\PdfLibWorkers\Data\Output;
-use BogdanKharchenko\PdfLibWorkers\Data\StoredPdf;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\ApiException;
-use BogdanKharchenko\PdfLibWorkers\Support\Fields;
+use BogdanKharchenko\PdfMill\Contracts\Operation;
+use BogdanKharchenko\PdfMill\Data\Output;
+use BogdanKharchenko\PdfMill\Data\StoredPdf;
+use BogdanKharchenko\PdfMill\Exceptions\ApiException;
+use BogdanKharchenko\PdfMill\Support\Fields;
 use Closure;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Client\Response;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
  * A PDF being made by create(), edit() or merge(). Add operations with its
  * methods, one per operation (see AddsOperations), then send it:
  *
- *   PdfLib::edit('templates/w9.pdf')->fillForm(['name' => 'Ada'], flatten: true)->store();
+ *   PdfMill::edit('templates/w9.pdf')->fillForm(['name' => 'Ada'], flatten: true)->store();
  *
  * store() keeps the PDF in R2 and returns its key and link; file() returns the
  * PDF itself; download() makes the browser save it. Returned from a route, it

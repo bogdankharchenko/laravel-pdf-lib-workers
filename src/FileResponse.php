@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers;
+namespace BogdanKharchenko\PdfMill;
 
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Client\Response;

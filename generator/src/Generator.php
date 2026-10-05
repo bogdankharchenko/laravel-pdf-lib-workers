@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Generator;
+namespace BogdanKharchenko\PdfMill\Generator;
 
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
@@ -21,7 +21,7 @@ use RuntimeException;
  */
 final class Generator
 {
-    private const NS = 'BogdanKharchenko\\PdfLibWorkers';
+    private const NS = 'BogdanKharchenko\\PdfMill';
 
     private const PAYLOAD = self::NS.'\\Contracts\\Payload';
 
@@ -94,7 +94,7 @@ final class Generator
 
     public function __construct(private readonly Spec $spec, string $specHash)
     {
-        $this->header = "Generated from openapi.json (pdf-lib-workers {$spec->version()}, sha256 ".substr($specHash, 0, 12).").\n"
+        $this->header = "Generated from openapi.json (pdfmill {$spec->version()}, sha256 ".substr($specHash, 0, 12).").\n"
             ."Do not edit: change the API's spec, copy it here and run `composer generate`.";
     }
 
@@ -1091,11 +1091,11 @@ final class Generator
      */
     private function emitFacade(array $methods): void
     {
-        $fqcn = self::NS.'\\Facades\\PdfLib';
+        $fqcn = self::NS.'\\Facades\\PdfMill';
         [$file, $namespace] = $this->file($fqcn, [...array_merge(...array_column($methods, 'uses')), 'Illuminate\\Support\\Facades\\Facade', self::NS.'\\Client']);
-        $class = $namespace->addClass('PdfLib')->setFinal()->setExtends('Illuminate\\Support\\Facades\\Facade');
+        $class = $namespace->addClass('PdfMill')->setFinal()->setExtends('Illuminate\\Support\\Facades\\Facade');
 
-        $lines = ['The pdf-lib-workers API.', ''];
+        $lines = ['The pdfmill API.', ''];
         foreach ($methods as $spec) {
             $params = array_map(function (array $p): string {
                 $null = ! $p['required'] || $p['type']->nullable;

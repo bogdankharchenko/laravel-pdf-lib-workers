@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\Exceptions\NotFoundException;
-use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
-use BogdanKharchenko\PdfLibWorkers\FileResponse;
+use BogdanKharchenko\PdfMill\Exceptions\NotFoundException;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
+use BogdanKharchenko\PdfMill\FileResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +28,7 @@ final class FileResponseTest extends TestCase
             'X-File-Url' => 'https://pdf.test/files/invoices/42.pdf?expires=1&sig=x',
         ])]);
 
-        $file = PdfLib::edit('in.pdf')->rotatePages(90)->file(storeAs: 'invoices/42.pdf');
+        $file = PdfMill::edit('in.pdf')->rotatePages(90)->file(storeAs: 'invoices/42.pdf');
 
         $request = $this->sentRequest();
         $this->assertSame('https://pdf.test/pdf/edit', $request->url());
@@ -48,7 +48,7 @@ final class FileResponseTest extends TestCase
     {
         Http::fake(['*' => Http::response(self::PDF, 200, ['Content-Type' => 'application/pdf', 'X-Page-Count' => '1'])]);
 
-        $file = PdfLib::create()->file();
+        $file = PdfMill::create()->file();
 
         $this->assertSentJson('{"output": {"store": false}}');
 
@@ -64,21 +64,21 @@ final class FileResponseTest extends TestCase
             'Content-Disposition' => "inline; filename=\"_____ 2026.pdf\"; filename*=UTF-8''%D0%9E%D1%82%D1%87%D1%91%D1%82%202026.pdf",
         ])]);
 
-        $this->assertSame('Отчёт 2026.pdf', PdfLib::create()->file()->filename);
+        $this->assertSame('Отчёт 2026.pdf', PdfMill::create()->file()->filename);
     }
 
     public function test_keeps_only_the_base_of_a_name(): void
     {
         Http::fake(['*' => Http::response(self::PDF, 200, ['Content-Disposition' => 'attachment; filename="../../etc/passwd"'])]);
 
-        $this->assertSame('passwd', PdfLib::create()->file()->filename);
+        $this->assertSame('passwd', PdfMill::create()->file()->filename);
     }
 
     public function test_downloads_by_key_with_each_segment_encoded(): void
     {
         Http::fake(['*' => Http::response('a,b', 200, ['Content-Type' => 'text/csv'])]);
 
-        $file = PdfLib::download('extracted/run 1/data #1?.csv');
+        $file = PdfMill::download('extracted/run 1/data #1?.csv');
 
         $request = $this->sentRequest();
         $this->assertSame('GET', $request->method());
@@ -98,7 +98,7 @@ final class FileResponseTest extends TestCase
 
         $this->expectException(NotFoundException::class);
 
-        PdfLib::download('missing/file.pdf');
+        PdfMill::download('missing/file.pdf');
     }
 
     public function test_shows_the_file_in_the_browser(): void

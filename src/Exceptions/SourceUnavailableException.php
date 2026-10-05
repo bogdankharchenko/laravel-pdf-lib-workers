@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Exceptions;
+namespace BogdanKharchenko\PdfMill\Exceptions;
 
 /**
  * HTTP 502: a URL source returned an error or could not be reached.

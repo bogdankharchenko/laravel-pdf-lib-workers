@@ -1,34 +1,34 @@
 <?php
 
 /**
- * Generated from openapi.json (pdf-lib-workers 0.2.2, sha256 dcb53f93ae8a).
+ * Generated from openapi.json (pdfmill 0.3.0, sha256 793485a9b985).
  * Do not edit: change the API's spec, copy it here and run `composer generate`.
  */
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Facades;
+namespace BogdanKharchenko\PdfMill\Facades;
 
-use BogdanKharchenko\PdfLibWorkers\Client;
-use BogdanKharchenko\PdfLibWorkers\Data\ExtractResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\InfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\LockedInfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\MeasureResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\ScriptsResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\SplitResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\TextResponse;
-use BogdanKharchenko\PdfLibWorkers\Enums\BuiltInFont;
-use BogdanKharchenko\PdfLibWorkers\Enums\ExtractInclude;
-use BogdanKharchenko\PdfLibWorkers\Enums\PaperSize;
-use BogdanKharchenko\PdfLibWorkers\FileResponse;
-use BogdanKharchenko\PdfLibWorkers\FontSource;
-use BogdanKharchenko\PdfLibWorkers\MergeSource;
-use BogdanKharchenko\PdfLibWorkers\PdfSource;
-use BogdanKharchenko\PdfLibWorkers\PendingPdf;
+use BogdanKharchenko\PdfMill\Client;
+use BogdanKharchenko\PdfMill\Data\ExtractResponse;
+use BogdanKharchenko\PdfMill\Data\InfoResponse;
+use BogdanKharchenko\PdfMill\Data\LockedInfoResponse;
+use BogdanKharchenko\PdfMill\Data\MeasureResponse;
+use BogdanKharchenko\PdfMill\Data\ScriptsResponse;
+use BogdanKharchenko\PdfMill\Data\SplitResponse;
+use BogdanKharchenko\PdfMill\Data\TextResponse;
+use BogdanKharchenko\PdfMill\Enums\BuiltInFont;
+use BogdanKharchenko\PdfMill\Enums\ExtractInclude;
+use BogdanKharchenko\PdfMill\Enums\PaperSize;
+use BogdanKharchenko\PdfMill\FileResponse;
+use BogdanKharchenko\PdfMill\FontSource;
+use BogdanKharchenko\PdfMill\MergeSource;
+use BogdanKharchenko\PdfMill\PdfSource;
+use BogdanKharchenko\PdfMill\PendingPdf;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * The pdf-lib-workers API.
+ * The pdfmill API.
  *
  * @method static FileResponse download(string $key)
  * @method static InfoResponse|LockedInfoResponse info(string|PdfSource $source)
@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @see Client
  */
-final class PdfLib extends Facade
+final class PdfMill extends Facade
 {
     protected static function getFacadeAccessor(): string
     {

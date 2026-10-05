@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests\Generator;
+namespace BogdanKharchenko\PdfMill\Tests\Generator;
 
-use BogdanKharchenko\PdfLibWorkers\Generator\Generator;
-use BogdanKharchenko\PdfLibWorkers\Generator\Spec;
+use BogdanKharchenko\PdfMill\Generator\Generator;
+use BogdanKharchenko\PdfMill\Generator\Spec;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Support;
+namespace BogdanKharchenko\PdfMill\Support;
 
 use BackedEnum;
-use BogdanKharchenko\PdfLibWorkers\Contracts\Payload;
-use BogdanKharchenko\PdfLibWorkers\Support\Transformers\PassThroughTransformer;
-use BogdanKharchenko\PdfLibWorkers\Upload;
+use BogdanKharchenko\PdfMill\Contracts\Payload;
+use BogdanKharchenko\PdfMill\Support\Transformers\PassThroughTransformer;
+use BogdanKharchenko\PdfMill\Upload;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Transformation\TransformationContextFactory;
 use stdClass;

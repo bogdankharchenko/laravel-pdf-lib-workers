@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Generated from openapi.json (pdf-lib-workers 0.2.2, sha256 dcb53f93ae8a).
+ * Generated from openapi.json (pdfmill 0.3.0, sha256 793485a9b985).
  * Do not edit: change the API's spec, copy it here and run `composer generate`.
  */
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Operations;
+namespace BogdanKharchenko\PdfMill\Operations;
 
-use BogdanKharchenko\PdfLibWorkers\Contracts\Operation;
-use BogdanKharchenko\PdfLibWorkers\Enums\SetViewerPreferencesDuplex;
-use BogdanKharchenko\PdfLibWorkers\Enums\SetViewerPreferencesNonFullScreenPageMode;
-use BogdanKharchenko\PdfLibWorkers\Enums\SetViewerPreferencesPageLayout;
-use BogdanKharchenko\PdfLibWorkers\Enums\SetViewerPreferencesPageMode;
-use BogdanKharchenko\PdfLibWorkers\Enums\SetViewerPreferencesPrintScaling;
-use BogdanKharchenko\PdfLibWorkers\Enums\SetViewerPreferencesReadingDirection;
+use BogdanKharchenko\PdfMill\Contracts\Operation;
+use BogdanKharchenko\PdfMill\Enums\SetViewerPreferencesDuplex;
+use BogdanKharchenko\PdfMill\Enums\SetViewerPreferencesNonFullScreenPageMode;
+use BogdanKharchenko\PdfMill\Enums\SetViewerPreferencesPageLayout;
+use BogdanKharchenko\PdfMill\Enums\SetViewerPreferencesPageMode;
+use BogdanKharchenko\PdfMill\Enums\SetViewerPreferencesPrintScaling;
+use BogdanKharchenko\PdfMill\Enums\SetViewerPreferencesReadingDirection;
 use Spatie\LaravelData\Attributes\Computed;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;

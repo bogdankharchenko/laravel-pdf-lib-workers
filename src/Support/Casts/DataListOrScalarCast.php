@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Support\Casts;
+namespace BogdanKharchenko\PdfMill\Support\Casts;
 
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Data;

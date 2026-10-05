@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Exceptions;
+namespace BogdanKharchenko\PdfMill\Exceptions;
 
 /**
  * HTTP 400: bad JSON or fields (see fieldErrors()), a page out of range, an unknown form field, or a font missing characters.

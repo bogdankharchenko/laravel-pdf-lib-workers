@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Generator;
+namespace BogdanKharchenko\PdfMill\Generator;
 
 /**
  * How a schema looks in PHP.

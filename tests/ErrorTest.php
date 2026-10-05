@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\Data\FieldError;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\ApiException;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\InvalidRequestException;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\NotFoundException;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\ServerException;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\SourceTimeoutException;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\SourceTooLargeException;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\SourceUnavailableException;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\UnauthorizedException;
-use BogdanKharchenko\PdfLibWorkers\Exceptions\UnprocessablePdfException;
-use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
+use BogdanKharchenko\PdfMill\Data\FieldError;
+use BogdanKharchenko\PdfMill\Exceptions\ApiException;
+use BogdanKharchenko\PdfMill\Exceptions\InvalidRequestException;
+use BogdanKharchenko\PdfMill\Exceptions\NotFoundException;
+use BogdanKharchenko\PdfMill\Exceptions\ServerException;
+use BogdanKharchenko\PdfMill\Exceptions\SourceTimeoutException;
+use BogdanKharchenko\PdfMill\Exceptions\SourceTooLargeException;
+use BogdanKharchenko\PdfMill\Exceptions\SourceUnavailableException;
+use BogdanKharchenko\PdfMill\Exceptions\UnauthorizedException;
+use BogdanKharchenko\PdfMill\Exceptions\UnprocessablePdfException;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
 use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -39,7 +39,7 @@ final class ErrorTest extends TestCase
     {
         $this->respondWith($fixture);
 
-        $error = $this->catch(fn () => PdfLib::info('in.pdf'));
+        $error = $this->catch(fn () => PdfMill::info('in.pdf'));
 
         $this->assertInstanceOf($class, $error);
         $this->assertSame($status, $error->status);
@@ -68,7 +68,7 @@ final class ErrorTest extends TestCase
     {
         Http::fake(['*' => Http::response(['error' => 'sources[0]: failed'], $status)]);
 
-        $error = $this->catch(fn () => PdfLib::info('https://files.test/in.pdf'));
+        $error = $this->catch(fn () => PdfMill::info('https://files.test/in.pdf'));
 
         $this->assertInstanceOf($class, $error);
         $this->assertSame('sources[0]: failed', $error->getMessage());
@@ -78,7 +78,7 @@ final class ErrorTest extends TestCase
     {
         $this->respondWith('error-400-validation');
 
-        $error = $this->catch(fn () => PdfLib::info('in.pdf'));
+        $error = $this->catch(fn () => PdfMill::info('in.pdf'));
 
         $this->assertInstanceOf(InvalidRequestException::class, $error);
         $this->assertSame('Invalid request', $error->error->error);
@@ -98,7 +98,7 @@ final class ErrorTest extends TestCase
             ['path' => '', 'message' => 'Unrecognized key: "colour"'],
         ]], 400)]);
 
-        $error = $this->catch(fn () => PdfLib::info('in.pdf'));
+        $error = $this->catch(fn () => PdfMill::info('in.pdf'));
 
         $this->assertSame('Invalid request: operations.0.x: Expected number, received string; Unrecognized key: "colour"', $error->getMessage());
     }
@@ -107,7 +107,7 @@ final class ErrorTest extends TestCase
     {
         Http::fake(['*' => Http::response(['error' => 'Invalid request', 'details' => 'Body is not JSON'], 400)]);
 
-        $error = $this->catch(fn () => PdfLib::info('in.pdf'));
+        $error = $this->catch(fn () => PdfMill::info('in.pdf'));
 
         $this->assertSame('Body is not JSON', $error->error->details);
         $this->assertSame([], $error->fieldErrors());
@@ -117,7 +117,7 @@ final class ErrorTest extends TestCase
     {
         Http::fake(['*' => Http::response("<html>\n  <title>502 Bad Gateway</title>\n</html>\n", 502)]);
 
-        $error = $this->catch(fn () => PdfLib::info('in.pdf'));
+        $error = $this->catch(fn () => PdfMill::info('in.pdf'));
 
         $this->assertInstanceOf(SourceUnavailableException::class, $error);
         $this->assertSame('HTTP 502: <html> <title>502 Bad Gateway</title> </html>', $error->getMessage());
@@ -128,7 +128,7 @@ final class ErrorTest extends TestCase
     {
         Http::fake(['*' => Http::response(str_repeat('x', 500), 500)]);
 
-        $error = $this->catch(fn () => PdfLib::info('in.pdf'));
+        $error = $this->catch(fn () => PdfMill::info('in.pdf'));
 
         $this->assertSame('HTTP 500: '.str_repeat('x', 199).'…', $error->getMessage());
     }

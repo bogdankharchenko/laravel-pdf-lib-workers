@@ -6,8 +6,8 @@ declare(strict_types=1);
  * Regenerates generated/ from openapi.json:  composer generate
  */
 
-use BogdanKharchenko\PdfLibWorkers\Generator\Generator;
-use BogdanKharchenko\PdfLibWorkers\Generator\Spec;
+use BogdanKharchenko\PdfMill\Generator\Generator;
+use BogdanKharchenko\PdfMill\Generator\Spec;
 
 require __DIR__.'/../vendor/autoload.php';
 

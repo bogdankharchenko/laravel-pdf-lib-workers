@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\Data\InfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
+use BogdanKharchenko\PdfMill\Data\InfoResponse;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 /**
@@ -24,7 +24,7 @@ final class AppConfigTest extends TestCase
     {
         $this->respondWith('create-stored');
 
-        PdfLib::create()->drawText('Hi', 1, 2, maxWidth: 100)->linkTtl(60)->store();
+        PdfMill::create()->drawText('Hi', 1, 2, maxWidth: 100)->linkTtl(60)->store();
 
         $this->assertSentJson('{"operations": [{"op": "drawText", "text": "Hi", "x": 1, "y": 2, "maxWidth": 100}], "output": {"linkTtl": 60}}');
     }
@@ -33,7 +33,7 @@ final class AppConfigTest extends TestCase
     {
         $this->respondWith('info');
 
-        $info = PdfLib::info('in.pdf');
+        $info = PdfMill::info('in.pdf');
 
         $this->assertInstanceOf(InfoResponse::class, $info);
         $this->assertSame(2, $info->pageCount);

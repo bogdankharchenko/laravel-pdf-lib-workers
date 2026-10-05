@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace BogdanKharchenko\PdfLibWorkers\Tests;
+namespace BogdanKharchenko\PdfMill\Tests;
 
 use BackedEnum;
-use BogdanKharchenko\PdfLibWorkers\Contracts\Operation;
-use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
-use BogdanKharchenko\PdfLibWorkers\PendingPdf;
-use BogdanKharchenko\PdfLibWorkers\Support\Encoder;
+use BogdanKharchenko\PdfMill\Contracts\Operation;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
+use BogdanKharchenko\PdfMill\PendingPdf;
+use BogdanKharchenko\PdfMill\Support\Encoder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 use ReflectionMethod;
@@ -25,7 +25,7 @@ use Spatie\LaravelData\Support\DataConfig;
  */
 final class OperationsTest extends TestCase
 {
-    private const NS = 'BogdanKharchenko\\PdfLibWorkers\\';
+    private const NS = 'BogdanKharchenko\\PdfMill\\';
 
     /**
      * @return iterable<string, array{string, array<string, mixed>}>
@@ -72,7 +72,7 @@ final class OperationsTest extends TestCase
 
         $this->respondWith('create-stored');
         $arguments = $this->arguments($class);
-        PdfLib::create()->{$op}(...$arguments)->store();
+        PdfMill::create()->{$op}(...$arguments)->store();
 
         $this->assertJsonIs(
             (string) json_encode(['operations' => [(new Encoder)->encode(new $class(...$arguments))]]),
