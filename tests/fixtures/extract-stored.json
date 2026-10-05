@@ -1,0 +1,72 @@
+{
+  "status": 200,
+  "body": {
+    "pages": [
+      {
+        "page": 1,
+        "text": "",
+        "images": [
+          {
+            "mimeType": "image/png",
+            "width": 1,
+            "height": 1,
+            "x": 300,
+            "y": 300,
+            "drawWidth": 40,
+            "drawHeight": 40,
+            "key": "tests/fixtures/extracted/page-1-image-1.png",
+            "url": "https://pdf.test/files/tests/fixtures/extracted/page-1-image-1.png?expires=1791227678&sig=SIGNATURE",
+            "expiresAt": "2026-10-05T19:14:38.000Z"
+          }
+        ],
+        "graphics": [
+          {
+            "x": 300,
+            "y": 400,
+            "width": 60,
+            "height": 30,
+            "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"300 -430 60 30\"><g transform=\"scale(1,-1)\"><path d=\"M 300 430 L 360 430 L 360 400 L 300 400 Z\" fill=\"#336699\" stroke=\"none\"/></g></svg>"
+          }
+        ]
+      },
+      {
+        "page": 2,
+        "text": "",
+        "images": [
+          {
+            "mimeType": "image/png",
+            "width": 1,
+            "height": 1,
+            "x": 300,
+            "y": 300,
+            "drawWidth": 40,
+            "drawHeight": 40,
+            "key": "tests/fixtures/extracted/page-2-image-1.png",
+            "url": "https://pdf.test/files/tests/fixtures/extracted/page-2-image-1.png?expires=1791227678&sig=SIGNATURE",
+            "expiresAt": "2026-10-05T19:14:38.000Z"
+          }
+        ],
+        "graphics": [
+          {
+            "x": 300,
+            "y": 400,
+            "width": 60,
+            "height": 30,
+            "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"300 -430 60 30\"><g transform=\"scale(1,-1)\"><path d=\"M 300 430 L 360 430 L 360 400 L 300 400 Z\" fill=\"#336699\" stroke=\"none\"/></g></svg>"
+          }
+        ]
+      }
+    ],
+    "attachments": [
+      {
+        "name": "data.csv",
+        "mimeType": "text/csv",
+        "description": null,
+        "size": 14,
+        "key": "tests/fixtures/extracted/attachments/data.csv",
+        "url": "https://pdf.test/files/tests/fixtures/extracted/attachments/data.csv?expires=1791227678&sig=SIGNATURE",
+        "expiresAt": "2026-10-05T19:14:38.000Z"
+      }
+    ]
+  }
+}

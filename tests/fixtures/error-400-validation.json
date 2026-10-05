@@ -1,0 +1,12 @@
+{
+  "status": 400,
+  "body": {
+    "error": "Invalid request",
+    "details": [
+      {
+        "path": "operations.0.op",
+        "message": "Invalid discriminator value. Expected 'addPage' | 'removePages' | 'selectPages' | 'duplicatePage' | 'rotatePages' | 'resizePages' | 'cropPages' | 'setPageBoxes' | 'scalePages' | 'translateContent' | 'insertPdf' | 'drawText' | 'drawImage' | 'drawRectangle' | 'drawEllipse' | 'drawLine' | 'drawSvgPath' | 'drawSvg' | 'drawPdfPage' | 'watermark' | 'pageNumbers' | 'fillForm' | 'flattenForm' | 'addFormField' | 'setFieldProperties' | 'removeFormFields' | 'setFieldScript' | 'addJavaScript' | 'setXFAJavaScript' | 'deleteXFA' | 'setLayerVisibility' | 'setViewerPreferences' | 'setMetadata' | 'attachFile' | 'detachFile' | 'convertToPDFA' | 'embedFacturX' | 'encrypt'"
+      }
+    ]
+  }
+}

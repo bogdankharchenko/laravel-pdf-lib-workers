@@ -1,0 +1,10 @@
+{
+  "status": 200,
+  "body": {
+    "key": "tests/fixtures/source.pdf",
+    "url": "https://pdf.test/files/tests/fixtures/source.pdf?expires=1791227675&sig=SIGNATURE",
+    "expiresAt": "2026-10-05T19:14:35.000Z",
+    "size": 11956,
+    "pageCount": 2
+  }
+}

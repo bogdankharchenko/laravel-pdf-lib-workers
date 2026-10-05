@@ -1,0 +1,6 @@
+{
+  "status": 422,
+  "body": {
+    "error": "Not a PDF (starts with \"not a pdf\")"
+  }
+}

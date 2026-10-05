@@ -1,0 +1,25 @@
+{
+  "status": 200,
+  "body": {
+    "parts": [
+      {
+        "key": "tests/fixtures/split/part-001.pdf",
+        "pages": [
+          1
+        ],
+        "size": 5924,
+        "url": "https://pdf.test/files/tests/fixtures/split/part-001.pdf?expires=1791227679&sig=SIGNATURE",
+        "expiresAt": "2026-10-05T19:14:39.000Z"
+      },
+      {
+        "key": "tests/fixtures/split/part-002.pdf",
+        "pages": [
+          2
+        ],
+        "size": 1153,
+        "url": "https://pdf.test/files/tests/fixtures/split/part-002.pdf?expires=1791227679&sig=SIGNATURE",
+        "expiresAt": "2026-10-05T19:14:39.000Z"
+      }
+    ]
+  }
+}

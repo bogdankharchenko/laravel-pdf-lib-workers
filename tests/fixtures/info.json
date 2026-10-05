@@ -1,0 +1,202 @@
+{
+  "status": 200,
+  "body": {
+    "pageCount": 2,
+    "encrypted": false,
+    "pdfA": null,
+    "metadata": {
+      "title": "Fixture",
+      "author": "Tests",
+      "subject": null,
+      "keywords": null,
+      "creator": "pdf-lib (https://github.com/Hopding/pdf-lib)",
+      "producer": "pdf-lib (https://github.com/Hopding/pdf-lib)",
+      "language": null,
+      "creationDate": "2026-10-05T18:14:35.000Z",
+      "modificationDate": "2026-10-05T18:14:35.000Z",
+      "copyright": "© 2026 Acme",
+      "copyrightUrl": null,
+      "custom": {
+        "MadeFor": "Fixtures"
+      }
+    },
+    "pages": [
+      {
+        "page": 1,
+        "width": 595.28,
+        "height": 841.89,
+        "rotation": 0,
+        "boxes": {
+          "mediaBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "cropBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "bleedBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "trimBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "artBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          }
+        }
+      },
+      {
+        "page": 2,
+        "width": 595.28,
+        "height": 841.89,
+        "rotation": 0,
+        "boxes": {
+          "mediaBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "cropBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "bleedBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "trimBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "artBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          }
+        }
+      }
+    ],
+    "form": {
+      "hasXFA": false,
+      "fields": [
+        {
+          "name": "fullName",
+          "type": "text",
+          "value": "Ada",
+          "settings": {
+            "readOnly": false,
+            "required": true,
+            "exported": true,
+            "multiline": false,
+            "maxLength": 40,
+            "alignment": "left",
+            "password": false,
+            "comb": false
+          }
+        },
+        {
+          "name": "agree",
+          "type": "checkbox",
+          "value": true,
+          "settings": {
+            "readOnly": false,
+            "required": false,
+            "exported": true,
+            "checked": true
+          }
+        },
+        {
+          "name": "country",
+          "type": "dropdown",
+          "value": [
+            "UK"
+          ],
+          "options": [
+            "FR",
+            "UK"
+          ],
+          "settings": {
+            "readOnly": false,
+            "required": false,
+            "exported": true,
+            "multiselect": false,
+            "sort": false,
+            "editable": false
+          }
+        },
+        {
+          "name": "plan",
+          "type": "radio",
+          "value": "pro",
+          "options": [
+            "basic",
+            "pro"
+          ],
+          "settings": {
+            "readOnly": false,
+            "required": false,
+            "exported": true,
+            "offToggle": true,
+            "mutuallyExclusive": true
+          }
+        }
+      ],
+      "signatureFields": []
+    },
+    "layers": [],
+    "viewerPreferences": {
+      "pageMode": "UseOutlines",
+      "pageLayout": null,
+      "hideToolbar": false,
+      "hideMenubar": false,
+      "hideWindowUI": false,
+      "fitWindow": false,
+      "centerWindow": false,
+      "displayDocTitle": true,
+      "nonFullScreenPageMode": "UseNone",
+      "readingDirection": "L2R",
+      "printScaling": "AppDefault",
+      "duplex": "Simplex",
+      "pickTrayByPDFSize": null,
+      "printPageRange": [
+        {
+          "start": 1,
+          "end": 1
+        }
+      ],
+      "numCopies": 1
+    },
+    "attachments": [
+      {
+        "name": "data.csv",
+        "size": 14,
+        "mimeType": "text/csv",
+        "description": null,
+        "relationship": "Data"
+      }
+    ],
+    "hasJavaScript": true
+  }
+}

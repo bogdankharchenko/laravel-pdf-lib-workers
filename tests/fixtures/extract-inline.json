@@ -1,0 +1,46 @@
+{
+  "status": 200,
+  "body": {
+    "pages": [
+      {
+        "page": 1,
+        "images": [
+          {
+            "mimeType": "image/png",
+            "width": 1,
+            "height": 1,
+            "x": 300,
+            "y": 300,
+            "drawWidth": 40,
+            "drawHeight": 40,
+            "base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC"
+          }
+        ]
+      },
+      {
+        "page": 2,
+        "images": [
+          {
+            "mimeType": "image/png",
+            "width": 1,
+            "height": 1,
+            "x": 300,
+            "y": 300,
+            "drawWidth": 40,
+            "drawHeight": 40,
+            "base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC"
+          }
+        ]
+      }
+    ],
+    "attachments": [
+      {
+        "name": "data.csv",
+        "mimeType": "text/csv",
+        "description": null,
+        "size": 14,
+        "base64": "aWQsdG90YWwKNDIsOTA="
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - generated
+        - generator/src
+    treatPhpDocTypesAsCertain: false

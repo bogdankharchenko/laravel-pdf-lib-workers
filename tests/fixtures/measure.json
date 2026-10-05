@@ -1,0 +1,20 @@
+{
+  "status": 200,
+  "body": {
+    "width": 132.75,
+    "height": 16.650000000000002,
+    "ascent": 12.924,
+    "lines": [
+      {
+        "text": "Quarterly report ",
+        "width": 132.75
+      },
+      {
+        "text": "for Acme Inc.",
+        "width": 105.49799999999999
+      }
+    ],
+    "blockHeight": 38.25,
+    "sizeForHeight": 21.62162162162162
+  }
+}

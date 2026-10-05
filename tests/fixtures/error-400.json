@@ -1,0 +1,6 @@
+{
+  "status": 400,
+  "body": {
+    "error": "operations[0] (removePages): Page 9 is out of range (document has 2 pages)"
+  }
+}

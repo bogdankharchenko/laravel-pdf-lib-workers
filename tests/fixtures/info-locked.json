@@ -1,0 +1,86 @@
+{
+  "status": 200,
+  "body": {
+    "pageCount": 2,
+    "encrypted": true,
+    "needsPassword": true,
+    "pages": [
+      {
+        "page": 1,
+        "width": 595.28,
+        "height": 841.89,
+        "rotation": 0,
+        "boxes": {
+          "mediaBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "cropBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "bleedBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "trimBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "artBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          }
+        }
+      },
+      {
+        "page": 2,
+        "width": 595.28,
+        "height": 841.89,
+        "rotation": 0,
+        "boxes": {
+          "mediaBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "cropBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "bleedBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "trimBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          },
+          "artBox": {
+            "x": 0,
+            "y": 0,
+            "width": 595.28,
+            "height": 841.89
+          }
+        }
+      }
+    ]
+  }
+}

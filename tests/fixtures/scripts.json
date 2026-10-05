@@ -1,0 +1,14 @@
+{
+  "status": 200,
+  "body": {
+    "document": [
+      {
+        "name": "hello",
+        "script": "app.alert('hi');"
+      }
+    ],
+    "xfa": [],
+    "fields": [],
+    "pages": []
+  }
+}
