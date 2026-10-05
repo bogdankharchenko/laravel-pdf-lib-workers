@@ -7,17 +7,18 @@ on:
 
 jobs:
   test:
-    name: PHP ${{ matrix.php }}, Laravel ${{ matrix.laravel }}${{ matrix.lowest && ', lowest dependencies' || '' }}
+    name: PHP ${{ matrix.php }}, Laravel ${{ matrix.laravel }}, ${{ matrix.dependencies }} dependencies
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php: ['8.3', '8.4', '8.5']
         laravel: ['12', '13']
+        dependencies: [highest]
         include:
           - php: '8.3'
             laravel: '12'
-            lowest: true
+            dependencies: lowest
     steps:
       - uses: actions/checkout@v7
 
@@ -29,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer require --no-update --no-interaction "illuminate/contracts:^${{ matrix.laravel }}.0" "illuminate/http:^${{ matrix.laravel }}.0" "illuminate/support:^${{ matrix.laravel }}.0"
-          composer update --prefer-dist --no-interaction --no-progress ${{ matrix.lowest && '--prefer-lowest' || '' }}
+          composer update --prefer-dist --no-interaction --no-progress ${{ matrix.dependencies == 'lowest' && '--prefer-lowest' || '' }}
 
       # Also fails when generated/ is out of date with openapi.json.
       - run: composer test
