@@ -9,17 +9,12 @@ declare(strict_types=1);
 
 namespace BogdanKharchenko\PdfLibWorkers;
 
-use BogdanKharchenko\PdfLibWorkers\Contracts\Operation;
 use BogdanKharchenko\PdfLibWorkers\Data\ExtractResponse;
 use BogdanKharchenko\PdfLibWorkers\Data\InfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\InlinePdf;
 use BogdanKharchenko\PdfLibWorkers\Data\LockedInfoResponse;
 use BogdanKharchenko\PdfLibWorkers\Data\MeasureResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\Output;
-use BogdanKharchenko\PdfLibWorkers\Data\PdfResult;
 use BogdanKharchenko\PdfLibWorkers\Data\ScriptsResponse;
 use BogdanKharchenko\PdfLibWorkers\Data\SplitResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\StoredPdf;
 use BogdanKharchenko\PdfLibWorkers\Data\TextResponse;
 use BogdanKharchenko\PdfLibWorkers\Enums\BuiltInFont;
 use BogdanKharchenko\PdfLibWorkers\Enums\ExtractInclude;
@@ -144,55 +139,18 @@ trait Endpoints
      *
      * Makes a new PDF from blank pages and an operations list: text, images, shapes, other PDFs' pages, form fields, metadata, encryption.
      *
-     * @param  PaperSize|array{float, float}|null  $size  A paper name ("A4", "Letter", "Legal", …) or [width, height] in points (72 pt = 1 inch; A4 is 595 × 842). Default: "A4".
-     * @param  int|null  $pageCount  Blank pages to start with. With 0, add pages with addPage. Default: 1.
-     * @param  list<Operation>|null  $operations  Steps to run, in order (max 500). A failing step is named in the error: operations[2] (removePages): …
-     * @param  Output|null  $output  What to do with the PDF this request produces. Send Accept: application/pdf to get the PDF bytes instead of a JSON PdfResult.
-     * @return StoredPdf|InlinePdf
-     *
-     * @throws ApiException
-     */
-    public function create(
-        PaperSize|array|null $size = null,
-        ?int $pageCount = null,
-        ?array $operations = null,
-        ?Output $output = null,
-    ): StoredPdf|InlinePdf {
-        return PdfResult::from($this->post('/pdf/create', [
-            'size' => $size,
-            'pageCount' => $pageCount,
-            'operations' => $operations,
-            'output' => $output,
-        ])->json());
-    }
-
-    /**
-     * Make a new PDF
-     *
-     * Like create(), but returns the file itself instead of JSON.
-     *
-     * Makes a new PDF from blank pages and an operations list: text, images, shapes, other PDFs' pages, form fields, metadata, encryption.
+     * Chain PendingPdf's methods to add operations, then call store(), file() or download(), or return it from a route.
      *
      * @param  PaperSize|array{float, float}|null  $size  A paper name ("A4", "Letter", "Legal", …) or [width, height] in points (72 pt = 1 inch; A4 is 595 × 842). Default: "A4".
      * @param  int|null  $pageCount  Blank pages to start with. With 0, add pages with addPage. Default: 1.
-     * @param  list<Operation>|null  $operations  Steps to run, in order (max 500). A failing step is named in the error: operations[2] (removePages): …
-     * @param  Output|null  $output  What to do with the PDF this request produces. Send Accept: application/pdf to get the PDF bytes instead of a JSON PdfResult.
-     * @return FileResponse
-     *
-     * @throws ApiException
+     * @return PendingPdf
      */
-    public function createFile(
-        PaperSize|array|null $size = null,
-        ?int $pageCount = null,
-        ?array $operations = null,
-        ?Output $output = null,
-    ): FileResponse {
-        return FileResponse::fromResponse($this->post('/pdf/create', [
+    public function create(PaperSize|array|null $size = null, ?int $pageCount = null): PendingPdf
+    {
+        return new PendingPdf(fn (array $body, string $accept) => $this->post('/pdf/create', $body, $accept), [
             'size' => $size,
             'pageCount' => $pageCount,
-            'operations' => $operations,
-            'output' => $output,
-        ], 'application/pdf'));
+        ]);
     }
 
     /**
@@ -200,55 +158,18 @@ trait Endpoints
      *
      * Runs an operations list on one PDF. With "incremental": true the original bytes are kept and the changes appended, so existing digital signatures stay valid. A PDF opened with its password is saved without one unless the operations include encrypt.
      *
-     * @param  string|PdfSource  $source  A PDF: a PdfSourceObject or a shortcut string.
-     * @param  list<Operation>  $operations  Steps to run, in order (max 500). A failing step is named in the error: operations[2] (removePages): …
-     * @param  bool|null  $incremental  Keep the original bytes and append the changes, so existing digital signatures stay valid. Default: false.
-     * @param  Output|null  $output  What to do with the PDF this request produces. Send Accept: application/pdf to get the PDF bytes instead of a JSON PdfResult.
-     * @return StoredPdf|InlinePdf
-     *
-     * @throws ApiException
-     */
-    public function edit(
-        string|PdfSource $source,
-        array $operations,
-        ?bool $incremental = null,
-        ?Output $output = null,
-    ): StoredPdf|InlinePdf {
-        return PdfResult::from($this->post('/pdf/edit', [
-            'source' => $source,
-            'operations' => $operations,
-            'incremental' => $incremental,
-            'output' => $output,
-        ])->json());
-    }
-
-    /**
-     * Run operations on a PDF
-     *
-     * Like edit(), but returns the file itself instead of JSON.
-     *
-     * Runs an operations list on one PDF. With "incremental": true the original bytes are kept and the changes appended, so existing digital signatures stay valid. A PDF opened with its password is saved without one unless the operations include encrypt.
+     * Chain PendingPdf's methods to add operations, then call store(), file() or download(), or return it from a route.
      *
      * @param  string|PdfSource  $source  A PDF: a PdfSourceObject or a shortcut string.
-     * @param  list<Operation>  $operations  Steps to run, in order (max 500). A failing step is named in the error: operations[2] (removePages): …
      * @param  bool|null  $incremental  Keep the original bytes and append the changes, so existing digital signatures stay valid. Default: false.
-     * @param  Output|null  $output  What to do with the PDF this request produces. Send Accept: application/pdf to get the PDF bytes instead of a JSON PdfResult.
-     * @return FileResponse
-     *
-     * @throws ApiException
+     * @return PendingPdf
      */
-    public function editFile(
-        string|PdfSource $source,
-        array $operations,
-        ?bool $incremental = null,
-        ?Output $output = null,
-    ): FileResponse {
-        return FileResponse::fromResponse($this->post('/pdf/edit', [
+    public function edit(string|PdfSource $source, ?bool $incremental = null): PendingPdf
+    {
+        return new PendingPdf(fn (array $body, string $accept) => $this->post('/pdf/edit', $body, $accept), [
             'source' => $source,
-            'operations' => $operations,
             'incremental' => $incremental,
-            'output' => $output,
-        ], 'application/pdf'));
+        ]);
     }
 
     /**
@@ -256,43 +177,16 @@ trait Endpoints
      *
      * Joins PDFs (whole or chosen pages) and PNG/JPEG images in order, each image becoming one page, then runs an optional operations list on the result. In a multipart request "sources" may be left out: every uploaded PDF and image is merged in the order sent, except files the operations use, such as a watermark logo.
      *
-     * @param  list<string|MergeSource>  $sources  PDFs and images, in order. In a multipart request it may be left out: every uploaded PDF and image is merged in the order sent, except files the operations use.
-     * @param  list<Operation>|null  $operations  Steps to run on the merged document.
-     * @param  Output|null  $output  What to do with the PDF this request produces. Send Accept: application/pdf to get the PDF bytes instead of a JSON PdfResult.
-     * @return StoredPdf|InlinePdf
-     *
-     * @throws ApiException
-     */
-    public function merge(array $sources, ?array $operations = null, ?Output $output = null): StoredPdf|InlinePdf
-    {
-        return PdfResult::from($this->post('/pdf/merge', [
-            'sources' => $sources,
-            'operations' => $operations,
-            'output' => $output,
-        ])->json());
-    }
-
-    /**
-     * Join PDFs and images, then run operations
-     *
-     * Like merge(), but returns the file itself instead of JSON.
-     *
-     * Joins PDFs (whole or chosen pages) and PNG/JPEG images in order, each image becoming one page, then runs an optional operations list on the result. In a multipart request "sources" may be left out: every uploaded PDF and image is merged in the order sent, except files the operations use, such as a watermark logo.
+     * Chain PendingPdf's methods to add operations, then call store(), file() or download(), or return it from a route.
      *
      * @param  list<string|MergeSource>  $sources  PDFs and images, in order. In a multipart request it may be left out: every uploaded PDF and image is merged in the order sent, except files the operations use.
-     * @param  list<Operation>|null  $operations  Steps to run on the merged document.
-     * @param  Output|null  $output  What to do with the PDF this request produces. Send Accept: application/pdf to get the PDF bytes instead of a JSON PdfResult.
-     * @return FileResponse
-     *
-     * @throws ApiException
+     * @return PendingPdf
      */
-    public function mergeFile(array $sources, ?array $operations = null, ?Output $output = null): FileResponse
+    public function merge(array $sources): PendingPdf
     {
-        return FileResponse::fromResponse($this->post('/pdf/merge', [
+        return new PendingPdf(fn (array $body, string $accept) => $this->post('/pdf/merge', $body, $accept), [
             'sources' => $sources,
-            'operations' => $operations,
-            'output' => $output,
-        ], 'application/pdf'));
+        ]);
     }
 
     /**

@@ -16,7 +16,6 @@ use BogdanKharchenko\PdfLibWorkers\Data\FieldSettings;
 use BogdanKharchenko\PdfLibWorkers\Data\FormField;
 use BogdanKharchenko\PdfLibWorkers\Data\FormInfo;
 use BogdanKharchenko\PdfLibWorkers\Data\InfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\InlinePdf;
 use BogdanKharchenko\PdfLibWorkers\Data\LockedInfoResponse;
 use BogdanKharchenko\PdfLibWorkers\Data\MeasuredLine;
 use BogdanKharchenko\PdfLibWorkers\Data\PageBoxes;
@@ -53,8 +52,7 @@ final class ResponseTest extends TestCase
         yield 'scripts' => ['scripts', '/pdf/scripts', fn () => PdfLib::scripts('in.pdf')];
         yield 'measure' => ['measure', '/text/measure', fn () => PdfLib::measureText('Quarterly report for Acme Inc.', maxWidth: 140, fitHeight: 20)];
         yield 'split' => ['split', '/pdf/split', fn () => PdfLib::split('in.pdf')];
-        yield 'create, stored' => ['create-stored', '/pdf/create', fn () => PdfLib::create()];
-        yield 'create, inline' => ['create-inline', '/pdf/create', fn () => PdfLib::create()];
+        yield 'create' => ['create-stored', '/pdf/create', fn () => PdfLib::create()->store()];
     }
 
     /**
@@ -205,21 +203,10 @@ final class ResponseTest extends TestCase
     {
         $this->respondWith('create-stored');
 
-        $pdf = PdfLib::create();
+        $pdf = PdfLib::create()->store();
 
         $this->assertInstanceOf(StoredPdf::class, $pdf);
         $this->assertSame(2, $pdf->pageCount);
         $this->assertStringStartsWith('https://pdf.test/files/tests/fixtures/source.pdf?', $pdf->url);
-    }
-
-    public function test_an_inline_pdf(): void
-    {
-        $this->respondWith('create-inline');
-
-        $pdf = PdfLib::create();
-
-        $this->assertInstanceOf(InlinePdf::class, $pdf);
-        $this->assertStringStartsWith('%PDF-', (string) base64_decode($pdf->base64, true));
-        $this->assertSame($pdf->size, strlen((string) base64_decode($pdf->base64, true)));
     }
 }

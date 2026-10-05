@@ -6,20 +6,16 @@ namespace BogdanKharchenko\PdfLibWorkers\Tests;
 
 use BogdanKharchenko\PdfLibWorkers\Client;
 use BogdanKharchenko\PdfLibWorkers\Data\InfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\Output;
 use BogdanKharchenko\PdfLibWorkers\Data\StoredPdf;
 use BogdanKharchenko\PdfLibWorkers\Enums\AddFormFieldType;
 use BogdanKharchenko\PdfLibWorkers\Enums\BuiltInFont;
 use BogdanKharchenko\PdfLibWorkers\Exceptions\UnauthorizedException;
 use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
 use BogdanKharchenko\PdfLibWorkers\MergeSource;
-use BogdanKharchenko\PdfLibWorkers\Operations\AddFormField;
-use BogdanKharchenko\PdfLibWorkers\Operations\DrawText;
-use BogdanKharchenko\PdfLibWorkers\Operations\FillForm;
-use BogdanKharchenko\PdfLibWorkers\Operations\SetMetadata;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
@@ -50,16 +46,16 @@ final class LiveTest extends TestCase
 
     public function test_makes_fills_reads_and_merges_a_pdf(): void
     {
-        $made = PdfLib::create(operations: [
-            new DrawText('Hello from Laravel', 72, 760, size: 18, font: BuiltInFont::HelveticaBold),
-            new AddFormField(AddFormFieldType::Text, 'name', page: 1, x: 72, y: 700, width: 200, height: 24),
-            new AddFormField(AddFormFieldType::Text, '7', page: 1, x: 72, y: 660, width: 200, height: 24),
-            new SetMetadata(title: 'Live test', copyright: '© 2026 Acme', custom: ['MadeFor' => 'Laravel']),
-        ]);
+        $made = PdfLib::create()
+            ->drawText('Hello from Laravel', 72, 760, size: 18, font: BuiltInFont::HelveticaBold)
+            ->addFormField(AddFormFieldType::Text, 'name', page: 1, x: 72, y: 700, width: 200, height: 24)
+            ->addFormField(AddFormFieldType::Text, '7', page: 1, x: 72, y: 660, width: 200, height: 24)
+            ->setMetadata(title: 'Live test', copyright: '© 2026 Acme', custom: ['MadeFor' => 'Laravel'])
+            ->store();
         $this->assertInstanceOf(StoredPdf::class, $made);
 
         // A field named "7" is a PHP int key; it must still be sent as a JSON object key.
-        $filled = PdfLib::edit($made->key, [new FillForm(fields: ['name' => 'Ada', '7' => 'seven'])]);
+        $filled = PdfLib::edit($made->key)->fillForm(fields: ['name' => 'Ada', '7' => 'seven'])->store();
         $this->assertInstanceOf(StoredPdf::class, $filled);
 
         $info = PdfLib::info($filled->key);
@@ -74,7 +70,7 @@ final class LiveTest extends TestCase
         $downloaded = PdfLib::download($filled->key);
         $this->assertStringStartsWith('%PDF-', $downloaded->contents);
 
-        $merged = PdfLib::merge([MergeSource::contents($downloaded->contents, 'filled.pdf'), $made->key]);
+        $merged = PdfLib::merge([MergeSource::contents($downloaded->contents, 'filled.pdf'), $made->key])->store();
         $this->assertSame(2, $merged->pageCount);
 
         $this->assertGreaterThan(0, PdfLib::measureText('Hello', size: 12)->width);
@@ -89,14 +85,17 @@ final class LiveTest extends TestCase
             $this->markTestSkipped("The deployment runs pdf-lib-workers {$version}; returning the PDF itself needs 0.2.0.");
         }
 
-        $file = PdfLib::createFile(pageCount: 2, output: new Output(filename: 'Live test.pdf'));
+        $file = PdfLib::create(pageCount: 2)->filename('Live test.pdf')->file();
 
         $this->assertStringStartsWith('%PDF-', $file->contents);
         $this->assertSame('application/pdf', $file->contentType);
         $this->assertSame('Live test.pdf', $file->filename);
         $this->assertSame(2, $file->pageCount);
-        $this->assertNotNull($file->key);
-        $this->assertSame($file->contents, PdfLib::download($file->key)->contents);
+        $this->assertNull($file->key);
+
+        $kept = PdfLib::create()->file(storeAs: 'outputs/live-test-'.Str::uuid().'.pdf');
+        $this->assertNotNull($kept->key);
+        $this->assertSame($kept->contents, PdfLib::download($kept->key)->contents);
     }
 
     public function test_rejects_a_wrong_key(): void

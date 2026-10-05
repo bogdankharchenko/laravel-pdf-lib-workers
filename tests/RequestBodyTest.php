@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BogdanKharchenko\PdfLibWorkers\Tests;
 
 use BogdanKharchenko\PdfLibWorkers\Data\Layer;
-use BogdanKharchenko\PdfLibWorkers\Data\Output;
 use BogdanKharchenko\PdfLibWorkers\Data\Permissions;
 use BogdanKharchenko\PdfLibWorkers\Enums\AddFormFieldType;
 use BogdanKharchenko\PdfLibWorkers\Enums\BuiltInFont;
@@ -15,14 +14,6 @@ use BogdanKharchenko\PdfLibWorkers\Enums\PaperSize;
 use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
 use BogdanKharchenko\PdfLibWorkers\FontSource;
 use BogdanKharchenko\PdfLibWorkers\MergeSource;
-use BogdanKharchenko\PdfLibWorkers\Operations\AddFormField;
-use BogdanKharchenko\PdfLibWorkers\Operations\DrawText;
-use BogdanKharchenko\PdfLibWorkers\Operations\Encrypt;
-use BogdanKharchenko\PdfLibWorkers\Operations\FillForm;
-use BogdanKharchenko\PdfLibWorkers\Operations\RotatePages;
-use BogdanKharchenko\PdfLibWorkers\Operations\SetLayerVisibility;
-use BogdanKharchenko\PdfLibWorkers\Operations\SetMetadata;
-use BogdanKharchenko\PdfLibWorkers\Operations\Watermark;
 use BogdanKharchenko\PdfLibWorkers\PdfSource;
 use BogdanKharchenko\PdfLibWorkers\Source;
 
@@ -40,7 +31,7 @@ final class RequestBodyTest extends TestCase
 
     public function test_posts_json_with_the_api_key(): void
     {
-        PdfLib::edit('templates/in.pdf', [new RotatePages(degrees: 90)]);
+        PdfLib::edit('templates/in.pdf')->rotatePages(90)->store();
 
         $request = $this->sentRequest();
         $this->assertSame('POST', $request->method());
@@ -52,23 +43,23 @@ final class RequestBodyTest extends TestCase
 
     public function test_leaves_out_arguments_and_fields_that_were_not_given(): void
     {
-        PdfLib::edit('in.pdf', [new DrawText('Hi', 10, 20)]);
+        PdfLib::edit('in.pdf')->drawText('Hi', 10, 20)->store();
 
         $this->assertSentJson('{"source": "in.pdf", "operations": [{"op": "drawText", "text": "Hi", "x": 10, "y": 20}]}');
     }
 
     public function test_keeps_a_null_that_was_given(): void
     {
-        PdfLib::edit('in.pdf', [new AddFormField(AddFormFieldType::Text, 'name', maxLength: null)]);
+        PdfLib::edit('in.pdf')->addFormField(AddFormFieldType::Text, 'name', maxLength: null)->store();
 
         $this->assertSentJson('{"source": "in.pdf", "operations": [{"op": "addFormField", "type": "text", "name": "name", "maxLength": null}]}');
     }
 
     public function test_sends_enums_as_their_values(): void
     {
-        PdfLib::create(PaperSize::Letter, operations: [
-            new DrawText('Hi', 10, 20, origin: Origin::TopLeft, font: BuiltInFont::HelveticaBold),
-        ]);
+        PdfLib::create(PaperSize::Letter)
+            ->drawText('Hi', 10, 20, origin: Origin::TopLeft, font: BuiltInFont::HelveticaBold)
+            ->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -80,17 +71,17 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_a_custom_page_size_as_a_pair(): void
     {
-        PdfLib::create([612, 792], pageCount: 2);
+        PdfLib::create([612, 792], pageCount: 2)->store();
 
         $this->assertSentJson('{"size": [612, 792], "pageCount": 2}');
     }
 
     public function test_sends_maps_as_objects_even_when_empty(): void
     {
-        PdfLib::edit(PdfSource::url('https://files.test/in.pdf', headers: []), [
-            new FillForm(fields: []),
-            new SetMetadata(custom: []),
-        ]);
+        PdfLib::edit(PdfSource::url('https://files.test/in.pdf', headers: []))
+            ->fillForm(fields: [])
+            ->setMetadata(custom: [])
+            ->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -102,10 +93,10 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_maps_with_numeric_keys_as_objects(): void
     {
-        PdfLib::edit(PdfSource::url('https://files.test/in.pdf', headers: ['1' => 'x']), [
-            new FillForm(fields: ['0' => 'first', '1' => true]),
-            new SetMetadata(custom: ['2026' => 'year']),
-        ]);
+        PdfLib::edit(PdfSource::url('https://files.test/in.pdf', headers: ['1' => 'x']))
+            ->fillForm(fields: ['0' => 'first', '1' => true])
+            ->setMetadata(custom: ['2026' => 'year'])
+            ->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -120,14 +111,14 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_an_empty_nested_object_as_an_object(): void
     {
-        PdfLib::edit('in.pdf', [new Encrypt('owner', permissions: new Permissions)]);
+        PdfLib::edit('in.pdf')->encrypt('owner', permissions: new Permissions)->store();
 
         $this->assertSentJson('{"source": "in.pdf", "operations": [{"op": "encrypt", "ownerPassword": "owner", "permissions": {}}]}');
     }
 
     public function test_sends_a_list_of_objects(): void
     {
-        PdfLib::edit('in.pdf', [new SetLayerVisibility([new Layer('Draft', false), new Layer('Final', true)])]);
+        PdfLib::edit('in.pdf')->setLayerVisibility([new Layer('Draft', false), new Layer('Final', true)])->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -139,15 +130,14 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_every_kind_of_source(): void
     {
-        PdfLib::merge(
-            [
-                'a.pdf',
-                MergeSource::key('b.pdf', password: 'secret', pages: '1-2'),
-                MergeSource::url('https://files.test/c.png', headers: ['authorization' => 'Bearer x'], size: 'image'),
-                MergeSource::base64('ZA==', size: PaperSize::A5, margin: 18),
-            ],
-            [new Watermark(text: 'DRAFT', font: FontSource::key('fonts/inter.ttf', postscriptName: 'Inter-Bold'))],
-        );
+        PdfLib::merge([
+            'a.pdf',
+            MergeSource::key('b.pdf', password: 'secret', pages: '1-2'),
+            MergeSource::url('https://files.test/c.png', headers: ['authorization' => 'Bearer x'], size: 'image'),
+            MergeSource::base64('ZA==', size: PaperSize::A5, margin: 18),
+        ])
+            ->watermark(text: 'DRAFT', font: FontSource::key('fonts/inter.ttf', postscriptName: 'Inter-Bold'))
+            ->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -164,9 +154,7 @@ final class RequestBodyTest extends TestCase
 
     public function test_sends_sources_inside_operations(): void
     {
-        PdfLib::edit('in.pdf', [
-            new FillForm(images: ['signature' => Source::base64('iVBO'), 'logo' => 'logos/acme.png']),
-        ]);
+        PdfLib::edit('in.pdf')->fillForm(images: ['signature' => Source::base64('iVBO'), 'logo' => 'logos/acme.png'])->store();
 
         $this->assertSentJson(<<<'JSON'
             {
@@ -174,13 +162,6 @@ final class RequestBodyTest extends TestCase
                 "operations": [{"op": "fillForm", "images": {"signature": {"base64": "iVBO"}, "logo": "logos/acme.png"}}]
             }
             JSON);
-    }
-
-    public function test_sends_output_settings(): void
-    {
-        PdfLib::create(output: new Output(key: 'invoices/42.pdf', filename: 'Invoice 42.pdf', linkTtl: 600));
-
-        $this->assertSentJson('{"output": {"key": "invoices/42.pdf", "filename": "Invoice 42.pdf", "linkTtl": 600}}');
     }
 
     public function test_sends_lists_of_enums(): void

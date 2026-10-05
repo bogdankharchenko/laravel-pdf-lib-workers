@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace BogdanKharchenko\PdfLibWorkers\Tests;
 
 use BogdanKharchenko\PdfLibWorkers\Data\InfoResponse;
-use BogdanKharchenko\PdfLibWorkers\Data\Output;
 use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
-use BogdanKharchenko\PdfLibWorkers\Operations\DrawText;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 /**
@@ -26,7 +24,7 @@ final class AppConfigTest extends TestCase
     {
         $this->respondWith('create-stored');
 
-        PdfLib::create(operations: [new DrawText('Hi', 1, 2, maxWidth: 100)], output: new Output(linkTtl: 60));
+        PdfLib::create()->drawText('Hi', 1, 2, maxWidth: 100)->linkTtl(60)->store();
 
         $this->assertSentJson('{"operations": [{"op": "drawText", "text": "Hi", "x": 1, "y": 2, "maxWidth": 100}], "output": {"linkTtl": 60}}');
     }

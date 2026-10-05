@@ -4,7 +4,7 @@ Merge, fill, stamp, split and read PDFs from Laravel, using your own deployment 
 
 Every endpoint, operation, option and reply is generated from the API's OpenAPI spec as typed [laravel-data](https://spatie.be/docs/laravel-data) classes. Your IDE and PHPStan know every field, and the docblocks repeat the API's own documentation.
 
-This version targets **pdf-lib-workers 0.2.2**. The JSON endpoints work with any deployment from 0.1.0; `createFile()`, `editFile()` and `mergeFile()` need 0.2.0 or later.
+This version targets **pdf-lib-workers 0.2.2**. Getting the PDF itself (`file()`, `download()`, or returning it from a route) needs 0.2.0 or later; everything else works from 0.1.0.
 
 ## Install
 
@@ -33,18 +33,43 @@ PDF_LIB_WORKERS_KEY=your-api-key
 
 Call the `PdfLib` facade, or inject `BogdanKharchenko\PdfLibWorkers\Client`.
 
-### Fill a form and show it
+### Build a PDF step by step
 
 ```php
+use BogdanKharchenko\PdfLibWorkers\Enums\Position;
 use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
-use BogdanKharchenko\PdfLibWorkers\Operations\FillForm;
+use BogdanKharchenko\PdfLibWorkers\Source;
 
-Route::get('/w9', fn () => PdfLib::editFile('templates/w9.pdf', [
-    new FillForm(fields: ['name' => 'Ada Lovelace', 'agree' => true], flatten: true),
-]));
+$pdf = PdfLib::edit('templates/contract.pdf')
+    ->fillForm(['client' => 'Acme Inc.', 'agree' => true], flatten: true)
+    ->watermark(image: Source::disk('branding/logo.png'), position: Position::BottomRight, scale: 0.15, opacity: 1)
+    ->pageNumbers(format: 'Page {page} of {total}')
+    ->setMetadata(title: 'Contract 42', copyright: '© 2026 Acme Inc.', custom: ['ContractId' => '42'])
+    ->store();
+
+$pdf->url; // signed download link, valid for an hour by default
+$pdf->key; // R2 key: the source of your next request
 ```
 
-`editFile()` returns the PDF itself as a `FileResponse`. Returned from a route, it opens in the browser. `->download()` makes the browser save it, and `->save('w9/ada.pdf', 's3')` puts it on a disk.
+`create()`, `edit()` and `merge()` return a `PendingPdf`. Each [operation](#operations) is a method on it, and nothing is sent until you end the chain:
+
+| End with | You get |
+| --- | --- |
+| `->store()`, or `->store('contracts/42.pdf')` | `StoredPdf`: the PDF saved in R2, with `key`, `url`, `expiresAt`, `size` and `pageCount` |
+| `->file()` | `FileResponse`: the PDF itself. `->file(storeAs: 'contracts/42.pdf')` also saves it in R2 |
+| `->download('contract.pdf')` | A response that makes the browser save it |
+| Returning it from a route or controller | The PDF, shown in the browser |
+
+Before that, `->filename('Contract 42.pdf')` names the file, `->linkTtl(86400)` sets how long `store()`'s link works, and `->withoutObjectStreams()` writes a file that old tools can read.
+
+### Show a filled form in the browser
+
+```php
+Route::get('/w9', fn () => PdfLib::edit('templates/w9.pdf')
+    ->fillForm(['name' => 'Ada Lovelace', 'agree' => true], flatten: true));
+```
+
+A `FileResponse` from `->file()` can also be saved to a disk: `->file()->save('w9/ada.pdf', 's3')`.
 
 ### Merge uploads with a stored PDF
 
@@ -55,33 +80,19 @@ $pdf = PdfLib::merge([
     MergeSource::file($request->file('contract')),
     MergeSource::file($request->file('id_scan')), // images become pages
     'templates/terms.pdf',                        // an R2 key or a URL
-]);
-
-$pdf->url;       // signed download link, valid for an hour by default
-$pdf->key;       // R2 key: use it as the source of the next request
-$pdf->pageCount;
+])->store();
 ```
 
-### Stamp, number and label
+### Add steps only sometimes
 
 ```php
-use BogdanKharchenko\PdfLibWorkers\Enums\Position;
-use BogdanKharchenko\PdfLibWorkers\Operations\PageNumbers;
-use BogdanKharchenko\PdfLibWorkers\Operations\SetMetadata;
-use BogdanKharchenko\PdfLibWorkers\Operations\Watermark;
-use BogdanKharchenko\PdfLibWorkers\Source;
+use BogdanKharchenko\PdfLibWorkers\Enums\BuiltInFont;
+use BogdanKharchenko\PdfLibWorkers\PendingPdf;
 
-$pdf = PdfLib::edit($pdf->key, [
-    new Watermark(image: Source::disk('branding/logo.png'), position: Position::BottomRight, scale: 0.15, opacity: 1),
-    new Watermark(text: 'CONFIDENTIAL'),
-    new PageNumbers(format: 'Page {page} of {total}'),
-    new SetMetadata(
-        title: 'Contract 42',
-        author: 'Acme Inc.',
-        copyright: '© 2026 Acme Inc. All rights reserved.',
-        custom: ['MadeFor' => 'Client X', 'ContractId' => '42'],
-    ),
-]);
+return PdfLib::create()
+    ->drawText("Quote #{$quote->id}", 72, 760, size: 24, font: BuiltInFont::HelveticaBold)
+    ->when($quote->isDraft(), fn (PendingPdf $pdf) => $pdf->watermark(text: 'DRAFT'))
+    ->download("quote-{$quote->id}.pdf");
 ```
 
 ### Read a PDF
@@ -118,27 +129,28 @@ Wherever the API takes a file, pass a string (an R2 key, or an http(s) URL) or a
 
 ## Operations
 
-`create()`, `edit()` and `merge()` take a list of operations, run in order. Each is a class in `BogdanKharchenko\PdfLibWorkers\Operations`, named after its `op`:
+Each operation is a `PendingPdf` method named after its `op`, run in the order you call them:
 
-- **Pages:** `AddPage`, `RemovePages`, `SelectPages`, `DuplicatePage`, `RotatePages`, `ResizePages`, `CropPages`, `SetPageBoxes`, `ScalePages`, `TranslateContent`, `InsertPdf`
-- **Drawing:** `DrawText`, `DrawImage`, `DrawRectangle`, `DrawEllipse`, `DrawLine`, `DrawSvgPath`, `DrawSvg`, `DrawPdfPage`, `Watermark`, `PageNumbers`
-- **Forms:** `FillForm`, `FlattenForm`, `AddFormField`, `SetFieldProperties`, `RemoveFormFields`, `SetFieldScript`
-- **Scripts:** `AddJavaScript`, `SetXFAJavaScript`, `DeleteXFA`
-- **Document:** `SetLayerVisibility`, `SetViewerPreferences`, `SetMetadata`, `AttachFile`, `DetachFile`, `ConvertToPDFA`, `EmbedFacturX`, `Encrypt`
+- **Pages:** `addPage`, `removePages`, `selectPages`, `duplicatePage`, `rotatePages`, `resizePages`, `cropPages`, `setPageBoxes`, `scalePages`, `translateContent`, `insertPdf`
+- **Drawing:** `drawText`, `drawImage`, `drawRectangle`, `drawEllipse`, `drawLine`, `drawSvgPath`, `drawSvg`, `drawPdfPage`, `watermark`, `pageNumbers`
+- **Forms:** `fillForm`, `flattenForm`, `addFormField`, `setFieldProperties`, `removeFormFields`, `setFieldScript`
+- **Scripts:** `addJavaScript`, `setXFAJavaScript`, `deleteXFA`
+- **Document:** `setLayerVisibility`, `setViewerPreferences`, `setMetadata`, `attachFile`, `detachFile`, `convertToPDFA`, `embedFacturX`, `encrypt`
 
 Arguments you leave out are not sent, so the API's defaults apply. An explicit `null` is sent as `null`. Choices are enums in `BogdanKharchenko\PdfLibWorkers\Enums`, e.g. `BuiltInFont::HelveticaBold` or `PaperSize::Letter`. The [API's README](https://github.com/bogdankharchenko/pdf-lib-workers#operations) describes each operation in full.
+
+Each operation is also a class in `BogdanKharchenko\PdfLibWorkers\Operations`, with the same arguments. Build a list of them elsewhere and add it with `->apply(...$operations)`.
 
 ## Results
 
 | Method | Returns |
 | --- | --- |
-| `create()`, `edit()`, `merge()` | `StoredPdf` (`key`, `url`, `expiresAt`, `size`, `pageCount`), or `InlinePdf` (`base64`, `size`, `pageCount`) with `output: new Output(store: false)` |
-| `createFile()`, `editFile()`, `mergeFile()` | `FileResponse`: the PDF itself, plus `pageCount`, and `key` and `url` when it was also stored |
+| `create()`, `edit()`, `merge()` | A `PendingPdf`; see [Build a PDF step by step](#build-a-pdf-step-by-step) |
 | `download($key)` | `FileResponse` for any stored result |
 | `info()` | `InfoResponse`, or `LockedInfoResponse` for an encrypted PDF sent without its password |
 | `text()`, `extract()`, `scripts()`, `split()`, `measureText()` | `TextResponse`, `ExtractResponse`, `ScriptsResponse`, `SplitResponse`, `MeasureResponse` |
 
-`Output` controls where a PDF goes: `new Output(key: 'invoices/42.pdf', filename: 'Invoice 42.pdf', linkTtl: 86400)`. Results under the default `outputs/` keys are deleted after 7 days if you set up the API's recommended R2 rule.
+PDFs stored under the default `outputs/` keys are deleted after 7 days if you set up the API's recommended R2 rule.
 
 ## Errors
 

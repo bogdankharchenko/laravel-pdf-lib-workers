@@ -6,8 +6,6 @@ namespace BogdanKharchenko\PdfLibWorkers\Tests;
 
 use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
 use BogdanKharchenko\PdfLibWorkers\MergeSource;
-use BogdanKharchenko\PdfLibWorkers\Operations\DrawImage;
-use BogdanKharchenko\PdfLibWorkers\Operations\FillForm;
 use BogdanKharchenko\PdfLibWorkers\PdfSource;
 use BogdanKharchenko\PdfLibWorkers\Source;
 use BogdanKharchenko\PdfLibWorkers\Upload;
@@ -29,9 +27,9 @@ final class UploadTest extends TestCase
 
     public function test_sends_files_as_parts_and_refers_to_them_by_name(): void
     {
-        PdfLib::edit(PdfSource::contents('%PDF-in', 'in.pdf', password: 'secret'), [
-            new FillForm(images: ['signature' => Source::contents('PNG-sig', 'sig.png')]),
-        ]);
+        PdfLib::edit(PdfSource::contents('%PDF-in', 'in.pdf', password: 'secret'))
+            ->fillForm(images: ['signature' => Source::contents('PNG-sig', 'sig.png')])
+            ->store();
 
         $request = $this->sentRequest();
         $this->assertSame('https://pdf.test/pdf/edit', $request->url());
@@ -54,7 +52,7 @@ final class UploadTest extends TestCase
     {
         $logo = Source::contents('PNG-logo', 'logo.png');
 
-        PdfLib::edit('in.pdf', [new DrawImage($logo, 10, 10), new DrawImage($logo, 500, 10)]);
+        PdfLib::edit('in.pdf')->drawImage($logo, 10, 10)->drawImage($logo, 500, 10)->store();
 
         $parts = $this->sentParts();
         $this->assertSame(['options', 'file1'], array_keys($parts));
@@ -73,7 +71,7 @@ final class UploadTest extends TestCase
     {
         $path = $this->tempFile('%PDF-a');
 
-        PdfLib::merge([MergeSource::file($path), MergeSource::file($path, 'again.pdf', pages: 'last')]);
+        PdfLib::merge([MergeSource::file($path), MergeSource::file($path, 'again.pdf', pages: 'last')])->store();
 
         $parts = $this->sentParts();
         $this->assertSame(['contents' => '%PDF-a', 'filename' => basename($path)], $parts['file1']);

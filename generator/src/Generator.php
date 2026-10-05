@@ -7,6 +7,7 @@ namespace BogdanKharchenko\PdfLibWorkers\Generator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
+use Nette\PhpGenerator\Parameter;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\PsrPrinter;
@@ -34,6 +35,10 @@ final class Generator
 
     private const FILE_RESPONSE = self::NS.'\\FileResponse';
 
+    private const PENDING_PDF = self::NS.'\\PendingPdf';
+
+    private const ADDS_OPERATIONS = self::NS.'\\AddsOperations';
+
     private const API_EXCEPTION = self::NS.'\\Exceptions\\ApiException';
 
     private const JSON_OBJECT = self::NS.'\\Support\\Transformers\\JsonObjectTransformer';
@@ -54,6 +59,9 @@ final class Generator
 
     /** Methods of Client that endpoint methods must not shadow. */
     private const RESERVED_METHODS = ['post', 'get', 'request', 'checked', 'pathParam'];
+
+    /** PendingPdf's own methods (and Conditionable's): an operation of the same name would be hidden or clash. */
+    private const BUILDER_METHODS = ['apply', 'filename', 'linkTtl', 'withoutObjectStreams', 'store', 'file', 'download', 'toResponse', 'body', 'when', 'unless'];
 
     /** Names for enums the spec nests without a name of their own, keyed by the schema holding them. */
     private const ENUM_NAMES = ['PageSize' => 'PaperSize'];
@@ -110,6 +118,7 @@ final class Generator
 
         $methods = $this->endpointMethods();
         $this->emitEndpoints($methods);
+        $this->emitAddsOperations();
         $this->emitFacade($methods);
         $this->emitEnums();
         $this->assertUniqueShortNames();
@@ -561,17 +570,7 @@ final class Generator
     {
         $type = $field['type'];
         $parameter = $constructor->addPromotedParameter($field['name'])->setReadOnly();
-        $null = $type->nullable || (! $field['required'] && ! $isRequest);
-        $optional = ! $field['required'] && $isRequest;
-
-        $native = $optional ? $type->native.'|'.self::OPTIONAL.($type->nullable ? '|null' : '') : $type->nativeOrNull($null);
-        $parameter->setType($native);
-        if ($optional) {
-            $this->use($namespace, self::OPTIONAL);
-            $parameter->setDefaultValue(new Literal('new Optional()'));
-        } elseif (! $field['required']) {
-            $parameter->setDefaultValue(null);
-        }
+        $doc = $this->signature($parameter, $namespace, $field, $isRequest);
 
         if ($isRequest && $type->map) {
             $this->use($namespace, self::WITH_TRANSFORMER);
@@ -593,6 +592,30 @@ final class Generator
             }
         }
 
+        return $doc;
+    }
+
+    /**
+     * Types a field's parameter and returns its @param line. Request fields that may be
+     * left out are Optional, so leaving one out (not sent) differs from null (sent as null);
+     * response fields that may be missing are null.
+     *
+     * @param  Field  $field
+     */
+    private function signature(Parameter $parameter, PhpNamespace $namespace, array $field, bool $isRequest): string
+    {
+        $type = $field['type'];
+        $null = $type->nullable || (! $field['required'] && ! $isRequest);
+        $optional = ! $field['required'] && $isRequest;
+
+        $parameter->setType($optional ? $type->native.'|'.self::OPTIONAL.($type->nullable ? '|null' : '') : $type->nativeOrNull($null));
+        if ($optional) {
+            $this->use($namespace, self::OPTIONAL);
+            $parameter->setDefaultValue(new Literal('new Optional()'));
+        } elseif (! $field['required']) {
+            $parameter->setDefaultValue(null);
+        }
+
         $doc = $optional ? $type->doc.'|Optional'.($type->nullable ? '|null' : '') : $type->docOrNull($null);
         $text = $this->fieldText($field['schema']);
         if ($optional && $type->nullable) {
@@ -600,6 +623,46 @@ final class Generator
         }
 
         return rtrim("@param  {$doc}  \${$field['name']}  ".str_replace("\n", ' ', $text));
+    }
+
+    /**
+     * The trait that gives PendingPdf one method per operation, with the operation's own parameters.
+     */
+    private function emitAddsOperations(): void
+    {
+        $operations = [];
+        foreach ($this->spec->component('Operation')['discriminator']['mapping'] as $op => $ref) {
+            if (in_array($op, self::BUILDER_METHODS, true)) {
+                throw new RuntimeException("Operation {$op} clashes with a PendingPdf method");
+            }
+            $name = (string) Spec::refName(['$ref' => $ref]);
+            $schema = $this->spec->component($name);
+            $operations[$op] = [$this->classes[$name], $schema, $this->fields($schema, $this->operationShortName($name), skip: ['op'])];
+        }
+
+        $uses = [self::OPERATION, ...array_column($operations, 0)];
+        foreach ($operations as [, , $fields]) {
+            $uses = [...$uses, ...array_merge(...array_map(fn (array $f): array => $f['type']->uses, $fields))];
+        }
+        [$file, $namespace] = $this->file(self::ADDS_OPERATIONS, $uses);
+        $trait = $namespace->addTrait($this->short(self::ADDS_OPERATIONS));
+        $trait->addComment('One method per operation, each adding it to the PDF. Used by '.$this->short(self::PENDING_PDF).'.');
+
+        $trait->addMethod('apply')->setPublic()->setAbstract()->setReturnType('static')->setVariadic()
+            ->addComment('Adds operations made elsewhere.')
+            ->addParameter('operations')->setType(self::OPERATION);
+
+        foreach ($operations as $op => [$class, $schema, $fields]) {
+            $method = $trait->addMethod($op)->setReturnType('static');
+            $docs = array_map(fn (array $field): string => $this->signature($method->addParameter($field['name']), $namespace, $field, isRequest: true), $fields);
+            $method->addComment(trim($this->text($schema['description'] ?? '')."\n\n".implode("\n", $docs)));
+            $arguments = array_map(fn (array $field): string => "    {$field['name']}: \${$field['name']},", $fields);
+            $method->setBody($fields === []
+                ? 'return $this->apply(new '.$this->short($class).'());'
+                : 'return $this->apply(new '.$this->short($class)."(\n".implode("\n", $arguments)."\n));");
+        }
+
+        $this->write(self::ADDS_OPERATIONS, $file);
     }
 
     /**
@@ -870,25 +933,35 @@ final class Generator
             $json = $ok['application/json']['schema'] ?? null;
             $typedJson = $json !== null && (Spec::refName($json) !== null || isset($json['oneOf']));
             $binary = isset($ok['application/pdf']) || isset($ok['application/octet-stream']);
+            $summary = $operation['summary'] ?? '';
+            $description = $operation['description'] ?? '';
             if ($operation['x-method'] === 'head' || (! $typedJson && ! $binary)) {
                 continue;
             }
 
+            $request = Spec::refName($operation['requestBody']['content']['application/json']['schema'] ?? null);
+            $schema = $request === null ? [] : $this->spec->component($request);
+            if (isset($schema['properties']['operations'], $schema['properties']['output'])) {
+                $methods[] = $this->builderMethod($operation, $name, (string) $request, $schema);
+
+                continue;
+            }
+            if ($typedJson && $binary) {
+                throw new RuntimeException("{$name} returns JSON or a file but takes no operations: decide how the client should offer both");
+            }
+
             [$params, $call, $fallbackName] = $this->endpointCall($operation);
             $uses = array_merge(...array_map(fn (array $p): array => $p['type']->uses, $params));
-            $summary = $operation['summary'] ?? '';
-            $description = $operation['description'] ?? '';
 
             if ($typedJson) {
                 [$returns, $returnDoc, $body, $returnUses, $bodyUses] = $this->jsonReturn($json, str_replace(', %ACCEPT%', '', $call));
                 $methods[] = compact('name', 'summary', 'description', 'params', 'returns', 'returnDoc', 'body', 'bodyUses') + ['uses' => [...$uses, ...$returnUses]];
-            }
-            if ($binary) {
+            } else {
                 $accept = isset($ok['application/pdf']) ? "'application/pdf'" : "'*/*'";
                 $methods[] = [
-                    'name' => $typedJson ? $name.'File' : $name,
+                    'name' => $name,
                     'summary' => $summary,
-                    'description' => ($typedJson ? "Like {$name}(), but returns the file itself instead of JSON.\n\n" : '').$description,
+                    'description' => $description,
                     'params' => $params,
                     'returns' => self::FILE_RESPONSE,
                     'returnDoc' => $this->short(self::FILE_RESPONSE),
@@ -900,6 +973,33 @@ final class Generator
         }
 
         return $methods;
+    }
+
+    /**
+     * An endpoint that runs operations (create, edit, merge): it returns a PendingPdf
+     * holding its other fields, which gets the operations and sends the request.
+     *
+     * @param  array<string, mixed>  $operation
+     * @param  array<string, mixed>  $schema
+     * @return array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}
+     */
+    private function builderMethod(array $operation, string $name, string $request, array $schema): array
+    {
+        $params = $this->fields($schema, preg_replace('/Request$/', '', $request) ?? $request, skip: ['operations', 'output']);
+        $entries = array_map(fn (array $p): string => "    '{$p['name']}' => \${$p['name']},", $params);
+        $pending = $this->short(self::PENDING_PDF);
+
+        return [
+            'name' => $name,
+            'summary' => $operation['summary'] ?? '',
+            'description' => ($operation['description'] ?? '')."\n\nChain {$pending}'s methods to add operations, then call store(), file() or download(), or return it from a route.",
+            'params' => $params,
+            'returns' => self::PENDING_PDF,
+            'returnDoc' => $pending,
+            'uses' => [...array_merge(...array_map(fn (array $p): array => $p['type']->uses, $params)), self::PENDING_PDF],
+            'bodyUses' => [],
+            'body' => "return new {$pending}(fn (array \$body, string \$accept) => \$this->post('{$operation['x-path']}', \$body, \$accept), [\n".implode("\n", $entries)."\n]);",
+        ];
     }
 
     /**
@@ -975,7 +1075,9 @@ final class Generator
                 $docs[] = $this->paramDoc($param);
             }
             $text = implode("\n\n", array_filter([$spec['summary'], $this->text($spec['description'])]));
-            $method->addComment($text."\n\n".implode("\n", [...$docs, '@return '.$spec['returnDoc'], '', '@throws '.$this->short(self::API_EXCEPTION)]));
+            // A PendingPdf sends nothing until it is stored or returned, so only it can throw.
+            $throws = $spec['returns'] === self::PENDING_PDF ? [] : ['', '@throws '.$this->short(self::API_EXCEPTION)];
+            $method->addComment($text."\n\n".implode("\n", [...$docs, '@return '.$spec['returnDoc'], ...$throws]));
             $method->setBody($spec['body']);
         }
 

@@ -6,9 +6,12 @@ namespace BogdanKharchenko\PdfLibWorkers\Tests;
 
 use BackedEnum;
 use BogdanKharchenko\PdfLibWorkers\Contracts\Operation;
+use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
+use BogdanKharchenko\PdfLibWorkers\PendingPdf;
 use BogdanKharchenko\PdfLibWorkers\Support\Encoder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionUnionType;
@@ -53,6 +56,30 @@ final class OperationsTest extends TestCase
         $this->assertEqualsCanonicalizing($schema['required'], array_keys($encoded));
     }
 
+    /**
+     * @param  array<string, mixed>  $schema
+     */
+    #[DataProvider('operations')]
+    public function test_has_a_fluent_method_like_the_constructor(string $op, array $schema): void
+    {
+        $class = self::NS.'Operations\\'.ucfirst($op);
+        $method = new ReflectionMethod(PendingPdf::class, $op);
+        $constructor = new ReflectionMethod($class, '__construct');
+
+        // Declared by the generated trait: not hidden by a PendingPdf method of the same name.
+        $this->assertSame(realpath(__DIR__.'/../generated/AddsOperations.php'), $method->getFileName());
+        $this->assertSame($this->signature($constructor), $this->signature($method));
+
+        $this->respondWith('create-stored');
+        $arguments = $this->arguments($class);
+        PdfLib::create()->{$op}(...$arguments)->store();
+
+        $this->assertJsonIs(
+            (string) json_encode(['operations' => [(new Encoder)->encode(new $class(...$arguments))]]),
+            $this->sentRequest()->body(),
+        );
+    }
+
     public function test_has_no_operation_classes_the_spec_lacks(): void
     {
         $ops = array_keys(iterator_to_array(self::operations()));
@@ -66,12 +93,38 @@ final class OperationsTest extends TestCase
      */
     private function build(string $class): object
     {
-        $this->assertTrue(class_exists($class), "No class {$class}");
-        $constructor = (new ReflectionClass($class))->getConstructor();
-        $required = array_filter($constructor?->getParameters() ?? [], fn (ReflectionParameter $p): bool => ! $p->isOptional());
-        $args = array_map(fn (ReflectionParameter $p): mixed => $this->sample($class, $p), $required);
+        return new $class(...$this->arguments($class));
+    }
 
-        return new $class(...array_values($args));
+    /**
+     * Sample values for a class's required constructor parameters, by name.
+     *
+     * @return array<string, mixed>
+     */
+    private function arguments(string $class): array
+    {
+        $this->assertTrue(class_exists($class), "No class {$class}");
+        $arguments = [];
+        foreach ((new ReflectionClass($class))->getConstructor()?->getParameters() ?? [] as $parameter) {
+            if (! $parameter->isOptional()) {
+                $arguments[$parameter->getName()] = $this->sample($class, $parameter);
+            }
+        }
+
+        return $arguments;
+    }
+
+    /**
+     * Each parameter's name, type and default, e.g. "?int $page = null".
+     *
+     * @return list<string>
+     */
+    private function signature(ReflectionMethod $method): array
+    {
+        return array_map(
+            fn (ReflectionParameter $p): string => trim($p->getType().' $'.$p->getName().($p->isDefaultValueAvailable() ? ' = '.get_debug_type($p->getDefaultValue()) : '')),
+            $method->getParameters(),
+        );
     }
 
     /**

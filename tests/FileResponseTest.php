@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace BogdanKharchenko\PdfLibWorkers\Tests;
 
-use BogdanKharchenko\PdfLibWorkers\Data\Output;
 use BogdanKharchenko\PdfLibWorkers\Exceptions\NotFoundException;
 use BogdanKharchenko\PdfLibWorkers\Facades\PdfLib;
 use BogdanKharchenko\PdfLibWorkers\FileResponse;
-use BogdanKharchenko\PdfLibWorkers\Operations\RotatePages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * The *File methods and download(): the file itself, not JSON.
+ * PendingPdf::file() and download(): the file itself, not JSON.
  */
 final class FileResponseTest extends TestCase
 {
@@ -30,7 +28,7 @@ final class FileResponseTest extends TestCase
             'X-File-Url' => 'https://pdf.test/files/invoices/42.pdf?expires=1&sig=x',
         ])]);
 
-        $file = PdfLib::editFile('in.pdf', [new RotatePages(90)], output: new Output(key: 'invoices/42.pdf'));
+        $file = PdfLib::edit('in.pdf')->rotatePages(90)->file(storeAs: 'invoices/42.pdf');
 
         $request = $this->sentRequest();
         $this->assertSame('https://pdf.test/pdf/edit', $request->url());
@@ -46,11 +44,13 @@ final class FileResponseTest extends TestCase
         $this->assertSame('https://pdf.test/files/invoices/42.pdf?expires=1&sig=x', $file->url);
     }
 
-    public function test_has_no_key_or_link_for_a_pdf_that_was_not_stored(): void
+    public function test_does_not_keep_the_pdf_unless_asked(): void
     {
         Http::fake(['*' => Http::response(self::PDF, 200, ['Content-Type' => 'application/pdf', 'X-Page-Count' => '1'])]);
 
-        $file = PdfLib::createFile(output: new Output(store: false));
+        $file = PdfLib::create()->file();
+
+        $this->assertSentJson('{"output": {"store": false}}');
 
         $this->assertSame('document.pdf', $file->filename);
         $this->assertSame(1, $file->pageCount);
@@ -64,14 +64,14 @@ final class FileResponseTest extends TestCase
             'Content-Disposition' => "inline; filename=\"_____ 2026.pdf\"; filename*=UTF-8''%D0%9E%D1%82%D1%87%D1%91%D1%82%202026.pdf",
         ])]);
 
-        $this->assertSame('Отчёт 2026.pdf', PdfLib::createFile()->filename);
+        $this->assertSame('Отчёт 2026.pdf', PdfLib::create()->file()->filename);
     }
 
     public function test_keeps_only_the_base_of_a_name(): void
     {
         Http::fake(['*' => Http::response(self::PDF, 200, ['Content-Disposition' => 'attachment; filename="../../etc/passwd"'])]);
 
-        $this->assertSame('passwd', PdfLib::createFile()->filename);
+        $this->assertSame('passwd', PdfLib::create()->file()->filename);
     }
 
     public function test_downloads_by_key_with_each_segment_encoded(): void

@@ -11,9 +11,9 @@ use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 /**
- * A file returned by the API: a PDF from create/edit/merge with the *File
- * methods, or any stored result from download(). Return it from a controller
- * to show it in the browser, or call download() or save().
+ * A file returned by the API: a PDF from PendingPdf::file(), or any stored
+ * result from download(). Return it from a controller to show it in the
+ * browser, or call download() or save().
  */
 final readonly class FileResponse implements Responsable
 {
@@ -23,9 +23,9 @@ final readonly class FileResponse implements Responsable
         public string $filename,
         /** Number of pages, for PDFs made by create, edit or merge. */
         public ?int $pageCount = null,
-        /** R2 key, when the API also stored the file. */
+        /** R2 key, when the file was also stored (PendingPdf::file(storeAs: …)). */
         public ?string $key = null,
-        /** Signed download link, when the API also stored the file. */
+        /** Signed download link, when the file was also stored. */
         public ?string $url = null,
     ) {}
 
