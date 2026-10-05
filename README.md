@@ -14,7 +14,7 @@ The repository is private and not on Packagist yet, so first add it to your app'
 "repositories": [{ "type": "vcs", "url": "https://github.com/bogdankharchenko/laravel-pdf-lib-workers" }]
 ```
 
-Then require it:
+Composer needs read access to it: an SSH key on your GitHub account, or a token (`composer config --global --auth github-oauth.github.com <token>`). Then require it:
 
 ```bash
 composer require bogdankharchenko/laravel-pdf-lib-workers
