@@ -6,14 +6,6 @@ Every endpoint, operation, option and reply is generated from the API's OpenAPI 
 
 ## Install
 
-It isn't on Packagist yet, so first add the repository to your app's `composer.json`:
-
-```json
-"repositories": [{ "type": "vcs", "url": "https://github.com/bogdankharchenko/laravel-pdfmill" }]
-```
-
-Then require it:
-
 ```bash
 composer require bogdankharchenko/laravel-pdfmill
 ```
