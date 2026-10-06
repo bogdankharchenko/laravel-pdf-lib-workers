@@ -1,0 +1,46 @@
+src/Testing/PdfMillFake.php
+  s_11a02fa3fb7722::t_dbefc4c4e344c0 20-21,45,50,52,55,57,75-76,79,81,93-96,101-103,108,120,124,126,128,130
+  s_11a02fa3fb7722::t_69a61895cd4d2e 1-19,22-44,46-49,51,53-54,56,58-74,77-78,80,82-92,97-100,104-107,109-119,121-123,125,127,129,131-132
+  s_11a02fa3fb7722::t_55655bc7a048ce 133-134
+tests/FakeTest.php
+  s_11a02fa3fb7722::t_e9752bf04e048c 1-482
+  s_11a02fa3fb7722::t_edfdcdea2d9d8e 483-492
+tests/SentRequestTest.php
+  s_11a02fa3fb7722::t_fed4148dd9361a 1-68
+src/Testing/SentRequest.php
+  s_11a02fa3fb7722::t_888b5218b4878d 1-87
+src/Testing/FakeServer.php
+  s_11a02fa3fb7722::t_d015699ca5a395 1-388
+README.md
+  s_11a02fa3fb7722::t_a04342019bd5ec 170,173-202,206-238
+generated/Endpoints.php
+  s_11a02fa3fb7722::t_4bbec267aa4395 29-42
+generated/Facades/PdfMill.php
+  s_11a02fa3fb7722::t_155bcc26ca908c 28-31,35,47-53,56,60-72
+generator/src/Generator.php
+  s_11a02fa3fb7722::t_89ffc35c880208 21,45-48,65-70,931,950,955,968,973,1072,1080-1082,1102-1103,1105,1110-1111,1114,1123-1135,1137-1147
+src/Client.php
+  s_11a02fa3fb7722::t_f4252972462553 19-20,22
+src/Support/Encoder.php
+  s_11a02fa3fb7722::t_b9035d44571721 52-63
+tests/Generator/GeneratedCodeTest.php
+  s_11a02fa3fb7722::t_83fca04cd94a91 7-9,12,16-18,53-74
+tests/TestCase.php
+  s_11a02fa3fb7722::t_12fb759fe18ab8 12,131-140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "debb93efe333b8f2e9a3856ca362d795fc386c21",
+  "prompts": {},
+  "sessions": {
+    "s_11a02fa3fb7722": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24159d53-2c36-4ac6-a170-c654d0a1d84c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Bogdan Kharchenko <scriptor@gmail.com>"
+    }
+  }
+}
