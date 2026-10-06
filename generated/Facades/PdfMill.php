@@ -25,10 +25,14 @@ use BogdanKharchenko\PdfMill\FontSource;
 use BogdanKharchenko\PdfMill\MergeSource;
 use BogdanKharchenko\PdfMill\PdfSource;
 use BogdanKharchenko\PdfMill\PendingPdf;
+use BogdanKharchenko\PdfMill\Testing\PdfMillFake;
+use BogdanKharchenko\PdfMill\Testing\SentRequest;
+use Closure;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * The pdfmill API.
+ * The pdfmill API. In tests, PdfMill::fake() stands in for it and adds the assert methods.
  *
  * @method static FileResponse download(string $key)
  * @method static InfoResponse|LockedInfoResponse info(string|PdfSource $source)
@@ -40,11 +44,32 @@ use Illuminate\Support\Facades\Facade;
  * @method static PendingPdf merge(list<string|MergeSource> $sources)
  * @method static SplitResponse split(string|PdfSource $source, list<string|list<int>>|null $ranges = null, int|null $every = null, string|null $prefix = null, int|null $linkTtl = null)
  * @method static MeasureResponse measureText(string $text, BuiltInFont|FontSource|null $font = null, float|null $size = null, float|null $maxWidth = null, list<string>|null $wordBreaks = null, float|null $lineHeight = null, float|null $fitHeight = null)
+ * @method static void assertSent(string|Closure $endpoint, Closure|int|null $callback = null)
+ * @method static void assertNotSent(string|Closure $endpoint, Closure|null $callback = null)
+ * @method static void assertSentCount(int $count)
+ * @method static void assertNothingSent()
+ * @method static Collection<int, SentRequest> sent(string|Closure|null $endpoint = null, Closure|null $callback = null)
+ *
+ * @phpstan-import-type Replies from PdfMillFake
  *
  * @see Client
+ * @see PdfMillFake
  */
 final class PdfMill extends Facade
 {
+    /**
+     * Stands in for the API in a test: nothing is sent, each endpoint answers
+     * as the API would, and every request is recorded for the assert methods.
+     *
+     * @param  Replies  $replies  Replies by endpoint name, e.g. "merge" or "info"; see PdfMillFake.
+     */
+    public static function fake(array $replies = []): PdfMillFake
+    {
+        static::swap($fake = new PdfMillFake($replies));
+
+        return $fake;
+    }
+
     protected static function getFacadeAccessor(): string
     {
         return Client::class;

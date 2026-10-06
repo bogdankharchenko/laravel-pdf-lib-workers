@@ -16,9 +16,10 @@ use Illuminate\Http\Client\Response;
  * The pdfmill API client. Its endpoint methods are generated from the
  * API's OpenAPI spec (see Endpoints); this class only sends requests.
  *
- * Requests go through Laravel's HTTP client, so Http::fake() works in your tests.
+ * In tests, PdfMill::fake() replaces it with PdfMillFake, a Client that
+ * answers without the network; that is why this class isn't final.
  */
-final class Client
+class Client
 {
     use Endpoints;
 

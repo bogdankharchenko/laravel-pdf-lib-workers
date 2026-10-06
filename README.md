@@ -167,19 +167,74 @@ Every API error throws a subclass of `BogdanKharchenko\PdfMill\Exceptions\ApiExc
 
 ## Testing your app
 
-Requests go through Laravel's HTTP client, so `Http::fake()` works:
+`PdfMill::fake()` stands in for the API. Nothing is sent, every endpoint replies as the API would, and you assert on what your code asked for. It needs no `PDFMILL_URL` or key, and fakes a `Client` injected into your code too.
 
 ```php
-Http::fake([
-    config('pdfmill.url').'/pdf/merge' => Http::response([
-        'key' => 'outputs/test.pdf',
-        'url' => 'https://example.test/outputs/test.pdf',
-        'expiresAt' => '2026-01-01T00:00:00Z',
-        'size' => 1024,
-        'pageCount' => 3,
-    ]),
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
+use BogdanKharchenko\PdfMill\Testing\SentRequest;
+
+PdfMill::fake();
+
+$this->post('/contracts/42/sign')->assertOk();
+
+PdfMill::assertSent('edit', fn (SentRequest $pdf) => $pdf->data['source'] === 'templates/contract.pdf'
+    && $pdf->hasOperation('fillForm', ['fields' => ['client' => 'Acme Inc.']])
+    && $pdf->hasOperation('watermark', ['text' => 'DRAFT']));
+```
+
+Only the network is replaced: your options are encoded and your files read just as in production.
+
+By default every PDF is one blank A4 page. `store()` saves it under your key, or `outputs/<uuid>.pdf`. `file()`, `download()` and routes return a real PDF, and `info()`, `text()`, `extract()` and `split()` describe that page. To know keys and link expiry times in advance, use `Str::freezeUuids()` and `$this->freezeTime()`.
+
+### Set a reply
+
+Give an endpoint its reply by name:
+
+```php
+use BogdanKharchenko\PdfMill\Data\ErrorResponse;
+use BogdanKharchenko\PdfMill\Exceptions\UnprocessablePdfException;
+use BogdanKharchenko\PdfMill\FileResponse;
+
+PdfMill::fake([
+    'merge' => ['pageCount' => 12],
+    'download' => new FileResponse($csv, 'text/csv', 'totals.csv'),
+    'edit' => new UnprocessablePdfException(422, new ErrorResponse('Not a PDF')),
+    'info' => fn (SentRequest $request) => $request->data['source'] === 'locked.pdf' ? $locked : null,
 ]);
 ```
+
+| Reply | |
+| --- | --- |
+| An array | Fields to change in the default reply. Objects are merged and lists replaced |
+| A result object, such as `InfoResponse` | The whole reply. `create`, `edit` and `merge` take a `StoredPdf` or a `FileResponse`, and answer both `store()` and `file()` from it |
+| An `ApiException` | The API replies with that error, so your code gets it |
+| Any other exception, such as a `ConnectionException` | Thrown as if sending failed |
+| `Http::response(…)` | Exactly that HTTP reply |
+| A closure | Gets the `SentRequest` and returns any of these, or `null` for the default |
+
+### Assert
+
+| Assertion | Passes when |
+| --- | --- |
+| `PdfMill::assertSent('merge')` | At least one merge request was sent |
+| `PdfMill::assertSent('edit', 2)` | Exactly two edit requests were sent |
+| `PdfMill::assertSent('edit', fn (SentRequest $pdf) => …)` | The callback accepts an edit request. Leave out `'edit'` to check every request |
+| `PdfMill::assertNotSent('split')` | No split request was sent. It also takes a callback |
+| `PdfMill::assertSentCount(3)`, `PdfMill::assertNothingSent()` | Three requests in all, or none |
+
+A failed assertion lists what was sent. `PdfMill::sent('edit')` returns the requests, to inspect yourself.
+
+Each `SentRequest` has:
+
+- `endpoint`
+- `data`: the options sent, decoded from JSON
+- `files`: the uploads
+- `operations()`
+- `hasOperation()`
+
+`hasOperation()` finds an operation by name, `hasOperation('watermark', ['text' => 'DRAFT'])`, or by an object built the way your code builds it, `hasOperation(new Watermark(text: 'DRAFT'))`. It matches when the operation has at least the fields you give. Uploaded files match by filename and contents.
+
+Without `PdfMill::fake()`, requests go through Laravel's HTTP client, so `Http::fake()` works too.
 
 ## Working on this package
 

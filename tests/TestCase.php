@@ -9,6 +9,7 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Psr\Http\Message\StreamInterface;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\LaravelDataServiceProvider;
 use Spatie\LaravelData\Support\DataContainer;
 
@@ -125,6 +126,16 @@ abstract class TestCase extends Orchestra
         }
 
         return $parts;
+    }
+
+    /**
+     * Same class and fields. (assertEquals would also compare the context
+     * laravel-data keeps on an object once it has been transformed.)
+     */
+    protected function assertSameData(Data $expected, mixed $actual): void
+    {
+        $this->assertInstanceOf($expected::class, $actual);
+        $this->assertSame($expected->toArray(), $actual->toArray());
     }
 
     /**

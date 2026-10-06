@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace BogdanKharchenko\PdfMill\Tests\Generator;
 
+use BogdanKharchenko\PdfMill\Client;
+use BogdanKharchenko\PdfMill\Endpoints;
+use BogdanKharchenko\PdfMill\Facades\PdfMill;
 use BogdanKharchenko\PdfMill\Generator\Generator;
 use BogdanKharchenko\PdfMill\Generator\Spec;
+use BogdanKharchenko\PdfMill\Testing\PdfMillFake;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use ReflectionClass;
+use ReflectionClassConstant;
+use ReflectionMethod;
 use SplFileInfo;
 
 final class GeneratedCodeTest extends TestCase
@@ -41,6 +48,28 @@ final class GeneratedCodeTest extends TestCase
                 $this->assertMatchesRegularExpression('/\b'.$name.'\b/', $rest, "{$path} imports {$import[1]} but doesn't use it");
             }
         }
+    }
+
+    /**
+     * PdfMillFake is a Client and the facade forwards to it, so an endpoint
+     * method named like one of their methods would break all three.
+     */
+    public function test_reserves_the_method_names_of_the_client_the_fake_and_the_facade(): void
+    {
+        $reserved = (new ReflectionClassConstant(Generator::class, 'RESERVED_METHODS'))->getValue();
+        $this->assertIsArray($reserved);
+        $endpoints = array_map(fn (ReflectionMethod $method): string => $method->name, (new ReflectionClass(Endpoints::class))->getMethods());
+
+        $own = [];
+        foreach ([Client::class, PdfMillFake::class, PdfMill::class] as $class) {
+            foreach ((new ReflectionClass($class))->getMethods() as $method) {
+                if ($method->class === $class && ! $method->isConstructor() && ! in_array($method->name, $endpoints, true)) {
+                    $own[] = $method->name;
+                }
+            }
+        }
+
+        $this->assertSame([], array_values(array_diff($own, ['getFacadeAccessor'], $reserved)), 'Add these to Generator::RESERVED_METHODS');
     }
 
     /**

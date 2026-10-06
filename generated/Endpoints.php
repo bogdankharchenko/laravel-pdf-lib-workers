@@ -26,6 +26,20 @@ use BogdanKharchenko\PdfMill\Exceptions\ApiException;
  */
 trait Endpoints
 {
+    /** Each endpoint's HTTP method and path, by method name. PdfMillFake answers by it. */
+    protected const ROUTES = [
+        'download' => 'GET /files/{key}',
+        'info' => 'POST /pdf/info',
+        'text' => 'POST /pdf/text',
+        'extract' => 'POST /pdf/extract',
+        'scripts' => 'POST /pdf/scripts',
+        'create' => 'POST /pdf/create',
+        'edit' => 'POST /pdf/edit',
+        'merge' => 'POST /pdf/merge',
+        'split' => 'POST /pdf/split',
+        'measureText' => 'POST /text/measure',
+    ];
+
     /**
      * Download a stored result
      *

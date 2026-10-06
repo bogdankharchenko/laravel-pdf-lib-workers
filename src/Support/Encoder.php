@@ -50,6 +50,19 @@ final class Encoder
     }
 
     /**
+     * The value as the API reads it: encoded to JSON, then decoded into
+     * arrays. Like encode(), it adds the files it refers to to uploads().
+     *
+     * @return array<array-key, mixed>
+     */
+    public function decoded(mixed $value): array
+    {
+        $decoded = json_decode(json_encode($this->encode($value), JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    /**
      * Files referred to by the encoded value, with the field names they are sent under.
      *
      * @return list<array{name: string, upload: Upload}>

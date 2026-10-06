@@ -66,6 +66,23 @@ final readonly class Upload
     }
 
     /**
+     * The file's bytes.
+     */
+    public function contents(): string
+    {
+        $body = $this->body();
+        if (is_string($body)) {
+            return $body;
+        }
+
+        try {
+            return (string) stream_get_contents($body);
+        } finally {
+            fclose($body);
+        }
+    }
+
+    /**
      * The file's body: a fresh stream for files on disk, so an Upload can be sent more than once.
      *
      * @return string|resource

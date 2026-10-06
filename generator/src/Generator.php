@@ -18,6 +18,7 @@ use RuntimeException;
  * classes, operations, sources, response unions, the endpoint methods and the facade.
  *
  * @phpstan-type Field array{name: string, type: PhpType, required: bool, schema: array<string, mixed>}
+ * @phpstan-type Endpoint array{name: string, route: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}
  */
 final class Generator
 {
@@ -41,6 +42,10 @@ final class Generator
 
     private const API_EXCEPTION = self::NS.'\\Exceptions\\ApiException';
 
+    private const FAKE = self::NS.'\\Testing\\PdfMillFake';
+
+    private const SENT_REQUEST = self::NS.'\\Testing\\SentRequest';
+
     private const JSON_OBJECT = self::NS.'\\Support\\Transformers\\JsonObjectTransformer';
 
     private const LIST_OR_SCALAR = self::NS.'\\Support\\Casts\\DataListOrScalarCast';
@@ -57,8 +62,12 @@ final class Generator
 
     private const WITH_CAST = 'Spatie\\LaravelData\\Attributes\\WithCast';
 
-    /** Methods of Client that endpoint methods must not shadow. */
-    private const RESERVED_METHODS = ['post', 'get', 'request', 'checked', 'pathParam'];
+    /** Methods of Client, of PdfMillFake (a Client) and of the facade, which endpoint methods must not clash with. */
+    private const RESERVED_METHODS = [
+        'post', 'get', 'request', 'checked', 'pathParam',
+        'assertSent', 'assertNotSent', 'assertSentCount', 'assertNothingSent', 'sent', 'describe',
+        'fake',
+    ];
 
     /** PendingPdf's own methods (and Conditionable's): an operation of the same name would be hidden or clash. */
     private const BUILDER_METHODS = ['apply', 'filename', 'linkTtl', 'withoutObjectStreams', 'store', 'file', 'download', 'toResponse', 'body', 'when', 'unless'];
@@ -919,7 +928,7 @@ final class Generator
     // ---------- endpoints and facade ----------
 
     /**
-     * @return list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}>
+     * @return list<Endpoint>
      */
     private function endpointMethods(): array
     {
@@ -938,11 +947,12 @@ final class Generator
             if ($operation['x-method'] === 'head' || (! $typedJson && ! $binary)) {
                 continue;
             }
+            $route = strtoupper($operation['x-method']).' '.$operation['x-path'];
 
             $request = Spec::refName($operation['requestBody']['content']['application/json']['schema'] ?? null);
             $schema = $request === null ? [] : $this->spec->component($request);
             if (isset($schema['properties']['operations'], $schema['properties']['output'])) {
-                $methods[] = $this->builderMethod($operation, $name, (string) $request, $schema);
+                $methods[] = ['route' => $route] + $this->builderMethod($operation, $name, (string) $request, $schema);
 
                 continue;
             }
@@ -955,11 +965,12 @@ final class Generator
 
             if ($typedJson) {
                 [$returns, $returnDoc, $body, $returnUses, $bodyUses] = $this->jsonReturn($json, str_replace(', %ACCEPT%', '', $call));
-                $methods[] = compact('name', 'summary', 'description', 'params', 'returns', 'returnDoc', 'body', 'bodyUses') + ['uses' => [...$uses, ...$returnUses]];
+                $methods[] = compact('name', 'route', 'summary', 'description', 'params', 'returns', 'returnDoc', 'body', 'bodyUses') + ['uses' => [...$uses, ...$returnUses]];
             } else {
                 $accept = isset($ok['application/pdf']) ? "'application/pdf'" : "'*/*'";
                 $methods[] = [
                     'name' => $name,
+                    'route' => $route,
                     'summary' => $summary,
                     'description' => $description,
                     'params' => $params,
@@ -1058,7 +1069,7 @@ final class Generator
     }
 
     /**
-     * @param  list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}>  $methods
+     * @param  list<Endpoint>  $methods
      */
     private function emitEndpoints(array $methods): void
     {
@@ -1066,6 +1077,9 @@ final class Generator
         [$file, $namespace] = $this->file($fqcn, [...array_merge(...array_column($methods, 'uses'), ...array_column($methods, 'bodyUses')), self::API_EXCEPTION]);
         $trait = $namespace->addTrait('Endpoints');
         $trait->addComment("The API's endpoints, one method each. Used by Client.");
+        $trait->addConstant('ROUTES', array_column($methods, 'route', 'name'))
+            ->setProtected()
+            ->addComment("Each endpoint's HTTP method and path, by method name. PdfMillFake answers by it.");
 
         foreach ($methods as $spec) {
             $method = $trait->addMethod($spec['name'])->setReturnType($spec['returns']);
@@ -1085,17 +1099,19 @@ final class Generator
     }
 
     /**
-     * The facade, with an @method line per endpoint so IDEs and PHPStan know them.
+     * The facade, with an @method line per endpoint (and per assertion of
+     * PdfMillFake) so IDEs and PHPStan know them, and fake().
      *
-     * @param  list<array{name: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}>  $methods
+     * @param  list<Endpoint>  $methods
      */
     private function emitFacade(array $methods): void
     {
         $fqcn = self::NS.'\\Facades\\PdfMill';
-        [$file, $namespace] = $this->file($fqcn, [...array_merge(...array_column($methods, 'uses')), 'Illuminate\\Support\\Facades\\Facade', self::NS.'\\Client']);
+        $uses = ['Closure', 'Illuminate\\Support\\Collection', 'Illuminate\\Support\\Facades\\Facade', self::NS.'\\Client', self::FAKE, self::SENT_REQUEST];
+        [$file, $namespace] = $this->file($fqcn, [...array_merge(...array_column($methods, 'uses')), ...$uses]);
         $class = $namespace->addClass('PdfMill')->setFinal()->setExtends('Illuminate\\Support\\Facades\\Facade');
 
-        $lines = ['The pdfmill API.', ''];
+        $lines = ['The pdfmill API. In tests, PdfMill::fake() stands in for it and adds the assert methods.', ''];
         foreach ($methods as $spec) {
             $params = array_map(function (array $p): string {
                 $null = ! $p['required'] || $p['type']->nullable;
@@ -1104,9 +1120,31 @@ final class Generator
             }, $spec['params']);
             $lines[] = "@method static {$spec['returnDoc']} {$spec['name']}(".implode(', ', $params).')';
         }
-        $lines[] = '';
-        $lines[] = '@see Client';
+        array_push(
+            $lines,
+            '@method static void assertSent(string|Closure $endpoint, Closure|int|null $callback = null)',
+            '@method static void assertNotSent(string|Closure $endpoint, Closure|null $callback = null)',
+            '@method static void assertSentCount(int $count)',
+            '@method static void assertNothingSent()',
+            '@method static Collection<int, SentRequest> sent(string|Closure|null $endpoint = null, Closure|null $callback = null)',
+            '',
+            '@phpstan-import-type Replies from PdfMillFake',
+            '',
+            '@see Client',
+            '@see PdfMillFake',
+        );
         $class->addComment(implode("\n", $lines));
+
+        $fake = $class->addMethod('fake')->setStatic()->setReturnType(self::FAKE);
+        $fake->addParameter('replies')->setType('array')->setDefaultValue([]);
+        $fake->addComment(implode("\n", [
+            'Stands in for the API in a test: nothing is sent, each endpoint answers',
+            'as the API would, and every request is recorded for the assert methods.',
+            '',
+            '@param  Replies  $replies  Replies by endpoint name, e.g. "merge" or "info"; see PdfMillFake.',
+        ]));
+        $fake->setBody("static::swap(\$fake = new PdfMillFake(\$replies));\n\nreturn \$fake;");
+
         $class->addMethod('getFacadeAccessor')->setStatic()->setProtected()->setReturnType('string')->setBody('return Client::class;');
 
         $this->write($fqcn, $file);
