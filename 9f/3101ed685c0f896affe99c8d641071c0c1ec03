@@ -1,0 +1,53 @@
+generator/src/Generator.php
+  s_11a02fa3fb7722::t_89ffc35c880208 21,45-48,65-70,931,950,955,968,973,1072,1080-1082,1102-1103,1105,1110-1111,1114,1123-1135,1137-1147
+generated/Facades/PdfMill.php
+  s_11a02fa3fb7722::t_155bcc26ca908c 28-31,35,47-53,56,60-72
+src/Testing/SentRequest.php
+  s_11a02fa3fb7722::t_d45d22eccb111b 61-64
+  s_11a02fa3fb7722::t_888b5218b4878d 1-55,59,65-119
+  s_11a02fa3fb7722::t_ea827b74b23dd7 56-58
+  s_11a02fa3fb7722::t_5e0f90c7830a01 60
+tests/Generator/GeneratedCodeTest.php
+  s_11a02fa3fb7722::t_83fca04cd94a91 7-9,12,16-18,53-74
+src/Testing/FakeServer.php
+  s_11a02fa3fb7722::t_d015699ca5a395 1-400
+generated/Endpoints.php
+  s_11a02fa3fb7722::t_4bbec267aa4395 29-42
+tests/TestCase.php
+  s_11a02fa3fb7722::t_12fb759fe18ab8 12,131-140
+tests/SentRequestTest.php
+  s_11a02fa3fb7722::t_fed4148dd9361a 1-87
+src/Testing/PdfMillFake.php
+  s_11a02fa3fb7722::t_55655bc7a048ce 131-132
+  s_11a02fa3fb7722::t_69a61895cd4d2e 1-18,21-42,44-47,49,51-52,54,56-72,75-76,78,80-90,95-98,102-105,107-117,119-121,123,125,127,129-130
+  s_11a02fa3fb7722::t_dbefc4c4e344c0 19-20,43,48,50,53,55,73-74,77,79,91-94,99-101,106,118,122,124,126,128
+  s_11a02fa3fb7722::t_f3774a41ee0506 133-135
+README.md
+  s_11a02fa3fb7722::t_a04342019bd5ec 170,173-202,206-238
+src/Client.php
+  s_11a02fa3fb7722::t_f4252972462553 19-20,22
+src/Upload.php
+  s_11a02fa3fb7722::t_86b841612cda24 68
+  s_11a02fa3fb7722::t_81ad41b5fec4c8 69-84
+src/Support/Encoder.php
+  s_11a02fa3fb7722::t_b9035d44571721 52-64
+tests/FakeTest.php
+  s_11a02fa3fb7722::t_edfdcdea2d9d8e 487-496
+  s_11a02fa3fb7722::t_e9752bf04e048c 1-486
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9f3101ed685c0f896affe99c8d641071c0c1ec03",
+  "prompts": {},
+  "sessions": {
+    "s_11a02fa3fb7722": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24159d53-2c36-4ac6-a170-c654d0a1d84c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": null
+    }
+  }
+}
