@@ -70,7 +70,7 @@ class Generator
     ];
 
     /** PendingPdf's own methods (and Conditionable's): an operation of the same name would be hidden or clash. */
-    private const BUILDER_METHODS = ['apply', 'filename', 'linkTtl', 'withoutObjectStreams', 'store', 'file', 'download', 'toResponse', 'body', 'when', 'unless'];
+    private const BUILDER_METHODS = ['apply', 'filename', 'linkTtl', 'withoutObjectStreams', 'store', 'put', 'file', 'download', 'toResponse', 'body', 'when', 'unless'];
 
     /** Names for enums the spec nests without a name of their own, keyed by the schema holding them. */
     private const ENUM_NAMES = ['PageSize' => 'PaperSize'];

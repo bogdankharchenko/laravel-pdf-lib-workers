@@ -46,6 +46,7 @@ $pdf->key; // R2 key: the source of your next request
 | End with | You get |
 | --- | --- |
 | `->store()`, or `->store('contracts/42.pdf')` | `StoredPdf`: the PDF saved in R2, with `key`, `url`, `expiresAt`, `size` and `pageCount` |
+| `->put($url)` | `UploadedPdf`: the PDF uploaded to your URL instead of R2, with `size` and `pageCount`. See [Upload straight to S3](#upload-straight-to-s3) |
 | `->file()` | `FileResponse`: the PDF itself. `->file(storeAs: 'contracts/42.pdf')` also saves it in R2 |
 | `->download('contract.pdf')` | A response that makes the browser save it |
 | Returning it from a route or controller | The PDF, shown in the browser |
@@ -60,6 +61,21 @@ Route::get('/w9', fn () => PdfMill::edit('templates/w9.pdf')
 ```
 
 A `FileResponse` from `->file()` can also be saved to a disk: `->file()->save('w9/ada.pdf', 's3')`.
+
+### Upload straight to S3
+
+`->file()->save()` brings the whole PDF into your app's memory first. With `->put()`, the Worker uploads it to your bucket itself. Spread in a presigned upload URL:
+
+```php
+$path = "reports/{$report->id}.pdf";
+
+PdfMill::merge($report->pdfUrls())
+    ->put(...Storage::disk('s3')->temporaryUploadUrl($path, now()->addMinutes(10)));
+
+Storage::disk('s3')->exists($path); // true
+```
+
+`put()` takes a URL and the headers it was signed with, as `temporaryUploadUrl()` returns them. It needs pdfmill 0.4 or later. An older deployment would keep the PDF in R2 instead, so `put()` throws an `UnexpectedValueException` rather than report an upload that didn't happen.
 
 ### Merge uploads with a stored PDF
 
@@ -153,8 +169,8 @@ Every API error throws a subclass of `BogdanKharchenko\PdfMill\Exceptions\ApiExc
 | `NotFoundException` | 404 | No file at an R2 key |
 | `SourceTooLargeException` | 413 | A URL source is too large |
 | `UnprocessablePdfException` | 422 | Not a PDF, a damaged PDF, or a wrong password |
-| `SourceUnavailableException` | 502 | A URL source failed or couldn't be reached |
-| `SourceTimeoutException` | 504 | A URL source timed out |
+| `SourceUnavailableException` | 502 | A URL source, or the upload to `put()`'s URL, failed or couldn't be reached |
+| `SourceTimeoutException` | 504 | A URL source, or the upload to `put()`'s URL, timed out |
 | `ServerException` | 500 and others | The API failed unexpectedly |
 
 ## Testing your app
@@ -178,6 +194,16 @@ Only the network is replaced: your options are encoded and your files read just 
 
 By default every PDF is one blank A4 page. `store()` saves it under your key, or `outputs/<uuid>.pdf`. `file()`, `download()` and routes return a real PDF, and `info()`, `text()`, `extract()` and `split()` describe that page. To know keys and link expiry times in advance, use `Str::freezeUuids()` and `$this->freezeTime()`.
 
+`put()` gets that page's size and page count, but nothing is uploaded. If your code reads the file back, write it from a closure reply:
+
+```php
+PdfMill::fake([
+    'merge' => function (SentRequest $merge): void {
+        Storage::disk('s3')->put('reports/42.pdf', '%PDF-1.7');
+    },
+]);
+```
+
 ### Set a reply
 
 Give an endpoint its reply by name:
@@ -198,7 +224,7 @@ PdfMill::fake([
 | Reply | |
 | --- | --- |
 | An array | Fields to change in the default reply. Objects are merged and lists replaced |
-| A result object, such as `InfoResponse` | The whole reply. `create`, `edit` and `merge` take a `StoredPdf` or a `FileResponse`, and answer both `store()` and `file()` from it |
+| A result object, such as `InfoResponse` | The whole reply. `create`, `edit` and `merge` take a `StoredPdf`, an `UploadedPdf` or a `FileResponse`, and answer `store()`, `put()` and `file()` from it |
 | An `ApiException` | The API replies with that error, so your code gets it |
 | Any other exception, such as a `ConnectionException` | Thrown as if sending failed |
 | `Http::response(…)` | Exactly that HTTP reply |

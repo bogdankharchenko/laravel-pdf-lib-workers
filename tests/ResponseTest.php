@@ -53,6 +53,7 @@ class ResponseTest extends TestCase
         yield 'measure' => ['measure', '/text/measure', fn () => PdfMill::measureText('Quarterly report for Acme Inc.', maxWidth: 140, fitHeight: 20)];
         yield 'split' => ['split', '/pdf/split', fn () => PdfMill::split('in.pdf')];
         yield 'create' => ['create-stored', '/pdf/create', fn () => PdfMill::create()->store()];
+        yield 'create, uploaded' => ['create-uploaded', '/pdf/create', fn () => PdfMill::create()->put('https://bucket.test/42.pdf')];
     }
 
     /**

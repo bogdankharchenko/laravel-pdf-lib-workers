@@ -11,12 +11,17 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-class XfaScript extends Data
+/**
+ * The PDF was uploaded to output.put.url.
+ */
+class UploadedPdf extends Data
 {
+    /**
+     * @param  int  $size  File size in bytes.
+     */
     public function __construct(
-        public readonly string $event,
-        public readonly string $script,
-        public readonly string $field,
+        public readonly int $size,
+        public readonly int $pageCount,
     ) {
     }
 }

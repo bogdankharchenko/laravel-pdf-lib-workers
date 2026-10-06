@@ -14,6 +14,7 @@ use BogdanKharchenko\PdfMill\Data\ScriptsResponse;
 use BogdanKharchenko\PdfMill\Data\SplitResponse;
 use BogdanKharchenko\PdfMill\Data\StoredPdf;
 use BogdanKharchenko\PdfMill\Data\TextResponse;
+use BogdanKharchenko\PdfMill\Data\UploadedPdf;
 use BogdanKharchenko\PdfMill\Enums\ExtractInclude;
 use BogdanKharchenko\PdfMill\Exceptions\InvalidRequestException;
 use BogdanKharchenko\PdfMill\Exceptions\SourceUnavailableException;
@@ -148,6 +149,16 @@ class FakeTest extends TestCase
         $this->assertNull($file->url);
     }
 
+    public function test_answers_an_upload_with_the_blank_page_but_uploads_nothing(): void
+    {
+        PdfMill::fake();
+
+        $pdf = PdfMill::merge(['a.pdf'])->put('https://bucket.test/42.pdf?X-Amz-Signature=abc');
+
+        $this->assertSame([strlen(PdfMill::create()->file()->contents), 1], [$pdf->size, $pdf->pageCount]);
+        PdfMill::assertSent('merge', fn (SentRequest $merge) => $merge->data['output']['put']['url'] === 'https://bucket.test/42.pdf?X-Amz-Signature=abc');
+    }
+
     public function test_the_blank_page_is_a_well_formed_pdf(): void
     {
         PdfMill::fake();
@@ -248,6 +259,7 @@ class FakeTest extends TestCase
 
         $this->assertSame(12, PdfMill::merge(['a.pdf'])->store()->pageCount);
         $this->assertSame(12, PdfMill::merge(['a.pdf'])->file()->pageCount);
+        $this->assertSame(12, PdfMill::merge(['a.pdf'])->put('https://bucket.test/42.pdf')->pageCount);
         $this->assertInstanceOf(InfoResponse::class, $info);
         $this->assertSame([3, 'Q3 report', null], [$info->pageCount, $info->metadata->title, $info->metadata->author], 'Objects are merged');
         $this->assertSame(['Invoice 42', 'Total: 90'], array_column(PdfMill::text('in.pdf')->pages, 'text'), 'Lists are replaced');
@@ -267,6 +279,7 @@ class FakeTest extends TestCase
         yield 'measure' => ['measureText', 'measure', MeasureResponse::class, fn () => PdfMill::measureText('Hello')];
         yield 'split' => ['split', 'split', SplitResponse::class, fn () => PdfMill::split('in.pdf')];
         yield 'store' => ['create', 'create-stored', StoredPdf::class, fn () => PdfMill::create()->store()];
+        yield 'put' => ['create', 'create-uploaded', UploadedPdf::class, fn () => PdfMill::create()->put('https://bucket.test/42.pdf')];
     }
 
     /**
@@ -289,13 +302,15 @@ class FakeTest extends TestCase
         PdfMill::fake(['download' => $csv, 'edit' => $signed]);
 
         $stored = PdfMill::edit('in.pdf')->store('signed/42.pdf');
+        $uploaded = PdfMill::edit('in.pdf')->put('https://bucket.test/42.pdf');
 
         $this->assertEquals($csv, PdfMill::download('extracted/totals.csv'));
         $this->assertEquals($signed, PdfMill::edit('in.pdf')->file());
         $this->assertSame(['signed/42.pdf', 15, 4], [$stored->key, $stored->size, $stored->pageCount]);
+        $this->assertSame([15, 4], [$uploaded->size, $uploaded->pageCount]);
     }
 
-    public function test_a_stored_pdf_reply_shapes_the_file_too(): void
+    public function test_a_stored_pdf_reply_shapes_the_file_and_the_upload_too(): void
     {
         $stored = new StoredPdf('contracts/42.pdf', 'https://cdn.test/42.pdf', '2026-01-01T00:00:00.000Z', 2048, 3);
         PdfMill::fake(['edit' => $stored]);
@@ -304,6 +319,17 @@ class FakeTest extends TestCase
 
         $this->assertSameData($stored, PdfMill::edit('in.pdf')->store());
         $this->assertSame([3, 'contracts/42.pdf', 'https://cdn.test/42.pdf'], [$file->pageCount, $file->key, $file->url]);
+        $this->assertSameData(new UploadedPdf(2048, 3), PdfMill::edit('in.pdf')->put('https://bucket.test/42.pdf'));
+    }
+
+    public function test_an_uploaded_pdf_reply_shapes_the_stored_pdf_and_the_file_too(): void
+    {
+        PdfMill::fake(['edit' => new UploadedPdf(2048, 3)]);
+
+        $stored = PdfMill::edit('in.pdf')->store();
+
+        $this->assertSame([2048, 3], [$stored->size, $stored->pageCount]);
+        $this->assertSame(3, PdfMill::edit('in.pdf')->file()->pageCount);
     }
 
     public function test_replies_with_an_api_error(): void
@@ -377,7 +403,7 @@ class FakeTest extends TestCase
         PdfMill::fake(['edit' => fn () => new TextResponse([])]);
 
         $this->assertSame(
-            'PdfMill::fake(): edit replies with a StoredPdf, a FileResponse or an array of StoredPdf fields, not '.TextResponse::class.'.',
+            'PdfMill::fake(): edit replies with a StoredPdf, an UploadedPdf, a FileResponse or an array of their fields, not '.TextResponse::class.'.',
             $this->thrown(fn () => PdfMill::edit('in.pdf')->store())->getMessage(),
             'A closure\'s reply is checked when it is made',
         );

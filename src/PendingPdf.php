@@ -6,14 +6,19 @@ namespace BogdanKharchenko\PdfMill;
 
 use BogdanKharchenko\PdfMill\Contracts\Operation;
 use BogdanKharchenko\PdfMill\Data\Output;
+use BogdanKharchenko\PdfMill\Data\PdfResult;
+use BogdanKharchenko\PdfMill\Data\PutTarget;
 use BogdanKharchenko\PdfMill\Data\StoredPdf;
+use BogdanKharchenko\PdfMill\Data\UploadedPdf;
 use BogdanKharchenko\PdfMill\Exceptions\ApiException;
 use BogdanKharchenko\PdfMill\Support\Fields;
 use Closure;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Traits\Conditionable;
+use Spatie\LaravelData\Optional;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use UnexpectedValueException;
 
 /**
  * A PDF being made by create(), edit() or merge(). Add operations with its
@@ -21,9 +26,9 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
  *
  *   PdfMill::edit('templates/w9.pdf')->fillForm(['name' => 'Ada'], flatten: true)->store();
  *
- * store() keeps the PDF in R2 and returns its key and link; file() returns the
- * PDF itself; download() makes the browser save it. Returned from a route, it
- * shows the PDF.
+ * store() keeps the PDF in R2 and returns its key and link; put() uploads it to
+ * a URL of yours; file() returns the PDF itself; download() makes the browser
+ * save it. Returned from a route, it shows the PDF.
  */
 class PendingPdf implements Responsable
 {
@@ -98,6 +103,29 @@ class PendingPdf implements Responsable
     public function store(?string $key = null): StoredPdf
     {
         return StoredPdf::from(($this->send)($this->body(['key' => $key]), 'application/json')->json());
+    }
+
+    /**
+     * Uploads the PDF to a URL of yours, such as an S3 presigned upload URL,
+     * instead of keeping it in R2, so the PDF never passes through your app.
+     * Spread in what Storage's temporaryUploadUrl() returns:
+     *
+     *   PdfMill::merge($urls)->put(...Storage::disk('s3')->temporaryUploadUrl('reports/42.pdf', now()->addMinutes(10)));
+     *
+     * @param  array<string, string|list<string>>  $headers  Headers the URL was signed with. Host and Content-Length are ignored.
+     *
+     * @throws ApiException
+     * @throws UnexpectedValueException if the deployment is older than pdfmill 0.4, which keeps the PDF in R2 instead.
+     */
+    public function put(string $url, array $headers = []): UploadedPdf
+    {
+        $headers = array_map(fn (string|array $value): string => implode(', ', (array) $value), $headers);
+        $target = new PutTarget($url, $headers === [] ? new Optional : $headers);
+        $result = PdfResult::from(($this->send)($this->body(['put' => $target]), 'application/json')->json());
+
+        return $result instanceof UploadedPdf
+            ? $result
+            : throw new UnexpectedValueException('pdfmill kept the PDF instead of uploading it to the put URL: the deployment needs pdfmill 0.4 or later.');
     }
 
     /**

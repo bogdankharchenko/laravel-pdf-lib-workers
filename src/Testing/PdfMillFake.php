@@ -24,6 +24,8 @@ use Throwable;
  *
  * Each endpoint answers as if every PDF were one blank A4 page:
  * - store() returns a StoredPdf under your key, or "outputs/<uuid>.pdf";
+ * - put() returns an UploadedPdf but uploads nothing: if your code reads the
+ *   file back, write it there from a closure reply;
  * - file(), download() and returning a PendingPdf give that page as a PDF;
  * - info, text, extract, scripts and split describe it; measureText makes
  *   each character half the font size wide and each line as tall as the size.
@@ -33,7 +35,8 @@ use Throwable;
  * Change an endpoint's reply by its name:
  * - an array: fields to change in the default reply, e.g. ['pageCount' => 3];
  * - a result object: the whole reply, e.g. an InfoResponse. create, edit and
- *   merge take a StoredPdf or a FileResponse, download a FileResponse;
+ *   merge take a StoredPdf, an UploadedPdf or a FileResponse, download a
+ *   FileResponse;
  * - an ApiException: the API answers with that error, so your code gets it;
  * - any other exception, e.g. a ConnectionException: thrown, as if sending failed;
  * - Http::response(): exactly that HTTP reply;

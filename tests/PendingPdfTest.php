@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace BogdanKharchenko\PdfMill\Tests;
 
 use BogdanKharchenko\PdfMill\Data\StoredPdf;
+use BogdanKharchenko\PdfMill\Data\UploadedPdf;
 use BogdanKharchenko\PdfMill\Facades\PdfMill;
 use BogdanKharchenko\PdfMill\Operations\FlattenForm;
 use BogdanKharchenko\PdfMill\Operations\RotatePages;
 use BogdanKharchenko\PdfMill\PendingPdf;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use UnexpectedValueException;
 
 /**
  * create(), edit() and merge() return a PendingPdf: operations are chained, then sent.
@@ -51,6 +53,48 @@ class PendingPdfTest extends TestCase
         $this->assertSentJson(<<<'JSON'
             {"output": {"key": "invoices/42.pdf", "filename": "Invoice 42.pdf", "linkTtl": 86400, "useObjectStreams": false}}
             JSON);
+    }
+
+    public function test_uploads_the_pdf_to_a_url_of_yours(): void
+    {
+        $this->respondWith('create-uploaded');
+
+        $pdf = PdfMill::merge(['a.pdf', 'b.pdf'])->put('https://bucket.test/reports/42.pdf?X-Amz-Signature=abc');
+
+        $this->assertInstanceOf(UploadedPdf::class, $pdf);
+        $this->assertSame(2, $pdf->pageCount);
+        $this->assertSame(['application/json'], $this->sentRequest()->header('Accept'));
+        $this->assertSentJson('{"sources": ["a.pdf", "b.pdf"], "output": {"put": {"url": "https://bucket.test/reports/42.pdf?X-Amz-Signature=abc"}}}');
+    }
+
+    public function test_uploads_to_a_temporary_upload_url_with_the_headers_it_was_signed_with(): void
+    {
+        $this->respondWith('create-uploaded');
+        // What Storage::disk('s3')->temporaryUploadUrl() returns: header values are lists.
+        $upload = [
+            'url' => 'https://bucket.s3.amazonaws.com/reports/42.pdf?X-Amz-Signature=abc',
+            'headers' => ['Host' => ['bucket.s3.amazonaws.com'], 'x-amz-meta-tags' => ['signed', 'final'], 'x-amz-acl' => 'private'],
+        ];
+
+        PdfMill::create()->put(...$upload);
+
+        $this->assertSentJson(<<<'JSON'
+            {"output": {"put": {
+                "url": "https://bucket.s3.amazonaws.com/reports/42.pdf?X-Amz-Signature=abc",
+                "headers": {"Host": "bucket.s3.amazonaws.com", "x-amz-meta-tags": "signed, final", "x-amz-acl": "private"}
+            }}}
+            JSON);
+    }
+
+    public function test_refuses_a_deployment_that_keeps_the_pdf_instead_of_uploading_it(): void
+    {
+        // pdfmill before 0.4 ignores output.put and stores the PDF in R2.
+        $this->respondWith('create-stored');
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('pdfmill 0.4');
+
+        PdfMill::create()->put('https://bucket.test/reports/42.pdf');
     }
 
     public function test_keeps_the_fields_of_its_endpoint(): void

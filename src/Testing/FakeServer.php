@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BogdanKharchenko\PdfMill\Testing;
 
 use BogdanKharchenko\PdfMill\Data\StoredPdf;
+use BogdanKharchenko\PdfMill\Data\UploadedPdf;
 use BogdanKharchenko\PdfMill\Exceptions\ApiException;
 use BogdanKharchenko\PdfMill\FileResponse;
 use BogdanKharchenko\PdfMill\Support\Encoder;
@@ -127,9 +128,9 @@ class FakeServer
     {
         $expected = match (true) {
             $reply === null, $reply instanceof PromiseInterface, $reply instanceof Throwable => null,
-            in_array($endpoint, self::BUILDERS, true) => is_array($reply) || $reply instanceof StoredPdf || $reply instanceof FileResponse
+            in_array($endpoint, self::BUILDERS, true) => is_array($reply) || $reply instanceof StoredPdf || $reply instanceof UploadedPdf || $reply instanceof FileResponse
                 ? null
-                : 'a StoredPdf, a FileResponse or an array of StoredPdf fields',
+                : 'a StoredPdf, an UploadedPdf, a FileResponse or an array of their fields',
             $endpoint === 'download' => $reply instanceof FileResponse ? null : 'a FileResponse',
             default => is_array($reply) || $reply instanceof Data ? null : 'its result object or an array of fields',
         };
@@ -193,6 +194,10 @@ class FakeServer
     private static function pdf(SentRequest $sent, bool $wantsFile, mixed $reply): PromiseInterface
     {
         $output = $sent->data['output'] ?? [];
+        if (isset($output['put'])) {
+            return self::json(self::uploaded($reply));
+        }
+
         $file = $reply instanceof FileResponse ? $reply : null;
         $key = $file->key ?? $output['key'] ?? 'outputs/'.Str::uuid().'.pdf';
         $default = [
@@ -205,6 +210,7 @@ class FakeServer
         $stored = match (true) {
             $reply instanceof StoredPdf => (new Encoder)->decoded($reply),
             $reply instanceof FileResponse => self::merge($default, array_filter(['url' => $reply->url])),
+            $reply instanceof UploadedPdf => self::merge($default, (new Encoder)->decoded($reply)),
             default => self::merge($default, is_array($reply) ? $reply : []),
         };
 
@@ -222,6 +228,24 @@ class FakeServer
             key: $kept ? $stored['key'] : null,
             url: $kept ? $stored['url'] : null,
         ));
+    }
+
+    /**
+     * What the API answers once it has uploaded the PDF to output.put: only its
+     * size and page count, whatever else the reply set says.
+     *
+     * @param  Reply|null  $reply
+     * @return array{size: mixed, pageCount: mixed}
+     */
+    private static function uploaded(mixed $reply): array
+    {
+        $facts = match (true) {
+            $reply instanceof FileResponse => ['size' => strlen($reply->contents), 'pageCount' => $reply->pageCount ?? 1],
+            $reply instanceof Data => (new Encoder)->decoded($reply),
+            default => self::merge(['size' => strlen(self::blankPdf()), 'pageCount' => 1], is_array($reply) ? $reply : []),
+        };
+
+        return ['size' => $facts['size'], 'pageCount' => $facts['pageCount']];
     }
 
     /**

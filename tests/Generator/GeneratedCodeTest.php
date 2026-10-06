@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace BogdanKharchenko\PdfMill\Tests\Generator;
 
+use BogdanKharchenko\PdfMill\AddsOperations;
 use BogdanKharchenko\PdfMill\Client;
 use BogdanKharchenko\PdfMill\Endpoints;
 use BogdanKharchenko\PdfMill\Facades\PdfMill;
 use BogdanKharchenko\PdfMill\Generator\Generator;
 use BogdanKharchenko\PdfMill\Generator\Spec;
+use BogdanKharchenko\PdfMill\PendingPdf;
 use BogdanKharchenko\PdfMill\Testing\PdfMillFake;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
@@ -70,6 +72,26 @@ class GeneratedCodeTest extends TestCase
         }
 
         $this->assertSame([], array_values(array_diff($own, ['getFacadeAccessor'], $reserved)), 'Add these to Generator::RESERVED_METHODS');
+    }
+
+    /**
+     * Operations are PendingPdf methods too, so one named like PendingPdf's
+     * own methods (Conditionable's included) would be hidden or clash.
+     */
+    public function test_reserves_the_method_names_of_pending_pdf(): void
+    {
+        $reserved = (new ReflectionClassConstant(Generator::class, 'BUILDER_METHODS'))->getValue();
+        $this->assertIsArray($reserved);
+        $operations = array_map(fn (ReflectionMethod $method): string => $method->name, (new ReflectionClass(AddsOperations::class))->getMethods());
+
+        $own = [];
+        foreach ((new ReflectionClass(PendingPdf::class))->getMethods() as $method) {
+            if (! $method->isConstructor() && ! in_array($method->name, $operations, true)) {
+                $own[] = $method->name;
+            }
+        }
+
+        $this->assertSame([], array_values(array_diff($own, $reserved)), 'Add these to Generator::BUILDER_METHODS');
     }
 
     /**
