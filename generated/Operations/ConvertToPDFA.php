@@ -19,7 +19,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Adds what PDF/A requires (sRGB output intent, file ID, XMP). Text must use an embedded font file, and the PDF must not be encrypted.
  */
-final class ConvertToPDFA extends Data implements Operation
+class ConvertToPDFA extends Data implements Operation
 {
     /** Names this step in the operations list: always "convertToPDFA". */
     #[Computed]
@@ -28,7 +28,6 @@ final class ConvertToPDFA extends Data implements Operation
     /**
      * @param  ConvertToPDFAConformance|Optional  $conformance  Default: "3B".
      * @param  string|Source|Optional  $iccProfile  ICC colour profile. Default: sRGB.
-     * @param  string|Optional  $outputConditionIdentifier
      * @param  1|3|4|Optional  $colorComponents  Components of the ICC profile: 1 gray, 3 RGB, 4 CMYK.
      */
     public function __construct(

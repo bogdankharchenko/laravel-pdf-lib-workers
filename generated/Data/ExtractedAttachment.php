@@ -14,13 +14,9 @@ use Spatie\LaravelData\Data;
 /**
  * Comes in several shapes; fields not in every shape are null when absent.
  */
-final class ExtractedAttachment extends Data
+class ExtractedAttachment extends Data
 {
     /**
-     * @param  string  $name
-     * @param  string|null  $mimeType
-     * @param  string|null  $description
-     * @param  int  $size
      * @param  string|null  $key  R2 key of the saved file.
      * @param  string|null  $url  Signed download link; works without the API key until expiresAt.
      * @param  string|null  $expiresAt  When the link stops working (ISO 8601).

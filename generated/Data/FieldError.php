@@ -11,12 +11,8 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class FieldError extends Data
+class FieldError extends Data
 {
-    /**
-     * @param  string  $path
-     * @param  string  $message
-     */
     public function __construct(
         public readonly string $path,
         public readonly string $message,

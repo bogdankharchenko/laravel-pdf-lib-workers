@@ -15,24 +15,8 @@ use Spatie\LaravelData\Data;
 /**
  * A field's settings; which ones appear depends on the field type.
  */
-final class FieldSettings extends Data
+class FieldSettings extends Data
 {
-    /**
-     * @param  bool  $readOnly
-     * @param  bool  $required
-     * @param  bool  $exported
-     * @param  bool|null  $multiline
-     * @param  int|null  $maxLength
-     * @param  Alignment|null  $alignment
-     * @param  bool|null  $password
-     * @param  bool|null  $comb
-     * @param  bool|null  $multiselect
-     * @param  bool|null  $sort
-     * @param  bool|null  $editable
-     * @param  bool|null  $offToggle
-     * @param  bool|null  $mutuallyExclusive
-     * @param  bool|null  $checked
-     */
     public function __construct(
         public readonly bool $readOnly,
         public readonly bool $required,

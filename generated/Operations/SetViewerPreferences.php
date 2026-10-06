@@ -23,26 +23,17 @@ use Spatie\LaravelData\Optional;
 /**
  * Controls how viewers open the PDF.
  */
-final class SetViewerPreferences extends Data implements Operation
+class SetViewerPreferences extends Data implements Operation
 {
     /** Names this step in the operations list: always "setViewerPreferences". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  bool|Optional  $hideToolbar
-     * @param  bool|Optional  $hideMenubar
-     * @param  bool|Optional  $hideWindowUI
-     * @param  bool|Optional  $fitWindow
-     * @param  bool|Optional  $centerWindow
      * @param  bool|Optional  $displayDocTitle  Show the title, not the file name, in the window bar.
      * @param  SetViewerPreferencesPageMode|Optional  $pageMode  Which panel is open, or full screen.
-     * @param  SetViewerPreferencesPageLayout|Optional  $pageLayout
      * @param  SetViewerPreferencesNonFullScreenPageMode|Optional  $nonFullScreenPageMode  Panel shown after leaving full screen.
-     * @param  SetViewerPreferencesReadingDirection|Optional  $readingDirection
      * @param  SetViewerPreferencesPrintScaling|Optional  $printScaling  Print dialog default; "None" prints at actual size.
-     * @param  SetViewerPreferencesDuplex|Optional  $duplex
-     * @param  bool|Optional  $pickTrayByPDFSize
      * @param  string|list<int>|Optional  $printPageRange  Print dialog's default page range.
      * @param  int|Optional  $numCopies  Print dialog's default number of copies.
      */

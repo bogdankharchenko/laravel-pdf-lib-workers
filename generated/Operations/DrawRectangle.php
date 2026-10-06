@@ -20,17 +20,14 @@ use Spatie\LaravelData\Optional;
 /**
  * Draws a rectangle, optionally with rounded corners.
  */
-final class DrawRectangle extends Data implements Operation
+class DrawRectangle extends Data implements Operation
 {
     /** Names this step in the operations list: always "drawRectangle". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  float  $x
      * @param  float  $y  Bottom edge (bottom-left origin) or top edge (top-left origin).
-     * @param  float  $width
-     * @param  float  $height
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  float|Optional  $rx  Horizontal corner radius.

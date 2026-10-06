@@ -17,7 +17,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Rotates pages by a multiple of 90°.
  */
-final class RotatePages extends Data implements Operation
+class RotatePages extends Data implements Operation
 {
     /** Names this step in the operations list: always "rotatePages". */
     #[Computed]

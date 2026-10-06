@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\Group;
  *   PDFMILL_LIVE_URL=https://… PDFMILL_LIVE_KEY=… vendor/bin/phpunit --group live
  */
 #[Group('live')]
-final class LiveTest extends TestCase
+class LiveTest extends TestCase
 {
     protected function setUp(): void
     {

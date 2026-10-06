@@ -11,12 +11,8 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class MeasuredLine extends Data
+class MeasuredLine extends Data
 {
-    /**
-     * @param  string  $text
-     * @param  float  $width
-     */
     public function __construct(
         public readonly string $text,
         public readonly float $width,

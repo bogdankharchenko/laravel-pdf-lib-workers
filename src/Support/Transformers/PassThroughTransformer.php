@@ -13,7 +13,7 @@ use Spatie\LaravelData\Transformers\Transformer;
  *
  * @internal
  */
-final class PassThroughTransformer implements Transformer
+class PassThroughTransformer implements Transformer
 {
     public function transform(DataProperty $property, mixed $value, TransformationContext $context): mixed
     {

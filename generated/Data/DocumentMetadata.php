@@ -11,20 +11,9 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class DocumentMetadata extends Data
+class DocumentMetadata extends Data
 {
     /**
-     * @param  string|null  $title
-     * @param  string|null  $author
-     * @param  string|null  $subject
-     * @param  string|null  $keywords
-     * @param  string|null  $creator
-     * @param  string|null  $producer
-     * @param  string|null  $language
-     * @param  string|null  $creationDate
-     * @param  string|null  $modificationDate
-     * @param  string|null  $copyright
-     * @param  string|null  $copyrightUrl
      * @param  array<array-key, string>  $custom  Custom fields set with setMetadata (or by other tools).
      */
     public function __construct(

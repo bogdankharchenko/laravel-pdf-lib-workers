@@ -37,7 +37,7 @@ use Spatie\LaravelData\Data;
 /**
  * Responses captured from the real API, read into typed objects.
  */
-final class ResponseTest extends TestCase
+class ResponseTest extends TestCase
 {
     /**
      * @return iterable<string, array{string, string, Closure(): Data}>

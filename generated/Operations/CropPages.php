@@ -17,17 +17,13 @@ use Spatie\LaravelData\Optional;
 /**
  * Sets the visible area (crop box). Content outside it is hidden, not removed.
  */
-final class CropPages extends Data implements Operation
+class CropPages extends Data implements Operation
 {
     /** Names this step in the operations list: always "cropPages". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  float  $x
-     * @param  float  $y
-     * @param  float  $width
-     * @param  float  $height
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      */
     public function __construct(

@@ -11,12 +11,8 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class DocumentScript extends Data
+class DocumentScript extends Data
 {
-    /**
-     * @param  string  $name
-     * @param  string  $script
-     */
     public function __construct(
         public readonly string $name,
         public readonly string $script,

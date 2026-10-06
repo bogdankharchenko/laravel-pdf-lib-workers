@@ -43,7 +43,7 @@ use Throwable;
  * @phpstan-type Reply array<string, mixed>|Data|FileResponse|Throwable|PromiseInterface
  * @phpstan-type Replies array<string, Reply|Closure(SentRequest): (Reply|null)>
  */
-final class PdfMillFake extends Client implements Fake
+class PdfMillFake extends Client implements Fake
 {
     private readonly FakeServer $server;
 

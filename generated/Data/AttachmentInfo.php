@@ -11,15 +11,8 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class AttachmentInfo extends Data
+class AttachmentInfo extends Data
 {
-    /**
-     * @param  string  $name
-     * @param  int  $size
-     * @param  string|null  $mimeType
-     * @param  string|null  $description
-     * @param  string|null  $relationship
-     */
     public function __construct(
         public readonly string $name,
         public readonly int $size,

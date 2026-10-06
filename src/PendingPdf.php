@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
  * PDF itself; download() makes the browser save it. Returned from a route, it
  * shows the PDF.
  */
-final class PendingPdf implements Responsable
+class PendingPdf implements Responsable
 {
     use AddsOperations;
     use Conditionable;

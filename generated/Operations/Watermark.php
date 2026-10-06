@@ -22,7 +22,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Stamps text or an image (give one) on each page, centred or in a corner, at any angle and opacity.
  */
-final class Watermark extends Data implements Operation
+class Watermark extends Data implements Operation
 {
     /** Names this step in the operations list: always "watermark". */
     #[Computed]

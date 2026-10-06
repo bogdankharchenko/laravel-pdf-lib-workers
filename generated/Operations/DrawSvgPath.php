@@ -21,7 +21,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Draws an SVG path. Its y axis points down from (x, y). Fills black when neither colour nor border is given.
  */
-final class DrawSvgPath extends Data implements Operation
+class DrawSvgPath extends Data implements Operation
 {
     /** Names this step in the operations list: always "drawSvgPath". */
     #[Computed]
@@ -29,13 +29,9 @@ final class DrawSvgPath extends Data implements Operation
 
     /**
      * @param  string  $path  SVG path data, e.g. "M 0 0 L 100 0 L 50 80 Z".
-     * @param  float  $x
-     * @param  float  $y
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
-     * @param  float|Optional  $scale
      * @param  float|Optional  $rotate  Rotation in degrees, counter-clockwise.
-     * @param  DrawSvgPathFillRule|Optional  $fillRule
      * @param  string|Optional  $color  Fill colour. Default: no fill.
      * @param  float|Optional  $opacity  0 (invisible) to 1 (opaque).
      * @param  string|Optional  $borderColor  Border colour. Default: no border.

@@ -6,7 +6,7 @@ namespace BogdanKharchenko\PdfMill\Exceptions;
 
 use LogicException;
 
-final class MissingConfigurationException extends LogicException
+class MissingConfigurationException extends LogicException
 {
     public static function for(string $setting, string $env): self
     {

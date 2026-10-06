@@ -187,10 +187,6 @@ trait AddsOperations
     /**
      * Sets the visible area (crop box). Content outside it is hidden, not removed.
      *
-     * @param  float  $x
-     * @param  float  $y
-     * @param  float  $width
-     * @param  float  $height
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      */
     public function cropPages(
@@ -259,8 +255,6 @@ trait AddsOperations
     /**
      * Moves everything drawn on the page by (x, y) points.
      *
-     * @param  float  $x
-     * @param  float  $y
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      */
     public function translateContent(float $x, float $y, string|array|Optional $pages = new Optional()): static
@@ -301,7 +295,6 @@ trait AddsOperations
      * Draws text.
      *
      * @param  string  $text  The text. "\n" starts a new line.
-     * @param  float  $x
      * @param  float  $y  Baseline of the first line (bottom-left origin), or top of the text (top-left origin).
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
@@ -371,12 +364,10 @@ trait AddsOperations
      * Draws a PNG or JPEG. JPEG photos are turned upright using their EXIF orientation.
      *
      * @param  string|Source  $image  A PNG or JPEG.
-     * @param  float  $x
      * @param  float  $y  Bottom edge (bottom-left origin) or top edge (top-left origin) of the image.
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  float|Optional  $width  Width in points. Give one of width/height to keep the aspect ratio; neither draws 1 px per point.
-     * @param  float|Optional  $height
      * @param  float|Optional  $opacity  0 (invisible) to 1 (opaque).
      * @param  float|Optional  $rotate  Rotation in degrees, counter-clockwise.
      * @param  float|Optional  $xSkew  Horizontal skew in degrees.
@@ -416,10 +407,7 @@ trait AddsOperations
     /**
      * Draws a rectangle, optionally with rounded corners.
      *
-     * @param  float  $x
      * @param  float  $y  Bottom edge (bottom-left origin) or top edge (top-left origin).
-     * @param  float  $width
-     * @param  float  $height
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  float|Optional  $rx  Horizontal corner radius.
@@ -486,9 +474,6 @@ trait AddsOperations
     /**
      * Draws an ellipse or circle centred on (x, y).
      *
-     * @param  float  $x
-     * @param  float  $y
-     * @param  float  $xRadius
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  float|Optional  $yRadius  Default: xRadius (a circle).
@@ -553,7 +538,6 @@ trait AddsOperations
      * @param  float|Optional  $opacity  0 (invisible) to 1 (opaque).
      * @param  LineCap|Optional  $lineCap  Shape of line ends.
      * @param  list<float>|Optional  $dashArray  Dash pattern, e.g. [6, 3].
-     * @param  float|Optional  $dashPhase
      * @param  BlendMode|Optional  $blendMode  How the drawing's colours mix with what is underneath.
      */
     public function drawLine(
@@ -588,13 +572,9 @@ trait AddsOperations
      * Draws an SVG path. Its y axis points down from (x, y). Fills black when neither colour nor border is given.
      *
      * @param  string  $path  SVG path data, e.g. "M 0 0 L 100 0 L 50 80 Z".
-     * @param  float  $x
-     * @param  float  $y
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
-     * @param  float|Optional  $scale
      * @param  float|Optional  $rotate  Rotation in degrees, counter-clockwise.
-     * @param  DrawSvgPathFillRule|Optional  $fillRule
      * @param  string|Optional  $color  Fill colour. Default: no fill.
      * @param  float|Optional  $opacity  0 (invisible) to 1 (opaque).
      * @param  string|Optional  $borderColor  Border colour. Default: no border.
@@ -649,12 +629,9 @@ trait AddsOperations
      * Draws an SVG document (shapes, text, transforms).
      *
      * @param  string  $svg  SVG markup.
-     * @param  float  $x
      * @param  float  $y  Top-left corner of the SVG.
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
-     * @param  float|Optional  $width
-     * @param  float|Optional  $height
      * @param  float|Optional  $fontSize  Default size for SVG text.
      * @param  array<array-key, BuiltInFont|FontSource>|Optional  $fonts  Fonts for SVG text, keyed by the font-family name used in the SVG.
      * @param  BlendMode|Optional  $blendMode  How the drawing's colours mix with what is underneath.
@@ -696,7 +673,6 @@ trait AddsOperations
      * @param  float|Optional  $y  Bottom edge (bottom-left origin) or top edge (top-left origin). Default: 0.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  float|Optional  $width  Give one of width/height to keep the aspect ratio.
-     * @param  float|Optional  $height
      * @param  float|Optional  $scale  Alternative to width/height: a factor of the source size.
      * @param  float|Optional  $opacity  0 (invisible) to 1 (opaque).
      * @param  float|Optional  $rotate  Rotation in degrees, counter-clockwise.
@@ -866,13 +842,9 @@ trait AddsOperations
     /**
      * Creates a form field. Text, checkbox, dropdown, optionList and button need page, x, y, width and height; radio needs choices.
      *
-     * @param  AddFormFieldType  $type
      * @param  string  $name  Unique field name.
      * @param  int|Optional  $page  1-based page. Default: 1.
-     * @param  float|Optional  $x
      * @param  float|Optional  $y  Bottom edge (bottom-left origin) or top edge (top-left origin).
-     * @param  float|Optional  $width
-     * @param  float|Optional  $height
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  string|bool|list<string>|Optional  $value  Starting value: text, checkbox true/false, the selected option(s).
      * @param  list<RadioChoice>|Optional  $choices  Radio groups: one entry per choice, each with its own box.
@@ -883,9 +855,6 @@ trait AddsOperations
      * @param  string|Optional  $borderColor  A hex colour: "#rrggbb" or "#rgb".
      * @param  float|Optional  $borderWidth  Default: 1 when borderColor is set.
      * @param  float|Optional  $rotate  Rotation in degrees, counter-clockwise.
-     * @param  bool|Optional  $hidden
-     * @param  bool|Optional  $readOnly
-     * @param  bool|Optional  $required
      * @param  bool|Optional  $exported  false keeps the field's value out of form submissions.
      * @param  bool|Optional  $multiline  Text fields.
      * @param  int|Optional|null  $maxLength  Text fields: maximum characters; null removes the limit. Leave out to not send it; null is sent as null.
@@ -990,9 +959,6 @@ trait AddsOperations
     /**
      * Changes a field's settings, or shows an image in it.
      *
-     * @param  string  $name
-     * @param  bool|Optional  $readOnly
-     * @param  bool|Optional  $required
      * @param  bool|Optional  $exported  false keeps the field's value out of form submissions.
      * @param  bool|Optional  $multiline  Text fields.
      * @param  int|Optional|null  $maxLength  Text fields: maximum characters; null removes the limit. Leave out to not send it; null is sent as null.
@@ -1083,10 +1049,6 @@ trait AddsOperations
 
     /**
      * Replaces the script of a field's existing action (see /pdf/scripts). New actions cannot be added.
-     *
-     * @param  string  $name
-     * @param  SetFieldScriptEvent  $event
-     * @param  string  $script
      */
     public function setFieldScript(string $name, SetFieldScriptEvent $event, string $script): static
     {
@@ -1099,9 +1061,6 @@ trait AddsOperations
 
     /**
      * Adds document-level JavaScript, run when the PDF opens in viewers that allow it.
-     *
-     * @param  string  $name
-     * @param  string  $script
      */
     public function addJavaScript(string $name, string $script): static
     {
@@ -1114,9 +1073,7 @@ trait AddsOperations
     /**
      * Replaces a script in an XFA form. The source needs "preserveXFA": true.
      *
-     * @param  string  $field
      * @param  string  $event  XFA event, e.g. "event__click" (see /pdf/scripts).
-     * @param  string  $script
      */
     public function setXFAJavaScript(string $field, string $event, string $script): static
     {
@@ -1150,19 +1107,10 @@ trait AddsOperations
     /**
      * Controls how viewers open the PDF.
      *
-     * @param  bool|Optional  $hideToolbar
-     * @param  bool|Optional  $hideMenubar
-     * @param  bool|Optional  $hideWindowUI
-     * @param  bool|Optional  $fitWindow
-     * @param  bool|Optional  $centerWindow
      * @param  bool|Optional  $displayDocTitle  Show the title, not the file name, in the window bar.
      * @param  SetViewerPreferencesPageMode|Optional  $pageMode  Which panel is open, or full screen.
-     * @param  SetViewerPreferencesPageLayout|Optional  $pageLayout
      * @param  SetViewerPreferencesNonFullScreenPageMode|Optional  $nonFullScreenPageMode  Panel shown after leaving full screen.
-     * @param  SetViewerPreferencesReadingDirection|Optional  $readingDirection
      * @param  SetViewerPreferencesPrintScaling|Optional  $printScaling  Print dialog default; "None" prints at actual size.
-     * @param  SetViewerPreferencesDuplex|Optional  $duplex
-     * @param  bool|Optional  $pickTrayByPDFSize
      * @param  string|list<int>|Optional  $printPageRange  Print dialog's default page range.
      * @param  int|Optional  $numCopies  Print dialog's default number of copies.
      */
@@ -1205,10 +1153,7 @@ trait AddsOperations
     /**
      * Sets document properties, copyright and custom fields, in both the Info dictionary and XMP. Run it before convertToPDFA.
      *
-     * @param  string|Optional  $title
      * @param  bool|Optional  $showTitleInWindow  Show the title instead of the file name in viewers' title bar.
-     * @param  string|Optional  $author
-     * @param  string|Optional  $subject
      * @param  list<string>|Optional  $keywords
      * @param  string|Optional  $creator  The application that made the original content.
      * @param  string|Optional  $producer  The application that made the PDF.
@@ -1256,8 +1201,6 @@ trait AddsOperations
      *
      * @param  string|Source  $file  A file (image, attachment, XML…): a FileSource object or a shortcut string.
      * @param  string  $name  File name shown in viewers.
-     * @param  string|Optional  $mimeType
-     * @param  string|Optional  $description
      * @param  string|Optional  $creationDate  A date, ideally ISO 8601.
      * @param  string|Optional  $modificationDate  A date, ideally ISO 8601.
      * @param  AttachFileRelationship|Optional  $relationship  How the file relates to the PDF (PDF/A-3 associated files).
@@ -1284,8 +1227,6 @@ trait AddsOperations
 
     /**
      * Removes an embedded file.
-     *
-     * @param  string  $name
      */
     public function detachFile(string $name): static
     {
@@ -1299,7 +1240,6 @@ trait AddsOperations
      *
      * @param  ConvertToPDFAConformance|Optional  $conformance  Default: "3B".
      * @param  string|Source|Optional  $iccProfile  ICC colour profile. Default: sRGB.
-     * @param  string|Optional  $outputConditionIdentifier
      * @param  1|3|4|Optional  $colorComponents  Components of the ICC profile: 1 gray, 3 RGB, 4 CMYK.
      */
     public function convertToPDFA(
@@ -1320,11 +1260,6 @@ trait AddsOperations
      * Makes a Factur-X / ZUGFeRD e-invoice: attaches your invoice XML and makes the PDF PDF/A-3. The XML is not generated or checked.
      *
      * @param  string|Source  $xml  The complete Factur-X / ZUGFeRD XML.
-     * @param  EmbedFacturXConformanceLevel|Optional  $conformanceLevel
-     * @param  string|Optional  $fileName
-     * @param  string|Optional  $version
-     * @param  string|Optional  $documentType
-     * @param  string|Optional  $description
      */
     public function embedFacturX(
         string|Source $xml,

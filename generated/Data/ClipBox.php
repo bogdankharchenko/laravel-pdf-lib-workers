@@ -14,14 +14,8 @@ use Spatie\LaravelData\Data;
 /**
  * A rectangle by its edges, in the source page's coordinates.
  */
-final class ClipBox extends Data
+class ClipBox extends Data
 {
-    /**
-     * @param  float  $left
-     * @param  float  $bottom
-     * @param  float  $right
-     * @param  float  $top
-     */
     public function __construct(
         public readonly float $left,
         public readonly float $bottom,

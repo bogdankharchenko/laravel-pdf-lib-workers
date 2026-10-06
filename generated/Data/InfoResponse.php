@@ -12,15 +12,11 @@ namespace BogdanKharchenko\PdfMill\Data;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
-final class InfoResponse extends Data
+class InfoResponse extends Data
 {
     /**
-     * @param  int  $pageCount
-     * @param  bool  $encrypted
      * @param  string|null  $pdfA  PDF/A part and level, e.g. "3B", or null.
-     * @param  DocumentMetadata  $metadata
      * @param  list<PageInfo>  $pages
-     * @param  FormInfo  $form
      * @param  list<Layer>  $layers
      * @param  ViewerPreferences  $viewerPreferences  pageMode and pageLayout are always present; the rest only when the PDF sets viewer preferences.
      * @param  list<AttachmentInfo>  $attachments

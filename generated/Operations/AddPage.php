@@ -18,7 +18,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Adds blank pages.
  */
-final class AddPage extends Data implements Operation
+class AddPage extends Data implements Operation
 {
     /** Names this step in the operations list: always "addPage". */
     #[Computed]

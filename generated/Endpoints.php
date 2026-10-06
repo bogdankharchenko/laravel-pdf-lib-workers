@@ -46,7 +46,6 @@ trait Endpoints
      * Use the signed `url` from a response (no API key needed until it expires), or send the API key with just the path.
      *
      * @param  string  $key  The R2 key, slashes included (e.g. "outputs/abc.pdf"). "%2F" is accepted for "/".
-     * @return FileResponse
      *
      * @throws ApiException
      */
@@ -61,7 +60,6 @@ trait Endpoints
      * Reads everything about a PDF except its content: pages and their boxes, metadata (including copyright and custom fields), form fields with their types, choices and settings, layers, viewer preferences and attachments. Call it before editing to learn field names and page sizes. An encrypted PDF sent without its password returns a LockedInfoResponse, not an error.
      *
      * @param  string|PdfSource  $source  A PDF: a PdfSourceObject or a shortcut string.
-     * @return InfoResponse|LockedInfoResponse
      *
      * @throws ApiException
      */
@@ -85,7 +83,6 @@ trait Endpoints
      * @param  string|PdfSource  $source  A PDF: a PdfSourceObject or a shortcut string.
      * @param  string|list<int>|null  $pages  Pages, 1-based. A string such as "1-3,5", "first", "last", "odd", "even", "all" or "5-1" (reversed), or an array of numbers where negatives count from the end (-1 = last page). Leaving it out means every page.
      * @param  bool|null  $items  Also return each text run with its position, size and font. Default: false.
-     * @return TextResponse
      *
      * @throws ApiException
      */
@@ -109,7 +106,6 @@ trait Endpoints
      * @param  bool|null  $store  Save images and attachments to R2 and return signed links; false returns them as base64. Default: true.
      * @param  string|null  $prefix  R2 key prefix for stored files. Default: "extracted/<uuid>/", which the recommended expiry rule deletes after 7 days.
      * @param  int|null  $linkTtl  Lifetime of the signed download link, in seconds (max 604800 = 7 days). Default: the SIGNED_URL_TTL setting (3600).
-     * @return ExtractResponse
      *
      * @throws ApiException
      */
@@ -137,7 +133,6 @@ trait Endpoints
      * Lists the JavaScript in a PDF: document-level scripts, form field actions, page open/close actions and XFA scripts. Use it to find the field and event names that setFieldScript and setXFAJavaScript need.
      *
      * @param  string|PdfSource  $source  A PDF: a PdfSourceObject or a shortcut string.
-     * @return ScriptsResponse
      *
      * @throws ApiException
      */
@@ -157,7 +152,6 @@ trait Endpoints
      *
      * @param  PaperSize|array{float, float}|null  $size  A paper name ("A4", "Letter", "Legal", …) or [width, height] in points (72 pt = 1 inch; A4 is 595 × 842). Default: "A4".
      * @param  int|null  $pageCount  Blank pages to start with. With 0, add pages with addPage. Default: 1.
-     * @return PendingPdf
      */
     public function create(PaperSize|array|null $size = null, ?int $pageCount = null): PendingPdf
     {
@@ -176,7 +170,6 @@ trait Endpoints
      *
      * @param  string|PdfSource  $source  A PDF: a PdfSourceObject or a shortcut string.
      * @param  bool|null  $incremental  Keep the original bytes and append the changes, so existing digital signatures stay valid. Default: false.
-     * @return PendingPdf
      */
     public function edit(string|PdfSource $source, ?bool $incremental = null): PendingPdf
     {
@@ -194,7 +187,6 @@ trait Endpoints
      * Chain PendingPdf's methods to add operations, then call store(), file() or download(), or return it from a route.
      *
      * @param  list<string|MergeSource>  $sources  PDFs and images, in order. In a multipart request it may be left out: every uploaded PDF and image is merged in the order sent, except files the operations use.
-     * @return PendingPdf
      */
     public function merge(array $sources): PendingPdf
     {
@@ -213,7 +205,6 @@ trait Endpoints
      * @param  int|null  $every  Pages per part, when ranges is not given. Default: 1.
      * @param  string|null  $prefix  R2 key prefix for the parts. Default: "outputs/<uuid>/".
      * @param  int|null  $linkTtl  Lifetime of the signed download link, in seconds (max 604800 = 7 days). Default: the SIGNED_URL_TTL setting (3600).
-     * @return SplitResponse
      *
      * @throws ApiException
      */
@@ -245,7 +236,6 @@ trait Endpoints
      * @param  list<string>|null  $wordBreaks  Characters after which a line may wrap. Default: [" "].
      * @param  float|null  $lineHeight  Distance between baselines. Default: 1.2 × size.
      * @param  float|null  $fitHeight  Also return the font size whose text height equals this.
-     * @return MeasureResponse
      *
      * @throws ApiException
      */

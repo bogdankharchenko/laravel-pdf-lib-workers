@@ -14,7 +14,7 @@ use BogdanKharchenko\PdfMill\Testing\SentRequest;
 /**
  * hasOperation(): finding an operation by some of its fields.
  */
-final class SentRequestTest extends TestCase
+class SentRequestTest extends TestCase
 {
     private SentRequest $pdf;
 

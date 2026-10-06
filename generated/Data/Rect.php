@@ -14,14 +14,8 @@ use Spatie\LaravelData\Data;
 /**
  * A box in points: lower-left corner (x, y), width and height.
  */
-final class Rect extends Data
+class Rect extends Data
 {
-    /**
-     * @param  float  $x
-     * @param  float  $y
-     * @param  float  $width
-     * @param  float  $height
-     */
     public function __construct(
         public readonly float $x,
         public readonly float $y,

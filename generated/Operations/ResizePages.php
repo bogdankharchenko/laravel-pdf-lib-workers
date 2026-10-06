@@ -18,7 +18,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Changes the paper size.
  */
-final class ResizePages extends Data implements Operation
+class ResizePages extends Data implements Operation
 {
     /** Names this step in the operations list: always "resizePages". */
     #[Computed]

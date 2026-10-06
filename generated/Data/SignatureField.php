@@ -12,12 +12,8 @@ namespace BogdanKharchenko\PdfMill\Data;
 use BogdanKharchenko\PdfMill\Enums\SignatureFieldSource;
 use Spatie\LaravelData\Data;
 
-final class SignatureField extends Data
+class SignatureField extends Data
 {
-    /**
-     * @param  string  $name
-     * @param  SignatureFieldSource  $source
-     */
     public function __construct(
         public readonly string $name,
         public readonly SignatureFieldSource $source,

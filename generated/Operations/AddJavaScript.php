@@ -16,16 +16,12 @@ use Spatie\LaravelData\Data;
 /**
  * Adds document-level JavaScript, run when the PDF opens in viewers that allow it.
  */
-final class AddJavaScript extends Data implements Operation
+class AddJavaScript extends Data implements Operation
 {
     /** Names this step in the operations list: always "addJavaScript". */
     #[Computed]
     public readonly string $op;
 
-    /**
-     * @param  string  $name
-     * @param  string  $script
-     */
     public function __construct(
         public readonly string $name,
         public readonly string $script,

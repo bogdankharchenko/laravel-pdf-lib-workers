@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * PendingPdf::file() and download(): the file itself, not JSON.
  */
-final class FileResponseTest extends TestCase
+class FileResponseTest extends TestCase
 {
     private const PDF = "%PDF-1.7\n…";
 

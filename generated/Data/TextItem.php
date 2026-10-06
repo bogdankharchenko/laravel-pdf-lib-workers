@@ -11,15 +11,8 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class TextItem extends Data
+class TextItem extends Data
 {
-    /**
-     * @param  string  $text
-     * @param  float  $x
-     * @param  float  $y
-     * @param  float  $fontSize
-     * @param  string  $fontFamily
-     */
     public function __construct(
         public readonly string $text,
         public readonly float $x,

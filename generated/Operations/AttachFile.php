@@ -19,7 +19,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Embeds a file inside the PDF.
  */
-final class AttachFile extends Data implements Operation
+class AttachFile extends Data implements Operation
 {
     /** Names this step in the operations list: always "attachFile". */
     #[Computed]
@@ -28,8 +28,6 @@ final class AttachFile extends Data implements Operation
     /**
      * @param  string|Source  $file  A file (image, attachment, XML…): a FileSource object or a shortcut string.
      * @param  string  $name  File name shown in viewers.
-     * @param  string|Optional  $mimeType
-     * @param  string|Optional  $description
      * @param  string|Optional  $creationDate  A date, ideally ISO 8601.
      * @param  string|Optional  $modificationDate  A date, ideally ISO 8601.
      * @param  AttachFileRelationship|Optional  $relationship  How the file relates to the PDF (PDF/A-3 associated files).

@@ -15,7 +15,7 @@ use Spatie\LaravelData\Transformers\Transformer;
  *
  * @internal
  */
-final class JsonObjectTransformer implements Transformer
+class JsonObjectTransformer implements Transformer
 {
     public function transform(DataProperty $property, mixed $value, TransformationContext $context): mixed
     {

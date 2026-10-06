@@ -16,16 +16,14 @@ use Spatie\LaravelData\Data;
 /**
  * Replaces a script in an XFA form. The source needs "preserveXFA": true.
  */
-final class SetXFAJavaScript extends Data implements Operation
+class SetXFAJavaScript extends Data implements Operation
 {
     /** Names this step in the operations list: always "setXFAJavaScript". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  string  $field
      * @param  string  $event  XFA event, e.g. "event__click" (see /pdf/scripts).
-     * @param  string  $script
      */
     public function __construct(
         public readonly string $field,

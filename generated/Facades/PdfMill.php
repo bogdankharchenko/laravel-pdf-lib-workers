@@ -55,7 +55,7 @@ use Illuminate\Support\Facades\Facade;
  * @see Client
  * @see PdfMillFake
  */
-final class PdfMill extends Facade
+class PdfMill extends Facade
 {
     /**
      * Stands in for the API in a test: nothing is sent, each endpoint answers

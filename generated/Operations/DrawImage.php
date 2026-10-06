@@ -20,7 +20,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Draws a PNG or JPEG. JPEG photos are turned upright using their EXIF orientation.
  */
-final class DrawImage extends Data implements Operation
+class DrawImage extends Data implements Operation
 {
     /** Names this step in the operations list: always "drawImage". */
     #[Computed]
@@ -28,12 +28,10 @@ final class DrawImage extends Data implements Operation
 
     /**
      * @param  string|Source  $image  A PNG or JPEG.
-     * @param  float  $x
      * @param  float  $y  Bottom edge (bottom-left origin) or top edge (top-left origin) of the image.
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  float|Optional  $width  Width in points. Give one of width/height to keep the aspect ratio; neither draws 1 px per point.
-     * @param  float|Optional  $height
      * @param  float|Optional  $opacity  0 (invisible) to 1 (opaque).
      * @param  float|Optional  $rotate  Rotation in degrees, counter-clockwise.
      * @param  float|Optional  $xSkew  Horizontal skew in degrees.

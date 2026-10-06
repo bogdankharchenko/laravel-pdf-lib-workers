@@ -12,7 +12,7 @@ namespace BogdanKharchenko\PdfMill\Data;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
-final class SplitResponse extends Data
+class SplitResponse extends Data
 {
     /**
      * @param  list<SplitPart>  $parts

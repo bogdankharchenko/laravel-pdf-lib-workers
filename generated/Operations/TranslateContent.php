@@ -17,15 +17,13 @@ use Spatie\LaravelData\Optional;
 /**
  * Moves everything drawn on the page by (x, y) points.
  */
-final class TranslateContent extends Data implements Operation
+class TranslateContent extends Data implements Operation
 {
     /** Names this step in the operations list: always "translateContent". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  float  $x
-     * @param  float  $y
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      */
     public function __construct(

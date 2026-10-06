@@ -17,7 +17,7 @@ use RuntimeException;
  */
 class ApiException extends RuntimeException
 {
-    final public function __construct(
+    public function __construct(
         public readonly int $status,
         public readonly ErrorResponse $error,
     ) {

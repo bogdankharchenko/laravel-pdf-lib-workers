@@ -17,7 +17,7 @@ use Illuminate\Http\Client\Response;
  * API's OpenAPI spec (see Endpoints); this class only sends requests.
  *
  * In tests, PdfMill::fake() replaces it with PdfMillFake, a Client that
- * answers without the network; that is why this class isn't final.
+ * answers without the network.
  */
 class Client
 {
@@ -36,8 +36,6 @@ class Client
      * when the body refers to files.
      *
      * @param  array<string, mixed>  $body
-     *
-     * @throws ApiException
      */
     private function post(string $path, array $body, string $accept = 'application/json'): Response
     {
@@ -57,9 +55,6 @@ class Client
         return $this->checked($request->post($path, ['options' => $json]));
     }
 
-    /**
-     * @throws ApiException
-     */
     private function get(string $path, string $accept = '*/*'): Response
     {
         return $this->checked($this->request()->accept($accept)->get($path));
@@ -74,9 +69,6 @@ class Client
             ->connectTimeout($this->connectTimeout);
     }
 
-    /**
-     * @throws ApiException
-     */
     private function checked(Response $response): Response
     {
         if ($response->failed()) {

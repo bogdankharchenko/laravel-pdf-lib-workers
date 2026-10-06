@@ -15,14 +15,9 @@ use Spatie\LaravelData\Optional;
 /**
  * One radio button: its value and its box.
  */
-final class RadioChoice extends Data
+class RadioChoice extends Data
 {
     /**
-     * @param  string  $value
-     * @param  float  $x
-     * @param  float  $y
-     * @param  float  $width
-     * @param  float  $height
      * @param  int|Optional  $page  Default: the field's page.
      */
     public function __construct(

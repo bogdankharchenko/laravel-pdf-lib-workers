@@ -11,13 +11,8 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class FieldScript extends Data
+class FieldScript extends Data
 {
-    /**
-     * @param  string  $event
-     * @param  string  $script
-     * @param  string  $field
-     */
     public function __construct(
         public readonly string $event,
         public readonly string $script,

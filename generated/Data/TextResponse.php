@@ -12,7 +12,7 @@ namespace BogdanKharchenko\PdfMill\Data;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
-final class TextResponse extends Data
+class TextResponse extends Data
 {
     /**
      * @param  list<PageText>  $pages

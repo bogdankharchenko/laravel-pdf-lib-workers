@@ -6,7 +6,7 @@ namespace BogdanKharchenko\PdfMill\Generator;
 
 use RuntimeException;
 
-final class Names
+class Names
 {
     /**
      * "bottom-left" → "BottomLeft", "BASIC WL" → "BasicWl", "fillAndOutline" → "FillAndOutline", "4A0" → "4A0".

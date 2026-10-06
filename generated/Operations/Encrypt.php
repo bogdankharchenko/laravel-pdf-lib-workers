@@ -19,7 +19,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Password-protects the PDF. Applied when the file is saved.
  */
-final class Encrypt extends Data implements Operation
+class Encrypt extends Data implements Operation
 {
     /** Names this step in the operations list: always "encrypt". */
     #[Computed]

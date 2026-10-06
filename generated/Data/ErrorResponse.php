@@ -13,7 +13,7 @@ use BogdanKharchenko\PdfMill\Support\Casts\DataListOrScalarCast;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
-final class ErrorResponse extends Data
+class ErrorResponse extends Data
 {
     /**
      * @param  string  $error  What went wrong. Names the failing input, e.g. sources[1] or operations[2] (removePages).

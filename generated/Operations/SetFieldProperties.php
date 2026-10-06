@@ -21,16 +21,13 @@ use Spatie\LaravelData\Optional;
 /**
  * Changes a field's settings, or shows an image in it.
  */
-final class SetFieldProperties extends Data implements Operation
+class SetFieldProperties extends Data implements Operation
 {
     /** Names this step in the operations list: always "setFieldProperties". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  string  $name
-     * @param  bool|Optional  $readOnly
-     * @param  bool|Optional  $required
      * @param  bool|Optional  $exported  false keeps the field's value out of form submissions.
      * @param  bool|Optional  $multiline  Text fields.
      * @param  int|Optional|null  $maxLength  Text fields: maximum characters; null removes the limit. Leave out to not send it; null is sent as null.

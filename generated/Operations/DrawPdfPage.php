@@ -21,7 +21,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Draws a page of another PDF onto pages: letterheads, backgrounds, stamps, several pages on one sheet.
  */
-final class DrawPdfPage extends Data implements Operation
+class DrawPdfPage extends Data implements Operation
 {
     /** Names this step in the operations list: always "drawPdfPage". */
     #[Computed]
@@ -36,7 +36,6 @@ final class DrawPdfPage extends Data implements Operation
      * @param  float|Optional  $y  Bottom edge (bottom-left origin) or top edge (top-left origin). Default: 0.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  float|Optional  $width  Give one of width/height to keep the aspect ratio.
-     * @param  float|Optional  $height
      * @param  float|Optional  $scale  Alternative to width/height: a factor of the source size.
      * @param  float|Optional  $opacity  0 (invisible) to 1 (opaque).
      * @param  float|Optional  $rotate  Rotation in degrees, counter-clockwise.

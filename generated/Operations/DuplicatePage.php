@@ -17,7 +17,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Copies one page.
  */
-final class DuplicatePage extends Data implements Operation
+class DuplicatePage extends Data implements Operation
 {
     /** Names this step in the operations list: always "duplicatePage". */
     #[Computed]

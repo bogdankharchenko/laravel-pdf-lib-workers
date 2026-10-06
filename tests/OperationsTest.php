@@ -23,7 +23,7 @@ use Spatie\LaravelData\Support\DataConfig;
 /**
  * Every operation in the spec has a class that sends its "op" and required fields.
  */
-final class OperationsTest extends TestCase
+class OperationsTest extends TestCase
 {
     private const NS = 'BogdanKharchenko\\PdfMill\\';
 

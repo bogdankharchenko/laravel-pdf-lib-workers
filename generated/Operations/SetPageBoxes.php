@@ -18,7 +18,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Sets any of the five page boxes: media (paper), crop (visible area), bleed, trim and art (print production).
  */
-final class SetPageBoxes extends Data implements Operation
+class SetPageBoxes extends Data implements Operation
 {
     /** Names this step in the operations list: always "setPageBoxes". */
     #[Computed]

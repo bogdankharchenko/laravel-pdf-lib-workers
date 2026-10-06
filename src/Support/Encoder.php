@@ -22,7 +22,7 @@ use stdClass;
  *
  * @internal
  */
-final class Encoder
+class Encoder
 {
     /** @var array<int, array{name: string, upload: Upload}> keyed by object id, in the order first seen */
     private array $uploads = [];

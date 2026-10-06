@@ -12,10 +12,9 @@ namespace BogdanKharchenko\PdfMill\Data;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
-final class PageText extends Data
+class PageText extends Data
 {
     /**
-     * @param  int  $page
      * @param  string  $text  Text in drawing order, with a new line where the baseline moves. Scanned pages have none (no OCR).
      * @param  list<TextItem>|null  $items  Only with "items": true.
      */

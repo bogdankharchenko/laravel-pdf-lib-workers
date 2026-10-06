@@ -16,15 +16,12 @@ use Spatie\LaravelData\Data;
 /**
  * Removes an embedded file.
  */
-final class DetachFile extends Data implements Operation
+class DetachFile extends Data implements Operation
 {
     /** Names this step in the operations list: always "detachFile". */
     #[Computed]
     public readonly string $op;
 
-    /**
-     * @param  string  $name
-     */
     public function __construct(
         public readonly string $name,
     ) {

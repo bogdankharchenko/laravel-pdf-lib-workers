@@ -20,7 +20,7 @@ use SplFileInfo;
  *
  * Create one with MergeSource::key(), MergeSource::url(), MergeSource::base64(), MergeSource::file(), ::contents(), ::disk().
  */
-final readonly class MergeSource implements Payload
+readonly class MergeSource implements Payload
 {
     /**
      * @param  array<string, mixed>  $fields

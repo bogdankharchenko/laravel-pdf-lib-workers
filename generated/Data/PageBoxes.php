@@ -14,7 +14,7 @@ use Spatie\LaravelData\Data;
 /**
  * Media = paper size; crop = visible area; bleed, trim and art are for print production.
  */
-final class PageBoxes extends Data
+class PageBoxes extends Data
 {
     /**
      * @param  Box  $mediaBox  A page box in points: lower-left corner (x, y), width and height.

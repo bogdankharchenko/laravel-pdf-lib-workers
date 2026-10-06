@@ -19,7 +19,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Turns all form fields into plain page content.
  */
-final class FlattenForm extends Data implements Operation
+class FlattenForm extends Data implements Operation
 {
     /** Names this step in the operations list: always "flattenForm". */
     #[Computed]

@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-final class NamesTest extends TestCase
+class NamesTest extends TestCase
 {
     /**
      * @return iterable<array{string, string}>

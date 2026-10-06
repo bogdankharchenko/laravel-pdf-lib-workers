@@ -12,7 +12,7 @@ namespace BogdanKharchenko\PdfMill\Data;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
-final class ScriptsResponse extends Data
+class ScriptsResponse extends Data
 {
     /**
      * @param  list<DocumentScript>  $document

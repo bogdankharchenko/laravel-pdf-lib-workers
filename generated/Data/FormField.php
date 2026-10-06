@@ -12,11 +12,9 @@ namespace BogdanKharchenko\PdfMill\Data;
 use BogdanKharchenko\PdfMill\Enums\FormFieldType;
 use Spatie\LaravelData\Data;
 
-final class FormField extends Data
+class FormField extends Data
 {
     /**
-     * @param  string  $name
-     * @param  FormFieldType  $type
      * @param  string|bool|list<string>|null  $value  text: string or null; checkbox: boolean; dropdown/optionList: selected options; radio: selected option or null; others: null.
      * @param  FieldSettings  $settings  A field's settings; which ones appear depends on the field type.
      * @param  list<string>|null  $options  Choices, for dropdowns, option lists and radio groups.

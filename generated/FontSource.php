@@ -19,7 +19,7 @@ use SplFileInfo;
  *
  * Create one with FontSource::key(), FontSource::url(), FontSource::base64(), FontSource::file(), ::contents(), ::disk().
  */
-final readonly class FontSource implements Payload
+readonly class FontSource implements Payload
 {
     /**
      * @param  array<string, mixed>  $fields

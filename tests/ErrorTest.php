@@ -18,7 +18,7 @@ use BogdanKharchenko\PdfMill\Facades\PdfMill;
 use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-final class ErrorTest extends TestCase
+class ErrorTest extends TestCase
 {
     /**
      * @return iterable<string, array{string, class-string<ApiException>, int, string}>

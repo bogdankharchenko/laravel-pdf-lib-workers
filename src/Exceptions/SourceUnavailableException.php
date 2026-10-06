@@ -7,4 +7,4 @@ namespace BogdanKharchenko\PdfMill\Exceptions;
 /**
  * HTTP 502: a URL source returned an error or could not be reached.
  */
-final class SourceUnavailableException extends ApiException {}
+class SourceUnavailableException extends ApiException {}

@@ -20,7 +20,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Writes page numbers.
  */
-final class PageNumbers extends Data implements Operation
+class PageNumbers extends Data implements Operation
 {
     /** Names this step in the operations list: always "pageNumbers". */
     #[Computed]

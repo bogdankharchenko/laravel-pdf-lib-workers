@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
  * result from download(). Return it from a controller to show it in the
  * browser, or call download() or save().
  */
-final readonly class FileResponse implements Responsable
+readonly class FileResponse implements Responsable
 {
     public function __construct(
         public string $contents,

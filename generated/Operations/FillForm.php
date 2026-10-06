@@ -23,7 +23,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Fills form fields by name (see /pdf/info for names and types).
  */
-final class FillForm extends Data implements Operation
+class FillForm extends Data implements Operation
 {
     /** Names this step in the operations list: always "fillForm". */
     #[Computed]

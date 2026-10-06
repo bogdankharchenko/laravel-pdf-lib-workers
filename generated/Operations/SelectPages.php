@@ -16,7 +16,7 @@ use Spatie\LaravelData\Data;
 /**
  * Keeps only these pages, in this order: use it to extract, reorder, reverse or repeat pages.
  */
-final class SelectPages extends Data implements Operation
+class SelectPages extends Data implements Operation
 {
     /** Names this step in the operations list: always "selectPages". */
     #[Computed]

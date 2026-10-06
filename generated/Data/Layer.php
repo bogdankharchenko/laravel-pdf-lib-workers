@@ -14,12 +14,8 @@ use Spatie\LaravelData\Data;
 /**
  * A layer (optional content group) and whether it is shown.
  */
-final class Layer extends Data
+class Layer extends Data
 {
-    /**
-     * @param  string  $name
-     * @param  bool  $visible
-     */
     public function __construct(
         public readonly string $name,
         public readonly bool $visible,

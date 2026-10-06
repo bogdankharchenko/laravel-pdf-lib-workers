@@ -15,16 +15,12 @@ use Spatie\LaravelData\Data;
 /**
  * Comes in several shapes; fields not in every shape are null when absent.
  */
-final class ExtractedImage extends Data
+class ExtractedImage extends Data
 {
     /**
-     * @param  ExtractedImageMimeType  $mimeType
      * @param  int  $width  Pixels.
      * @param  int  $height  Pixels.
-     * @param  float  $x
-     * @param  float  $y
      * @param  float  $drawWidth  Size drawn on the page, in points.
-     * @param  float  $drawHeight
      * @param  string|null  $key  R2 key of the saved file.
      * @param  string|null  $url  Signed download link; works without the API key until expiresAt.
      * @param  string|null  $expiresAt  When the link stops working (ISO 8601).

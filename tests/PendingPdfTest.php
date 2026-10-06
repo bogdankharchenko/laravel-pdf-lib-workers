@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * create(), edit() and merge() return a PendingPdf: operations are chained, then sent.
  */
-final class PendingPdfTest extends TestCase
+class PendingPdfTest extends TestCase
 {
     private const PDF = "%PDF-1.7\n…";
 

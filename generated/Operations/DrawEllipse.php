@@ -20,16 +20,13 @@ use Spatie\LaravelData\Optional;
 /**
  * Draws an ellipse or circle centred on (x, y).
  */
-final class DrawEllipse extends Data implements Operation
+class DrawEllipse extends Data implements Operation
 {
     /** Names this step in the operations list: always "drawEllipse". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  float  $x
-     * @param  float  $y
-     * @param  float  $xRadius
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  float|Optional  $yRadius  Default: xRadius (a circle).

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * Usually created through a source's file(), contents() or disk() constructors.
  */
-final readonly class Upload
+readonly class Upload
 {
     /**
      * @param  SplFileInfo|null  $file  The file object itself, not just its path: that keeps a

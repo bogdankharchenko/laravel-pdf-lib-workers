@@ -9,7 +9,7 @@ use RuntimeException;
 /**
  * Read access to the OpenAPI document.
  */
-final readonly class Spec
+readonly class Spec
 {
     /**
      * @param  array<string, mixed>  $document

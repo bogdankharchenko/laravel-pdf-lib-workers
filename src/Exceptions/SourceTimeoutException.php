@@ -7,4 +7,4 @@ namespace BogdanKharchenko\PdfMill\Exceptions;
 /**
  * HTTP 504: a URL source timed out.
  */
-final class SourceTimeoutException extends ApiException {}
+class SourceTimeoutException extends ApiException {}

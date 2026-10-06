@@ -19,17 +19,14 @@ use Spatie\LaravelData\Optional;
 /**
  * Sets document properties, copyright and custom fields, in both the Info dictionary and XMP. Run it before convertToPDFA.
  */
-final class SetMetadata extends Data implements Operation
+class SetMetadata extends Data implements Operation
 {
     /** Names this step in the operations list: always "setMetadata". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  string|Optional  $title
      * @param  bool|Optional  $showTitleInWindow  Show the title instead of the file name in viewers' title bar.
-     * @param  string|Optional  $author
-     * @param  string|Optional  $subject
      * @param  list<string>|Optional  $keywords
      * @param  string|Optional  $creator  The application that made the original content.
      * @param  string|Optional  $producer  The application that made the PDF.

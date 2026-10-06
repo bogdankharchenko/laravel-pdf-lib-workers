@@ -14,14 +14,13 @@ use Spatie\LaravelData\Data;
 /**
  * The PDF was saved to R2.
  */
-final class StoredPdf extends Data
+class StoredPdf extends Data
 {
     /**
      * @param  string  $key  R2 key of the saved file.
      * @param  string  $url  Signed download link; works without the API key until expiresAt.
      * @param  string  $expiresAt  When the link stops working (ISO 8601).
      * @param  int  $size  File size in bytes.
-     * @param  int  $pageCount
      */
     public function __construct(
         public readonly string $key,

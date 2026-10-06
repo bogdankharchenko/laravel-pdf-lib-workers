@@ -10,7 +10,7 @@ namespace BogdanKharchenko\PdfMill\Support;
  *
  * @internal
  */
-final readonly class JsonMap
+readonly class JsonMap
 {
     /**
      * @param  array<array-key, mixed>  $values

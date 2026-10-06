@@ -7,7 +7,7 @@ namespace BogdanKharchenko\PdfMill\Support;
 /**
  * @internal
  */
-final class Fields
+class Fields
 {
     /**
      * Drops the options a source constructor was not given.

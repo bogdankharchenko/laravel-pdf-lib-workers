@@ -16,7 +16,7 @@ use InvalidArgumentException;
 /**
  * Requests that carry files go out as multipart, with the JSON body in "options".
  */
-final class UploadTest extends TestCase
+class UploadTest extends TestCase
 {
     protected function setUp(): void
     {

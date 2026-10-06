@@ -20,7 +20,7 @@ use BogdanKharchenko\PdfMill\Source;
 /**
  * What goes over the wire for JSON requests.
  */
-final class RequestBodyTest extends TestCase
+class RequestBodyTest extends TestCase
 {
     protected function setUp(): void
     {

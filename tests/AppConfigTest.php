@@ -11,7 +11,7 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 /**
  * The app's own laravel-data settings must not change the API's field names.
  */
-final class AppConfigTest extends TestCase
+class AppConfigTest extends TestCase
 {
     protected function defineEnvironment($app): void
     {

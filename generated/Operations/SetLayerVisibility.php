@@ -17,7 +17,7 @@ use Spatie\LaravelData\Data;
 /**
  * Shows or hides layers (optional content groups). See /pdf/info for layer names.
  */
-final class SetLayerVisibility extends Data implements Operation
+class SetLayerVisibility extends Data implements Operation
 {
     /** Names this step in the operations list: always "setLayerVisibility". */
     #[Computed]

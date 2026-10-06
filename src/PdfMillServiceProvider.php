@@ -9,7 +9,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Support\ServiceProvider;
 
-final class PdfMillServiceProvider extends ServiceProvider
+class PdfMillServiceProvider extends ServiceProvider
 {
     public function register(): void
     {

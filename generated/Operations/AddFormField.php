@@ -23,20 +23,16 @@ use Spatie\LaravelData\Optional;
 /**
  * Creates a form field. Text, checkbox, dropdown, optionList and button need page, x, y, width and height; radio needs choices.
  */
-final class AddFormField extends Data implements Operation
+class AddFormField extends Data implements Operation
 {
     /** Names this step in the operations list: always "addFormField". */
     #[Computed]
     public readonly string $op;
 
     /**
-     * @param  AddFormFieldType  $type
      * @param  string  $name  Unique field name.
      * @param  int|Optional  $page  1-based page. Default: 1.
-     * @param  float|Optional  $x
      * @param  float|Optional  $y  Bottom edge (bottom-left origin) or top edge (top-left origin).
-     * @param  float|Optional  $width
-     * @param  float|Optional  $height
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
      * @param  string|bool|list<string>|Optional  $value  Starting value: text, checkbox true/false, the selected option(s).
      * @param  list<RadioChoice>|Optional  $choices  Radio groups: one entry per choice, each with its own box.
@@ -47,9 +43,6 @@ final class AddFormField extends Data implements Operation
      * @param  string|Optional  $borderColor  A hex colour: "#rrggbb" or "#rgb".
      * @param  float|Optional  $borderWidth  Default: 1 when borderColor is set.
      * @param  float|Optional  $rotate  Rotation in degrees, counter-clockwise.
-     * @param  bool|Optional  $hidden
-     * @param  bool|Optional  $readOnly
-     * @param  bool|Optional  $required
      * @param  bool|Optional  $exported  false keeps the field's value out of form submissions.
      * @param  bool|Optional  $multiline  Text fields.
      * @param  int|Optional|null  $maxLength  Text fields: maximum characters; null removes the limit. Leave out to not send it; null is sent as null.

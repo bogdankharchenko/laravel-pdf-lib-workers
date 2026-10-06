@@ -11,7 +11,7 @@ use BogdanKharchenko\PdfMill\Support\Encoder;
  * A request PdfMillFake answered: the endpoint called, and the options and
  * files sent, as the API would have read them.
  */
-final readonly class SentRequest
+readonly class SentRequest
 {
     /**
      * @param  string  $endpoint  The method called, e.g. "edit" or "info".

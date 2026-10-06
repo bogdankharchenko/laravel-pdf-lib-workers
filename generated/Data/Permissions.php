@@ -16,17 +16,8 @@ use Spatie\LaravelData\Optional;
 /**
  * What user-password holders may do. Everything is allowed unless set to false.
  */
-final class Permissions extends Data
+class Permissions extends Data
 {
-    /**
-     * @param  bool|PermissionsPrinting|Optional  $printing
-     * @param  bool|Optional  $modifying
-     * @param  bool|Optional  $copying
-     * @param  bool|Optional  $annotating
-     * @param  bool|Optional  $fillingForms
-     * @param  bool|Optional  $contentAccessibility
-     * @param  bool|Optional  $documentAssembly
-     */
     public function __construct(
         public readonly bool|PermissionsPrinting|Optional $printing = new Optional(),
         public readonly bool|Optional $modifying = new Optional(),

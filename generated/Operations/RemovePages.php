@@ -16,7 +16,7 @@ use Spatie\LaravelData\Data;
 /**
  * Removes pages. At least one page must remain.
  */
-final class RemovePages extends Data implements Operation
+class RemovePages extends Data implements Operation
 {
     /** Names this step in the operations list: always "removePages". */
     #[Computed]

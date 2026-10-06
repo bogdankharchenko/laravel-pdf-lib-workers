@@ -17,17 +17,12 @@ use Spatie\LaravelData\Data;
 /**
  * Replaces the script of a field's existing action (see /pdf/scripts). New actions cannot be added.
  */
-final class SetFieldScript extends Data implements Operation
+class SetFieldScript extends Data implements Operation
 {
     /** Names this step in the operations list: always "setFieldScript". */
     #[Computed]
     public readonly string $op;
 
-    /**
-     * @param  string  $name
-     * @param  SetFieldScriptEvent  $event
-     * @param  string  $script
-     */
     public function __construct(
         public readonly string $name,
         public readonly SetFieldScriptEvent $event,

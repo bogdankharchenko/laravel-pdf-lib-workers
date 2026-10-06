@@ -16,7 +16,7 @@ use Spatie\LaravelData\Data;
 /**
  * Removes form fields.
  */
-final class RemoveFormFields extends Data implements Operation
+class RemoveFormFields extends Data implements Operation
 {
     /** Names this step in the operations list: always "removeFormFields". */
     #[Computed]

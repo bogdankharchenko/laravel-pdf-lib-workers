@@ -15,24 +15,10 @@ use Spatie\LaravelData\Data;
 /**
  * pageMode and pageLayout are always present; the rest only when the PDF sets viewer preferences.
  */
-final class ViewerPreferences extends Data
+class ViewerPreferences extends Data
 {
     /**
-     * @param  string|null  $pageMode
-     * @param  string|null  $pageLayout
-     * @param  bool|null  $hideToolbar
-     * @param  bool|null  $hideMenubar
-     * @param  bool|null  $hideWindowUI
-     * @param  bool|null  $fitWindow
-     * @param  bool|null  $centerWindow
-     * @param  bool|null  $displayDocTitle
-     * @param  string|null  $nonFullScreenPageMode
-     * @param  string|null  $readingDirection
-     * @param  string|null  $printScaling
-     * @param  string|null  $duplex
-     * @param  bool|null  $pickTrayByPDFSize
      * @param  list<PageRange>|null  $printPageRange
-     * @param  int|null  $numCopies
      */
     public function __construct(
         public readonly ?string $pageMode,

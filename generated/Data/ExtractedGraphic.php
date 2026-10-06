@@ -11,13 +11,9 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class ExtractedGraphic extends Data
+class ExtractedGraphic extends Data
 {
     /**
-     * @param  float  $x
-     * @param  float  $y
-     * @param  float  $width
-     * @param  float  $height
      * @param  string  $svg  Vector graphics, approximated as SVG.
      */
     public function __construct(

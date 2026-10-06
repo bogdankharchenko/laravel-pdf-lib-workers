@@ -7,4 +7,4 @@ namespace BogdanKharchenko\PdfMill\Exceptions;
 /**
  * HTTP 401: the API key is missing or wrong.
  */
-final class UnauthorizedException extends ApiException {}
+class UnauthorizedException extends ApiException {}

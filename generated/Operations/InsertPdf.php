@@ -19,7 +19,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Inserts pages from another PDF, or a PNG/JPEG image as a new page.
  */
-final class InsertPdf extends Data implements Operation
+class InsertPdf extends Data implements Operation
 {
     /** Names this step in the operations list: always "insertPdf". */
     #[Computed]

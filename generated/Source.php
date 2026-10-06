@@ -19,7 +19,7 @@ use SplFileInfo;
  *
  * Create one with Source::key(), Source::url(), Source::base64(), Source::file(), ::contents(), ::disk().
  */
-final readonly class Source implements Payload
+readonly class Source implements Payload
 {
     /**
      * @param  array<string, mixed>  $fields

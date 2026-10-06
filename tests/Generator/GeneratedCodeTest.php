@@ -18,7 +18,7 @@ use ReflectionClassConstant;
 use ReflectionMethod;
 use SplFileInfo;
 
-final class GeneratedCodeTest extends TestCase
+class GeneratedCodeTest extends TestCase
 {
     private const ROOT = __DIR__.'/../..';
 

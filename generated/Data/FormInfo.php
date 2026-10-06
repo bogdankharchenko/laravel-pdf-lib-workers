@@ -12,10 +12,9 @@ namespace BogdanKharchenko\PdfMill\Data;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
-final class FormInfo extends Data
+class FormInfo extends Data
 {
     /**
-     * @param  bool  $hasXFA
      * @param  list<FormField>  $fields
      * @param  list<SignatureField>  $signatureFields
      */

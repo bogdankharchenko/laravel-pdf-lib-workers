@@ -43,7 +43,7 @@ use Throwable;
 /**
  * PdfMill::fake(): the API's replies without the network, and assertions on what was sent.
  */
-final class FakeTest extends TestCase
+class FakeTest extends TestCase
 {
     public function test_needs_no_configuration(): void
     {

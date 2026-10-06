@@ -22,7 +22,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Draws text.
  */
-final class DrawText extends Data implements Operation
+class DrawText extends Data implements Operation
 {
     /** Names this step in the operations list: always "drawText". */
     #[Computed]
@@ -30,7 +30,6 @@ final class DrawText extends Data implements Operation
 
     /**
      * @param  string  $text  The text. "\n" starts a new line.
-     * @param  float  $x
      * @param  float  $y  Baseline of the first line (bottom-left origin), or top of the text (top-left origin).
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".

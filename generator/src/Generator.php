@@ -20,7 +20,7 @@ use RuntimeException;
  * @phpstan-type Field array{name: string, type: PhpType, required: bool, schema: array<string, mixed>}
  * @phpstan-type Endpoint array{name: string, route: string, summary: string, description: string, params: list<Field>, returns: string, returnDoc: string, uses: list<string>, bodyUses: list<string>, body: string}
  */
-final class Generator
+class Generator
 {
     private const NS = 'BogdanKharchenko\\PdfMill';
 
@@ -546,7 +546,7 @@ final class Generator
         }
 
         [$file, $namespace] = $this->file($fqcn, $uses);
-        $class = $namespace->addClass($this->short($fqcn))->setFinal()->setExtends(self::DATA);
+        $class = $namespace->addClass($this->short($fqcn))->setExtends(self::DATA);
         $this->describe($class, $schema, $this->kinds[$name] === 'merged' ? 'Comes in several shapes; fields not in every shape are null when absent.' : null);
         if ($op !== null) {
             $class->addImplement(self::OPERATION);
@@ -559,6 +559,7 @@ final class Generator
         foreach ($fields as $field) {
             $docs[] = $this->property($constructor, $namespace, $field, $isRequest, $isResponse, $name);
         }
+        $docs = array_filter($docs);
         if ($docs !== []) {
             $constructor->addComment(implode("\n", $docs));
         }
@@ -575,7 +576,7 @@ final class Generator
      *
      * @param  Field  $field
      */
-    private function property(Method $constructor, PhpNamespace $namespace, array $field, bool $isRequest, bool $isResponse, string $class): string
+    private function property(Method $constructor, PhpNamespace $namespace, array $field, bool $isRequest, bool $isResponse, string $class): ?string
     {
         $type = $field['type'];
         $parameter = $constructor->addPromotedParameter($field['name'])->setReadOnly();
@@ -605,19 +606,20 @@ final class Generator
     }
 
     /**
-     * Types a field's parameter and returns its @param line. Request fields that may be
+     * Types a field's parameter and returns its @param line, if it adds to the type. Request fields that may be
      * left out are Optional, so leaving one out (not sent) differs from null (sent as null);
      * response fields that may be missing are null.
      *
      * @param  Field  $field
      */
-    private function signature(Parameter $parameter, PhpNamespace $namespace, array $field, bool $isRequest): string
+    private function signature(Parameter $parameter, PhpNamespace $namespace, array $field, bool $isRequest): ?string
     {
         $type = $field['type'];
         $null = $type->nullable || (! $field['required'] && ! $isRequest);
         $optional = ! $field['required'] && $isRequest;
 
-        $parameter->setType($optional ? $type->native.'|'.self::OPTIONAL.($type->nullable ? '|null' : '') : $type->nativeOrNull($null));
+        $native = $optional ? $type->native.'|'.self::OPTIONAL.($type->nullable ? '|null' : '') : $type->nativeOrNull($null);
+        $parameter->setType($native);
         if ($optional) {
             $this->use($namespace, self::OPTIONAL);
             $parameter->setDefaultValue(new Literal('new Optional()'));
@@ -631,7 +633,7 @@ final class Generator
             $text = trim($text.' Leave out to not send it; null is sent as null.');
         }
 
-        return rtrim("@param  {$doc}  \${$field['name']}  ".str_replace("\n", ' ', $text));
+        return $this->paramLine($doc, $native, $field['name'], $text);
     }
 
     /**
@@ -663,7 +665,7 @@ final class Generator
 
         foreach ($operations as $op => [$class, $schema, $fields]) {
             $method = $trait->addMethod($op)->setReturnType('static');
-            $docs = array_map(fn (array $field): string => $this->signature($method->addParameter($field['name']), $namespace, $field, isRequest: true), $fields);
+            $docs = array_filter(array_map(fn (array $field): ?string => $this->signature($method->addParameter($field['name']), $namespace, $field, isRequest: true), $fields));
             $method->addComment(trim($this->text($schema['description'] ?? '')."\n\n".implode("\n", $docs)));
             $arguments = array_map(fn (array $field): string => "    {$field['name']}: \${$field['name']},", $fields);
             $method->setBody($fields === []
@@ -703,7 +705,7 @@ final class Generator
         $classes = array_values(array_map(fn (string $m): string => $this->classes[$m], $members));
 
         [$file, $namespace] = $this->file($fqcn, $classes);
-        $class = $namespace->addClass($this->short($fqcn))->setFinal();
+        $class = $namespace->addClass($this->short($fqcn));
         $this->describe($class, $schema, 'Reads a response as '.implode(' or ', array_map($this->short(...), $classes)).'.');
 
         $method = $class->addMethod('from')->setStatic()->setReturnType(implode('|', $classes));
@@ -773,7 +775,7 @@ final class Generator
         );
 
         [$file, $namespace] = $this->file($fqcn, [self::PAYLOAD, self::FIELDS]);
-        $class = $namespace->addClass($owner)->setFinal()->setReadOnly()->addImplement(self::PAYLOAD);
+        $class = $namespace->addClass($owner)->setReadOnly()->addImplement(self::PAYLOAD);
         $ways = array_map(fn (string $k): string => $k === 'upload' ? "{$owner}::file(), ::contents(), ::disk()" : "{$owner}::{$k}()", array_keys($kinds));
         $this->describe($class, $schema, 'Create one with '.implode(', ', $ways).'.');
 
@@ -867,7 +869,10 @@ final class Generator
         $entries = $first === '' ? [] : ["    {$first}"];
         foreach ($fields as $field) {
             $this->parameter($method, $field);
-            $lines[] = $this->paramDoc($field);
+            $doc = $this->paramDoc($field);
+            if ($doc !== null) {
+                $lines[] = $doc;
+            }
             $value = '$'.$field['name'];
             $entries[] = "    '{$field['name']}' => ".($field['type']->map ? "is_array({$value}) ? new ".$this->short(self::JSON_MAP)."({$value}) : {$value}" : $value).',';
         }
@@ -916,13 +921,40 @@ final class Generator
     }
 
     /**
+     * A method parameter's @param line, if it adds to the type.
+     *
      * @param  Field  $field
      */
-    private function paramDoc(array $field): string
+    private function paramDoc(array $field): ?string
     {
-        $type = $field['type']->docOrNull(! $field['required'] || $field['type']->nullable);
+        $null = ! $field['required'] || $field['type']->nullable;
 
-        return rtrim("@param  {$type}  \${$field['name']}  ".str_replace("\n", ' ', $this->fieldText($field['schema'])));
+        return $this->paramLine($field['type']->docOrNull($null), $field['type']->nativeOrNull($null), $field['name'], $this->fieldText($field['schema']));
+    }
+
+    /**
+     * A @param line, or null when it would only repeat the native type.
+     */
+    private function paramLine(string $doc, string $native, string $name, string $text): ?string
+    {
+        $text = str_replace("\n", ' ', $text);
+
+        return $text === '' && $this->repeatsNative($doc, $native) ? null : rtrim("@param  {$doc}  \${$name}  {$text}");
+    }
+
+    /**
+     * Whether a PHPDoc type says no more than a native one, e.g. "string|null" for "?string".
+     */
+    private function repeatsNative(string $doc, string $native): bool
+    {
+        $parts = function (string $type): array {
+            $parts = array_map($this->short(...), explode('|', str_starts_with($type, '?') ? substr($type, 1).'|null' : $type));
+            sort($parts);
+
+            return $parts;
+        };
+
+        return strpbrk($doc, '<{(\'') === false && $parts($doc) === $parts($native);
     }
 
     // ---------- endpoints and facade ----------
@@ -1083,15 +1115,15 @@ final class Generator
 
         foreach ($methods as $spec) {
             $method = $trait->addMethod($spec['name'])->setReturnType($spec['returns']);
-            $docs = [];
+            $tags = [];
             foreach ($spec['params'] as $param) {
                 $this->parameter($method, $param);
-                $docs[] = $this->paramDoc($param);
+                $tags[] = $this->paramDoc($param);
             }
-            $text = implode("\n\n", array_filter([$spec['summary'], $this->text($spec['description'])]));
+            $tags[] = $this->repeatsNative($spec['returnDoc'], $spec['returns']) ? null : '@return '.$spec['returnDoc'];
             // A PendingPdf sends nothing until it is stored or returned, so only it can throw.
-            $throws = $spec['returns'] === self::PENDING_PDF ? [] : ['', '@throws '.$this->short(self::API_EXCEPTION)];
-            $method->addComment($text."\n\n".implode("\n", [...$docs, '@return '.$spec['returnDoc'], ...$throws]));
+            $throws = $spec['returns'] === self::PENDING_PDF ? '' : '@throws '.$this->short(self::API_EXCEPTION);
+            $method->addComment(implode("\n\n", array_filter([$spec['summary'], $this->text($spec['description']), implode("\n", array_filter($tags)), $throws])));
             $method->setBody($spec['body']);
         }
 
@@ -1109,7 +1141,7 @@ final class Generator
         $fqcn = self::NS.'\\Facades\\PdfMill';
         $uses = ['Closure', 'Illuminate\\Support\\Collection', 'Illuminate\\Support\\Facades\\Facade', self::NS.'\\Client', self::FAKE, self::SENT_REQUEST];
         [$file, $namespace] = $this->file($fqcn, [...array_merge(...array_column($methods, 'uses')), ...$uses]);
-        $class = $namespace->addClass('PdfMill')->setFinal()->setExtends('Illuminate\\Support\\Facades\\Facade');
+        $class = $namespace->addClass('PdfMill')->setExtends('Illuminate\\Support\\Facades\\Facade');
 
         $lines = ['The pdfmill API. In tests, PdfMill::fake() stands in for it and adds the assert methods.', ''];
         foreach ($methods as $spec) {

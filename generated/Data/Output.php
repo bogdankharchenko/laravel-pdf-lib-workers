@@ -15,7 +15,7 @@ use Spatie\LaravelData\Optional;
 /**
  * What to do with the PDF this request produces. Send Accept: application/pdf to get the PDF bytes instead of a JSON PdfResult.
  */
-final class Output extends Data
+class Output extends Data
 {
     /**
      * @param  string|Optional  $key  Where to save in R2; overwrites an existing file. Default: "outputs/<uuid>.pdf", which the recommended expiry rule deletes after 7 days. Keys outside outputs/ and extracted/ are kept.

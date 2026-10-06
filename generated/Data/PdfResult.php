@@ -14,7 +14,7 @@ namespace BogdanKharchenko\PdfMill\Data;
  *
  * Reads a response as StoredPdf or InlinePdf.
  */
-final class PdfResult
+class PdfResult
 {
     /**
      * @param  array<string, mixed>  $data

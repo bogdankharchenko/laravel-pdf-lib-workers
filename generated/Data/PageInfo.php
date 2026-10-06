@@ -11,7 +11,7 @@ namespace BogdanKharchenko\PdfMill\Data;
 
 use Spatie\LaravelData\Data;
 
-final class PageInfo extends Data
+class PageInfo extends Data
 {
     /**
      * @param  int  $page  1-based page number.

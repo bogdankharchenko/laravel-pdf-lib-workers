@@ -15,10 +15,9 @@ use Spatie\LaravelData\Data;
 /**
  * An encrypted PDF sent without its password: only its structure is readable.
  */
-final class LockedInfoResponse extends Data
+class LockedInfoResponse extends Data
 {
     /**
-     * @param  int  $pageCount
      * @param  true  $encrypted
      * @param  true  $needsPassword
      * @param  list<PageInfo>  $pages

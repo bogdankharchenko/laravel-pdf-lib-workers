@@ -15,7 +15,7 @@ use Spatie\LaravelData\Support\DataProperty;
  *
  * @internal
  */
-final readonly class DataListOrScalarCast implements Cast
+readonly class DataListOrScalarCast implements Cast
 {
     /**
      * @param  class-string<Data>  $dataClass

@@ -16,7 +16,7 @@ use Spatie\LaravelData\Data;
 /**
  * Removes XFA form data, leaving the regular form fields.
  */
-final class DeleteXFA extends Data implements Operation
+class DeleteXFA extends Data implements Operation
 {
     /** Names this step in the operations list: always "deleteXFA". */
     #[Computed]

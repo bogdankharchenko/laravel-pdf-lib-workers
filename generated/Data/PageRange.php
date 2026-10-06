@@ -14,12 +14,8 @@ use Spatie\LaravelData\Data;
 /**
  * 1-based, inclusive.
  */
-final class PageRange extends Data
+class PageRange extends Data
 {
-    /**
-     * @param  int  $start
-     * @param  int  $end
-     */
     public function __construct(
         public readonly int $start,
         public readonly int $end,

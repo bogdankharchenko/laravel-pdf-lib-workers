@@ -19,7 +19,7 @@ use SplFileInfo;
  *
  * Create one with PdfSource::key(), PdfSource::url(), PdfSource::base64(), PdfSource::file(), ::contents(), ::disk().
  */
-final readonly class PdfSource implements Payload
+readonly class PdfSource implements Payload
 {
     /**
      * @param  array<string, mixed>  $fields

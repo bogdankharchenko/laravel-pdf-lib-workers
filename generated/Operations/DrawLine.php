@@ -21,7 +21,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Draws a straight line.
  */
-final class DrawLine extends Data implements Operation
+class DrawLine extends Data implements Operation
 {
     /** Names this step in the operations list: always "drawLine". */
     #[Computed]
@@ -37,7 +37,6 @@ final class DrawLine extends Data implements Operation
      * @param  float|Optional  $opacity  0 (invisible) to 1 (opaque).
      * @param  LineCap|Optional  $lineCap  Shape of line ends.
      * @param  list<float>|Optional  $dashArray  Dash pattern, e.g. [6, 3].
-     * @param  float|Optional  $dashPhase
      * @param  BlendMode|Optional  $blendMode  How the drawing's colours mix with what is underneath.
      */
     public function __construct(

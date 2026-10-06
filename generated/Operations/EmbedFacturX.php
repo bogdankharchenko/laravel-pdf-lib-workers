@@ -19,7 +19,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Makes a Factur-X / ZUGFeRD e-invoice: attaches your invoice XML and makes the PDF PDF/A-3. The XML is not generated or checked.
  */
-final class EmbedFacturX extends Data implements Operation
+class EmbedFacturX extends Data implements Operation
 {
     /** Names this step in the operations list: always "embedFacturX". */
     #[Computed]
@@ -27,11 +27,6 @@ final class EmbedFacturX extends Data implements Operation
 
     /**
      * @param  string|Source  $xml  The complete Factur-X / ZUGFeRD XML.
-     * @param  EmbedFacturXConformanceLevel|Optional  $conformanceLevel
-     * @param  string|Optional  $fileName
-     * @param  string|Optional  $version
-     * @param  string|Optional  $documentType
-     * @param  string|Optional  $description
      */
     public function __construct(
         public readonly string|Source $xml,

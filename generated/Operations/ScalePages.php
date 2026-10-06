@@ -18,7 +18,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Scales pages.
  */
-final class ScalePages extends Data implements Operation
+class ScalePages extends Data implements Operation
 {
     /** Names this step in the operations list: always "scalePages". */
     #[Computed]

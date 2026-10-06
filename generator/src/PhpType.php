@@ -7,7 +7,7 @@ namespace BogdanKharchenko\PdfMill\Generator;
 /**
  * How a schema looks in PHP.
  */
-final readonly class PhpType
+readonly class PhpType
 {
     /**
      * @param  string  $native  Native type, e.g. "string", "float|array", or a FQCN. Never includes null.

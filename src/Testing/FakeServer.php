@@ -33,7 +33,7 @@ use Throwable;
  * @phpstan-import-type Reply from PdfMillFake
  * @phpstan-import-type Replies from PdfMillFake
  */
-final class FakeServer
+class FakeServer
 {
     public const URL = 'https://pdfmill.test';
 

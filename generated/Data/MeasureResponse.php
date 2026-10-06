@@ -12,7 +12,7 @@ namespace BogdanKharchenko\PdfMill\Data;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
-final class MeasureResponse extends Data
+class MeasureResponse extends Data
 {
     /**
      * @param  float  $width  Width of the widest line, in points.

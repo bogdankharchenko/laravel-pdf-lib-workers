@@ -23,7 +23,7 @@ use Spatie\LaravelData\Optional;
 /**
  * Draws an SVG document (shapes, text, transforms).
  */
-final class DrawSvg extends Data implements Operation
+class DrawSvg extends Data implements Operation
 {
     /** Names this step in the operations list: always "drawSvg". */
     #[Computed]
@@ -31,12 +31,9 @@ final class DrawSvg extends Data implements Operation
 
     /**
      * @param  string  $svg  SVG markup.
-     * @param  float  $x
      * @param  float  $y  Top-left corner of the SVG.
      * @param  string|list<int>|Optional  $pages  Pages to apply this to. Default: every page.
      * @param  Origin|Optional  $origin  How to read x/y. "bottom-left": PDF coordinates in points, y measured up from the bottom edge. "top-left": y measured down from the top edge, like screen coordinates. Default: "bottom-left".
-     * @param  float|Optional  $width
-     * @param  float|Optional  $height
      * @param  float|Optional  $fontSize  Default size for SVG text.
      * @param  array<array-key, BuiltInFont|FontSource>|Optional  $fonts  Fonts for SVG text, keyed by the font-family name used in the SVG.
      * @param  BlendMode|Optional  $blendMode  How the drawing's colours mix with what is underneath.
